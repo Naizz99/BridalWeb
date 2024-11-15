@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{admin/fragments/layout}">
+
+<body>
+	<div layout:fragment="content" th:remove="tag">
+	<main id="main" class="main">
+
+	    <div class="pagetitle">
+	      <h1>Messages</h1>
+	      <nav>
+	        <ol class="breadcrumb">
+	          <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+	          <li class="breadcrumb-item active">Messages</li>
+	        </ol>
+	      </nav>
+	    </div>
+	
+	    <section class="section">
+	      <div class="row">
+	        <div class="col-lg-12">
+	
+	          <div class="card">
+	            <div class="card-body">
+					<!-- Check if the messages list is empty -->
+				    <div th:if="${#lists.isEmpty(messages)}">
+				        <div class="alert alert-info" role="alert">
+				            No messages available.
+				        </div>
+				    </div>
+				    
+	              <div class="alert alert-primary alert-dismissible fade show" role="alert" th:each="mes : ${messages}">
+	              	<h4 class="alert-heading" th:text="${mes.subject}"></h4>
+	                <p th:text="${mes.messageContent}"></p>
+	                <hr>
+					<p class="mb-0" th:text="${(mes.name != '' and mes.name != null ? mes.name + ' | ' : '') 
+					  + (mes.phone != '' and mes.phone != null ? mes.phone + ' | ' : '') 
+					  + (mes.email != '' and mes.email != null ? mes.email + ' | ' : '')}">
+					</p>
+	                
+	                
+	                <!-- Reply button to show the reply form -->
+		            <button type="button" th:class="${mes.isRead? 'btn btn-danger mt-2' : 'btn btn-warning mt-2'}" onclick="showReplyForm(this)" th:text="${mes.isRead? 'Replied' : 'Reply'}"></button>
+		
+		            <!-- Reply form (initially hidden) -->
+		            <div class="reply-form mt-3" style="display: none;">
+		              <form th:action="@{/messages/reply}" method="post">
+		                <input type="hidden" th:value="${mes.contactId}" name="contactId" />
+		                <div class="mb-3">
+		                  <textarea class="form-control" name="reply" th:text="${mes.reply}" rows="3" placeholder="Type your reply here..." th:disabled="${mes.isRead}" data-required="true"></textarea>
+		                </div>
+		                <button type="submit" class="btn btn-success" th:disabled="${mes.isRead}" onclick = "this.innerHTML = 'Sending..';">Send Reply</button>
+		              </form>
+		            </div>
+		
+		            
+		            <a type="button" class="btn-close" aria-label="Close" th:href="@{/messages/delete/{id}(id=${mes.contactId})}" onclick="return confirm('Are you sure?');"></a>
+	              </div>
+	            </div>
+	          </div>
+	
+	        </div>
+	      </div>
+	    </section>
+	
+		<script>
+			function showReplyForm(button) {
+			  // Find the nearest reply form to the clicked button
+			  var replyForm = button.nextElementSibling;
+			  
+			  // Toggle the display of the reply form
+			  if (replyForm.style.display === "none") {
+			    replyForm.style.display = "block";
+			  } else {
+			    replyForm.style.display = "none";
+			  }
+			}
+		 </script>
+	  </main>
+	</div>
+</body>	
+</html>

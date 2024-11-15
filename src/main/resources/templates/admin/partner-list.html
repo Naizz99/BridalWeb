@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{admin/fragments/layout}">
+
+<body>
+	<div layout:fragment="content" th:remove="tag">
+	<main id="main" class="main">
+
+	    <div class="pagetitle">
+	      <h1>Partners</h1>
+	      <nav>
+	        <ol class="breadcrumb">
+	          <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+	          <li class="breadcrumb-item active">Partners</li>
+	        </ol>
+	      </nav>
+	    </div>
+	
+	    <section class="section">
+	      <div class="row">
+	        <div class="col-lg-12">
+	
+			<a type="button" class="btn btn-primary" th:href="@{/partners/new}">Add New</a> <br><br>
+	          <div class="card">
+	            <div class="card-body">
+	            	  	
+					<div class="toast success" th:if="${message}" th:text="${message}" th:classappend="${message} ? 'show' : ''"></div>
+					<div class="toast error" th:if="${error}" th:text="${error}" th:classappend="${error} ? 'show' : ''"></div>
+	
+		              <table class="table datatable">
+		                <thead>
+		                  <tr>
+		                  	<th scope="col">#</th>
+		                    <th scope="col">Name</th>
+		                    <th scope="col">Image</th>
+		                    <th scope="col">WebSite</th>
+		                    <th>Actions</th>
+		                  </tr>
+		                </thead>
+		                <tbody>
+		                  <tr th:each="partner : ${partners}">
+		                    <th scope="row" th:text="${partner.id}"></th>
+		                    <td th:text="(${partner.name})? ${partner.name} : '-'"></td>
+		                    <td><img th:src="${partner.image}" th:alt="${partner.id}" width="150px" height="100px"></td>
+		                    <td th:text="(${partner.webSite})? ${partner.webSite} : '-'"></td>
+		                    <td>
+		                        <a type="button" class="btn btn-primary" th:href="@{/partners/edit/{id}(id=${partner.id})}">Edit</a> |
+		                        <a type="button" class="btn btn-secondary" th:href="@{/partners/delete/{id}(id=${partner.id})}" onclick="return confirm('Are you sure?');">Delete</a>
+		                    </td>
+		                  </tr>
+		                </tbody>
+		              </table>
+	
+	            </div>
+	          </div>
+	
+	        </div>
+	      </div>
+	    </section>
+	
+	  </main>
+	</div>
+</body>	
+</html>

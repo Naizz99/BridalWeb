@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{fragments/layout}">
+<head>
+    <title th:text="'Customer Account Management | ' + #{system.title}"></title>
+    <link rel="stylesheet" th:href="@{/css/vendor-styles.css}" />
+    <style>
+		body {
+		    background-color: #f8f9fa;
+		    margin: 0;
+		    padding: 0;
+		    display: flex;
+		    flex-direction: column;
+		    min-height: 100vh;
+		}
+		
+		.account-container {
+		    display: flex;
+		    flex: 1;
+		}
+		
+		.sidebar {
+		    width: 250px;
+		    background-color: #343a40;
+		    padding-top: 50px;
+		    display: flex;
+		    flex-direction: column;
+		}
+		
+		.main-content {
+		    flex-grow: 1;
+		    padding: 40px;
+		    background-color: #f5f5f5;
+		}
+
+		@media (max-width: 768px) {
+		    .account-container {
+		        flex-direction: column;
+		        height: auto;
+		    }
+		
+		    .sidebar {
+		        width: 100%;
+		        position: static;
+		        padding: 20px 0;
+		        padding-top: 100px;
+		    }
+		
+		    .main-content {
+		        padding: 20px;
+		        width: fit-content;
+		    }
+		}
+		
+		.content-card {
+		    background-color: white;
+		    padding: 30px;
+		    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		    border-radius: 10px;
+		    margin-bottom: 30px;
+		    transition: box-shadow 0.3s ease;
+		}
+		
+		footer {
+		    background-color: #343a40;
+		    color: white;
+		    text-align: center;
+		    padding: 15px;
+		    position: relative;
+		    bottom: 0;
+		    width: 100%;
+		}
+
+        .sidebar a {
+            text-decoration: none;
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+            position: relative;
+        }
+
+        .sidebar a i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        .sidebar a:hover {
+            background-color: #495057;
+        }
+
+        .sidebar a.active {
+            background-color: #f878ab;
+            color: #fff;
+        }
+
+        .content-card:hover {
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        h3 {
+            font-size: 24px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"], input[type="file"], input[type="date"], input[type="number"], select {
+            display: block;
+            /*width: 30%;*/
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+		
+        .btn-primary {
+            background-color: #f878ab;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #e0699b;
+        }
+        
+        .btn-secondary {
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+        
+		.vendor-section {
+		    padding: 30px 0;
+		}
+		
+		.vendor-card {
+		    position: relative;
+		    border-radius: 10px;
+		    overflow: hidden;
+		    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		    margin-bottom: 30px;
+		    background-color: #fff;
+		}
+		
+		.vendor-cover {
+		    background-size: cover;
+		    background-position: center;
+		    height: 250px;
+		    position: relative;
+		}
+		
+		.vendor-logo {
+		    position: absolute;
+		    top: 15px;
+		    left: 15px;
+		    width: 80px;
+		    height: 80px;
+		    border-radius: 50%;
+		    overflow: hidden;
+		    border: 3px solid #fff;
+		}
+		
+		.vendor-logo img {
+		    width: 100%;
+		    height: 100%;
+		    object-fit: cover;
+		}
+		
+		.vendor-info {
+		    position: absolute;
+		    width: 100%;
+		    bottom: 15px;
+		    left: 15px;
+		    color: white;
+		    text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5), 
+		                 -2px -2px 3px rgba(255, 255, 255, 0.2);
+		}
+		
+		.vendor-info h4 {
+		    font-size: 22px;
+		    font-weight: bold;
+		    color: #ffffff;
+		    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8);
+		}
+		
+		.vendor-contact-rating {
+		    position: relative;
+		    margin-top: 5px;
+		}
+		
+		.call-btn {
+		    position: absolute;
+		    right: 20px;;
+		    top: 0; 
+		    background-color: var(--primary-color);
+		    color: white;
+		    padding: 5px 15px;
+		    border-radius: 5px;
+		    text-decoration: none;
+		    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+		    display: inline-block;
+		}
+		
+		.rating {
+		    color: gold;
+		    font-size: 16px;
+		    display: inline-block;
+		    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); 
+		    margin-right: 10px;
+		    line-height: 30px;
+		}
+		
+		/**Wedding Planing CSS*/
+		#wizard ul {
+	        display: flex;
+	        list-style: none;
+	    }
+	    #wizard ul li {
+	        margin-right: 20px;
+	    }
+	    #wizard div.hide {
+	        display: none;
+	    }
+	    #wizard div.active {
+	        display: block;
+	    }
+	    #vendorsTable, #budgetBreakdownTable {
+	        /*width: 100%;*/
+	        border-collapse: collapse;
+	    }
+	    #vendorsTable th, #budgetBreakdownTable th, #vendorsTable td, #budgetBreakdownTable td {
+	        border: 1px solid #ccc;
+	        padding: 10px;
+	        text-align: left;
+	    }
+	    .prev-btn, .next-btn {
+	        margin-top: 10px;
+	    }
+    </style>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+<body>
+    <div layout:fragment="content">
+        <section class="account-container blog-section" style="margin-top:25px">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <a href="#" class="active" data-target="wedding-planning">
+                    <i class="fas fa-calendar-alt"></i><span>Wedding Planning</span>
+                </a>
+                <a href="#" data-target="my-plans">
+                    <i class="fa fa-heart"></i><span>My Plans</span>
+                </a>
+                <a href="#" data-target="add-new-wedding">
+                    <i class="fas fa-plus-circle"></i><span>Weddings</span>
+                </a>
+                <a href="#" data-target="add-new-blog">
+                    <i class="fa fa-address-card-o"></i><span>Blogs</span>
+                </a>
+                <a href="#" data-target="recent-vendors">
+                    <i class="fas fa-history"></i><span>Recent Vendors</span>
+                </a>
+                <a href="#" data-target="profile-management">
+                    <i class="fas fa-user"></i><span>Profile Management</span>
+                </a>
+            </div>
+
+            <!-- Main content -->
+            <div class="main-content">
+				<div th:if="${error}" class="alert alert-danger">
+		            <p th:text="${error}"></p>
+		        </div>
+		        <div th:if="${message}" class="alert alert-success">
+		            <p th:text="${message}"></p>
+		        </div>
+		        <div id="error-alert" class="alert alert-danger" style="display: none;">
+				    <p id="error-message" th:text="${error}"></p>
+				</div>
+				<div id="success-alert" class="alert alert-success" style="display: none;">
+				    <p id="success-message" th:text="${message}"></p>
+				</div>
+		        <input id="planId" type="hidden">
+                <!-- Wedding Planning Section -->
+                <div class="content-card content-section active" id="wedding-planning">
+					
+				    <div id="wizard">
+				
+				        <!-- Step 1: Select Wedding Type -->
+				        <div id="step-1" class="step active row">
+							<button type="button" class="next-btn btn-primary" id="nextStep1" disabled>Next</button>
+							<br><br>
+							<h3>Wedding Type, Budget(min 500,000) & Location</h3>
+								<select class="form-select" id="weddingType" name="weddingTypeId">
+			                    	<option value="">-- Select Wedding Type --</option>
+			                    	<option th:each="type : ${weddingTypes}" th:value="${type.weddingTypeId}" th:text="${type.typeName}"></option>
+			                    </select>
+								<input class="number-format" type="number" id="budget" name="budget" min="500000" placeholder="Enter Budget (Minimum 500,000)" onChange="updateAllAmounts()" required>
+<!--								<select id="budgetType" name="budgetType">-->
+<!--								    <option value="">-- Select Budget Type --</option>-->
+<!--								    <option th:each="type : ${T(com.kdm360.bridalweb.model.WeddingPlan$BUDGET).values()}"-->
+<!--								            th:value="${type.name()}"-->
+<!--								            th:text="${type.name()}">-->
+<!--								    </option>-->
+<!--								</select>-->
+<!--					            <div id="fixedBudgetWarning" style="display: none;">-->
+<!--					                <p>Warning: You cannot select packages over the budget in fixed mode.</p>-->
+<!--					            </div>-->
+								<select id="district" name="district">
+								    <option value="">-- Select District --</option>
+								    <option th:each="district : ${T(com.kdm360.bridalweb.model.Vendor$DISTRICT).values()}"
+								            th:value="${district.name()}"
+								            th:text="${district.name()}">
+								    </option>
+								</select>
+				            
+				        </div>
+						
+				        <!-- Step 2: Budget Breakdown -->
+				        <div id="step-2" class="step hide">
+				            <button type="button" class="prev-btn btn-secondary" id="prevStep2">Previous</button>
+				            <button type="button" class="next-btn btn-primary" id="nextStep2">Next</button>
+				            <br><br>
+							<h3>Budget Breakdown</h3>
+							<h5 for="totalBudget">Total Percentage(%): <span id="totalPercentageText"></span><input type="hidden" id="totalPercentage" readonly></h5>
+				            <h5 for="totalBudget">Total Budget: <span id="totalBudgetText" class="number-format"></span><input class="number-format" type="hidden" id="totalBudget" readonly></h5>
+				            <h5 for="remainBudget">Remain Amount: <span id="remainBudgetText" class="number-format"></span><input class="number-format" type="hidden" id="remainBudget" readonly></h5>
+				            <br>
+				            <table id="budgetBreakdownTable">
+				                <thead>
+				                    <tr>
+				                        <th>Category</th>
+				                        <th>Percentage (%)</th>
+				                        <th>Amount</th>
+				                        <th>Actions</th>
+				                    </tr>
+				                </thead>
+				                <tbody>
+								    <tr th:each="cat : ${categories}">
+								        <td th:text="${cat.typeName}" th:data-category-id="${cat.categoryId}" class="catName"></td>
+								        <td><input type="number" class="percentage" th:value="${100 / categories.size()}" th:data-category-id="${cat.categoryId}" onchange="updatePercentage(this)" oninput="updatePercentage(this)" style="width:100px"></td>
+								        <td><input type="number" class="amount number-format" onchange="updateAmount(this)" oninput="updateAmount(this)" style="width:120px"></td>
+								        <td><button type="button" class="remove-category btn btn-danger" onclick="removeCategory(this)">Remove</button></td>
+								    </tr>
+								</tbody>
+				            </table>
+							<div style="display: flex; align-items: center; margin-top: 10px;">
+							    <button type="button" class="btn btn-success btn-sm" onclick="showCategoryOptions()" style="font-weight: bold; margin-right: 10px;">+</button>
+							    
+							    <div id="categoryOptions" style="display: none; flex-grow: 1; align-items: center;">
+							        <select id="categorySelect" style="margin-right: 10px; width: 200px;">
+<!--							            <option th:value="${cat.categoryId}" th:text="${cat.typeName}" th:each="cat : ${categories}"></option>-->
+							        </select>
+							        <button type="button" onclick="addSelectedCategory()" class="btn btn-warning btn-sm" style="margin-right: 10px;">Add Category</button>
+							    </div>
+							</div>
+							<script>
+								
+							    function showCategoryOptions() {
+							        document.getElementById('categoryOptions').style.display = 'flex';
+							    }
+							
+							    function addSelectedCategory() {
+							        const selectedCategoryId = document.getElementById('categorySelect').value;
+							        const selectedCategoryName = document.getElementById('categorySelect').options[document.getElementById('categorySelect').selectedIndex].text;
+							
+							        // Create a new row for the selected category
+							        const newRow = document.createElement('tr');
+							        newRow.innerHTML = `
+							            <td data-category-id="${selectedCategoryId}" class="catName">${selectedCategoryName}</td>
+							            <td><input type="number" class="percentage" value="0" data-category-id="${selectedCategoryId}" onchange="updatePercentage(this)" oninput="updatePercentage(this)" style="width:100px"></td>
+							            <td><input type="number" class="amount number-format" onchange="updateAmount(this)" oninput="updateAmount(this)" style="width:120px"></td>
+							            <td><button type="button" class="remove-category btn btn-danger" onclick="removeCategory(this)">Remove</button></td>
+							        `;
+							
+							        // Insert the new row above the add button row
+							        const addRow = document.querySelector('#budgetBreakdownTable tbody tr:last-child');
+							        addRow.before(newRow);
+							
+									const selectElement = document.getElementById("categorySelect");
+								    for (let i = 0; i < selectElement.options.length; i++) {
+								        if (selectElement.options[i].value === selectedCategoryId) {
+								            selectElement.remove(i);
+								            break;
+								        }
+								    }
+								    
+							        // Hide the category options dropdown
+							        document.getElementById('categoryOptions').style.display = 'none';
+							
+							        // Optionally, re-run budget calculations
+							        updateAllAmounts();
+							        currentBudgetCal();
+							        updateCategoryDropdown();
+							    }
+							</script>
+				        </div>
+				
+				        <div id="step-3" class="step hide">
+							<button type="button" class="prev-btn btn-secondary" id="prevStep3">Previous</button>
+				            <button type="button" class="next-btn btn-primary" id="nextStep3">Save</button>
+				            <br><br>
+							<h3 for="vendorSelection">Available Vendors</h3>
+				                
+					        <label for="categoryDropdown">Select Category: </label>
+					        <select id="categoryDropdown" class="form-select">
+					            <option value="">-- Select Category --</option>
+					        </select>
+					        <h3 id="allocateBudgetDesc"></h3>
+					        
+					        <div id="FilteredVendors" class="row"> </div>
+				        </div>
+				
+				        <div id="step-4" class="step hide">
+				            <h3 for="vendorSelection">Plan Nickname:</h3>
+				            <input type="text" id="planNickName" name="planNickName" required>
+				            <span id="planNickNameError" style="color: red; display: none;">Please enter a valid plan nickname.</span><br><br>
+				            <button type="button" class="prev-btn btn-secondary" id="prevStep4">Previous</button>
+			                <button type="button" id="savePlan" class="btn btn-primary" onclick="createWeddingPlan()">Save Plan</button>
+				        </div>
+				    </div>
+				    <script>
+					    document.addEventListener('DOMContentLoaded', function() {
+
+						    updateAllAmounts();
+						    validateStep1();
+						
+						    document.querySelectorAll('.percentage').forEach(input => {
+						        input.addEventListener('input', () => {
+						            updatePercentage(input);
+						            updateCategoryDropdown();
+						        });
+						    });
+						
+							updateCategoryDropdown();
+							
+						    const steps = document.querySelectorAll('#wizard div.step');
+						    let currentStep = 0;
+						
+						    function showStep(index) {
+							    steps.forEach(step => {
+							        step.classList.remove('active');
+							        step.classList.add('hide');
+							    });
+							    steps[index].classList.remove('hide');
+							    steps[index].classList.add('active');
+							}
+						
+						    function validateStep1() {
+						        const weddingType = document.getElementById('weddingType').value;
+						        const budget = document.getElementById('budget').value;
+						        //const budgetType = document.getElementById('budgetType').value;
+						        const district = document.getElementById('district').value;
+						
+								currentBudgetCal();
+						
+						        const nextButton = document.getElementById('nextStep1');
+						        //nextButton.disabled = weddingType === '' || budget < 500000 || budgetType === '' || district === '';
+						        nextButton.disabled = weddingType === '' || budget < 500000 || district === '';
+						    }
+						
+						    function currentBudgetCal() {
+						        const percentages = document.querySelectorAll('#budgetBreakdownTable .percentage');
+						        let totalPercentage = 0;
+						        percentages.forEach(input => {
+						            totalPercentage += parseFloat(input.value || 0);
+						        });
+						
+						        document.getElementById('totalPercentage').value = totalPercentage;
+						        document.getElementById('totalBudget').value = document.getElementById('budget').value * totalPercentage / 100;
+						        document.getElementById('remainBudget').value = document.getElementById('budget').value - (document.getElementById('budget').value * totalPercentage / 100);
+						        //document.getElementById('nextStep2').disabled = totalPercentage !== 100;
+						
+								document.getElementById('totalPercentageText').innerHTML = document.getElementById('totalPercentage').value;
+								document.getElementById('totalBudgetText').innerHTML = 
+								    Number(document.getElementById('totalBudget').value).toLocaleString();
+								
+								document.getElementById('remainBudgetText').innerHTML = 
+								    Number(document.getElementById('remainBudget').value).toLocaleString();
+								
+						        if (totalPercentage !== 100) {
+						            document.getElementById('totalPercentage').style.color = 'red';
+						            document.getElementById('totalPercentageText').style.color = 'red';
+						        } else {
+						            document.getElementById('totalPercentage').style.color = 'red';
+						            document.getElementById('totalPercentageText').style.color = 'red';
+						        }
+						        
+						        updateCategoryDropdown();
+						    }
+						
+						    function bindValidations() {
+						        document.getElementById('weddingType').addEventListener('change', validateStep1);
+						        document.getElementById('budget').addEventListener('input', validateStep1);
+						        //document.getElementById('budgetType').addEventListener('change', validateStep1);
+						        document.getElementById('district').addEventListener('change', validateStep1);
+						        document.querySelectorAll('#budgetBreakdownTable .percentage').forEach(input => {
+						            input.addEventListener('input', currentBudgetCal);
+						        });
+						    }
+						
+						    bindValidations();
+						
+						    document.querySelectorAll('.next-btn').forEach((btn) => {
+						        btn.addEventListener('click', () => {
+						            currentStep++;
+						            showStep(currentStep);
+						        });
+						    });
+						
+						    document.querySelectorAll('.prev-btn').forEach((btn) => {
+						        btn.addEventListener('click', () => {
+						            currentStep--;
+						            showStep(currentStep);
+						        });
+						    });
+						
+						    showStep(currentStep);
+						
+						});
+						
+						function currentBudgetCal() {
+					        const percentages = document.querySelectorAll('#budgetBreakdownTable .percentage');
+					        let totalPercentage = 0;
+					        percentages.forEach(input => {
+					            totalPercentage += parseFloat(input.value || 0);
+					        });
+					
+					        document.getElementById('totalPercentage').value = totalPercentage;
+					        document.getElementById('totalBudget').value = document.getElementById('budget').value * totalPercentage / 100;
+					        document.getElementById('remainBudget').value = document.getElementById('budget').value - (document.getElementById('budget').value * totalPercentage / 100);
+					        //document.getElementById('nextStep2').disabled = totalPercentage !== 100;
+					
+							document.getElementById('totalPercentageText').innerHTML = document.getElementById('totalPercentage').value;
+							document.getElementById('totalBudgetText').innerHTML = 
+							    Number(document.getElementById('totalBudget').value).toLocaleString();
+							
+							document.getElementById('remainBudgetText').innerHTML = 
+							    Number(document.getElementById('remainBudget').value).toLocaleString();
+							
+					        if (totalPercentage !== 100) {
+					            document.getElementById('totalPercentage').style.color = 'red';
+					            document.getElementById('totalPercentageText').style.color = 'red';
+					        } else {
+					            document.getElementById('totalPercentage').style.color = 'red';
+					            document.getElementById('totalPercentageText').style.color = 'red';
+					        }
+					        updateCategoryDropdown();
+					    }
+					    
+						function updatePercentage(element) {
+						    const budget = document.getElementById('budget').value;
+						    const percentage = element.value;
+						    
+						    const row = element.closest('tr');
+						    const amountInput = row.querySelector('.amount');
+						
+						    if (budget && percentage) {
+						        const amount = (budget / 100) * percentage;
+						        amountInput.value = amount.toFixed(2);
+						    }
+						    
+						    currentBudgetCal();
+						}
+						
+						function updateAmount(element) {
+						    const budget = document.getElementById('budget').value;
+						    const amount = element.value;
+						    
+						    const row = element.closest('tr');
+						    const percentage = row.querySelector('.percentage');
+						
+						    if (budget && amount) {
+						        const amount1 = (amount / budget) * 100;
+						        percentage.value = amount1;
+						    }
+						    
+						    currentBudgetCal();
+						}
+						
+						function updateAllAmounts() {
+						    document.querySelectorAll('.percentage').forEach(input => {
+						        updatePercentage(input);
+						    });
+						}
+						
+						function removeCategory(button) {
+						    const row = button.closest('tr');
+						    
+						    const cat = row.querySelector('.catName').innerHTML;
+						    const catId = row.querySelector('.catName').getAttribute("data-category-id");
+					        const categorySelect = document.getElementById('categorySelect');
+					        const option = document.createElement('option');
+				            option.value = catId;
+				            option.textContent = cat;
+				            categorySelect.appendChild(option);
+					        
+							row.remove();
+
+						    updateAllAmounts();
+						    currentBudgetCal();
+						}
+
+						function updateCategoryDropdown() {
+						    const dropdown = document.getElementById('categoryDropdown');
+						    dropdown.innerHTML = ''; // Clear the existing options
+						
+						    const defaultOption = document.createElement('option');
+						    defaultOption.value = '';
+						    defaultOption.text = '-- Select Category --';
+						    dropdown.appendChild(defaultOption);
+						
+						    const rows = document.querySelectorAll('#budgetBreakdownTable tbody tr');
+						
+						    rows.forEach(row => {
+						        const percentageInput = row.querySelector('.percentage');
+						        const percentageValue = parseFloat(percentageInput.value || 0);
+						        
+						        const budgetInput = row.querySelector('.amount');
+						        const budgetValue = parseFloat(budgetInput.value || 0);
+						
+						        if (percentageValue >= 1) {
+						            const categoryId = row.querySelector('td[data-category-id]').getAttribute("data-category-id").trim();
+						            const categoryName = row.querySelector('td').textContent.trim();
+						            const option = document.createElement('option');
+						            						            
+						            option.value = categoryId;
+						            option.text = categoryName;
+						            
+						            option.setAttribute('data-percentage', percentageValue);
+        							option.setAttribute('data-budget', budgetValue);
+        
+						            dropdown.appendChild(option);
+						        }
+						    });
+						    
+							dropdown.addEventListener('change', function() {
+							    const selectedOption = dropdown.options[dropdown.selectedIndex];
+							    const percentage = selectedOption.getAttribute('data-percentage');
+							    const budget = selectedOption.getAttribute('data-budget');
+							
+								document.getElementById("allocateBudgetDesc").innerText = `Percentage: ${percentage}%\nBudget: ${budget}`;
+								
+								fetchVendors(document.getElementById("district").value,selectedOption.value, budget);
+							});
+						}
+						
+						function fetchVendors(district,category, budget) {
+				            fetch(`/vendors/getVendors?district=${district}&category=${category}&budget=${budget}`)
+						        .then(response => {
+						            if (!response.ok) {
+						                throw new Error('Network response was not ok');
+						            }
+						            return response.json();
+						        })
+						        .then(vendors => {
+						            
+						            const vendorContainer = document.getElementById('FilteredVendors');
+								    vendorContainer.innerHTML = ''; 
+								
+								    if (vendors.length === 0) {
+									    const noVendorsMessage = document.createElement('div');
+									    noVendorsMessage.classList.add('no-vendors-message');
+									    noVendorsMessage.innerHTML = `
+									        <p style="color:red;">No vendors are available at the moment. Please check back later!</p>
+									    `;
+									    vendorContainer.appendChild(noVendorsMessage);
+									} else {
+									    vendors.forEach(vendor => {
+									        const vendorCardCol = document.createElement('div');
+									        vendorCardCol.classList.add('col-md-4');
+									
+									        const vendorCard = document.createElement('div');
+									        vendorCard.classList.add('vendor-card');
+									
+									        vendorCard.innerHTML = `
+									            <a href="/vendors/${vendor.vendorId}" target="_blank">
+									                <div class="vendor-cover" style="background-image: url('${vendor.coverImage}');">
+									                    <div class="vendor-logo">
+									                        <img src="${(vendor.logo && vendor.logo !== '') ? vendor.logo : '/images/null-300300.jpg'}" alt="vendor logo">
+									                    </div>
+									                </div>
+									            </a>
+									            <div class="vendor-info">
+									                <div class="vendor-contact-rating">
+									                    <a href="/vendors/${vendor.vendorId}">
+									                        <h4>${vendor.companyName}</h4>
+									                    </a>
+									                    <a class="call-btn" href="tel:${vendor.mobile1}">
+									                        <i class="fa fa-phone"></i> 
+									                    </a>
+									                </div>
+									            </div>
+									        `;
+									
+									        vendorCardCol.appendChild(vendorCard);
+									        vendorContainer.appendChild(vendorCardCol);
+									    });
+									}
+
+						        })
+						        .catch(error => console.error('Error fetching vendors:', error));
+					    }
+
+					    updateCategoryDropdown();
+
+					</script>
+				</div>
+				    
+                <!-- My Plans Section -->
+                <div class="content-card content-section" id="my-plans">
+                    <div class="row">
+						<h3>My Wedding Plans</h3>
+	                    
+	                    <div class="col-md-4" th:each="plan : ${weddingPlanList}">
+						    <div class="vendor-card">
+						        <a th:href="@{/weddings/weddingPlan/view/{id}(id=${plan.planId})}" target="_blank">
+						            <div class="vendor-cover" style="background-image: url(images/wedding-plan-card-bg.jpg);">
+						                <div class="vendor-info" style="position: absolute; margin: 10px; color: #fff;">
+						                    <div class="category-content" style="text-align: left;">
+						                        <h4 th:text="${plan.planNickName}" style="font-size: 3rem; margin: 0; color: #fff;"></h4>
+						                        <h4 class="number-format estimatedTotal" th:text="${plan.estimatedTotal}" style="font-size: 1.6rem; margin: 0; color: #ffcc00;"></h4>
+						                    </div>
+						                </div>
+						            </div>
+						        </a>
+						    </div>
+						</div>
+						<script>
+							window.onload = function() {
+							    // Select all elements with the class 'estimatedTotal'
+							    const estimatedTotalElements = document.querySelectorAll('.estimatedTotal');
+							    
+							    estimatedTotalElements.forEach(estimatedTotalElement => {
+							        const estimatedTotal = parseFloat(estimatedTotalElement.textContent.replace(/,/g, ''));
+							        
+							        if (!isNaN(estimatedTotal)) {
+							            // Format the number with commas
+							            estimatedTotalElement.textContent = estimatedTotal.toLocaleString('en');
+							        }
+							    });
+							};
+
+						</script>
+					</div>
+                </div>
+                
+                <!-- Add New Wedding Section -->
+                <div class="content-card content-section" id="add-new-wedding">
+                    <div class="row">
+						<h3>My Weddings</h3>
+	                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#weddingModalCenter" onClick="resetWeddingData()">
+						  Add New
+						</button><br><br>
+						<div class="modal fade" id="weddingModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" sec:authorize="isAuthenticated()" th:if="${session.user.role.name() == 'CUSTOMER'}">
+						  <div class="modal-dialog-centered modal-dialog" role="document">
+						    <div class="modal-content">
+						      <div class="modal-header">
+						        <h5 class="modal-title" id="exampleModalLongTitle">Wedding</h5>
+						        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						          <span aria-hidden="true">&times;</span>
+						        </button>
+						      </div>
+						      <form class="row" th:action="@{/weddings/view}" th:object="${newWedding}" id="weddingForm" method="post" autocomplete="off" enctype="multipart/form-data">
+							      <div class="modal-body">
+									  	<input type="hidden" id="weddingId" th:field="*{weddingId}" >
+									  	<input type="hidden" id="createdBy" th:field="*{createdBy}" >
+									  	<input type="hidden" id="createdDate" th:field="*{createdDate}" >
+									  	<input type="hidden" id="weddingUserId" th:field="*{userId}" >
+										<div class="col-md-12">
+											<label for="name">Name (Bride & Groom)<span style="color:red;">*</span></label>
+						                  <div class="form-floating">
+						                    <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="Bride & Groom" data-required="true">
+						                  </div>
+						                </div>
+						                <div class="col-md-12">
+						                  <div class="form-floating">
+											  <label for="date">Images</label>
+						              			<input type="file" accept="image/*" id="images" name="images" multiple  data-required="false">
+						                  </div>
+						                </div>
+						                <div class="col-md-12">
+											<label for="date">Wedding Date</label>
+						                  <div class="form-floating">
+											<input type="date" class="form-control" id="date" 
+											       th:field="*{date}" placeholder="Date" data-required="false"
+											       onchange="document.getElementById('datePreview').value=this.value">
+											<input type="text" class="form-control" id="datePreview" 
+											       th:value="${newWedding.date}" placeholder="Date" data-required="false"
+											       onClick="document.getElementById('date').click();" readonly>
+						                  </div>
+						                </div>
+						                <div class="col-md-12">
+											<label for="location">Location</label>
+						                  <div class="form-floating">
+						                    <input type="text" class="form-control" id="weddingLocation" th:field="*{location}" placeholder="Location" data-required="false">
+						                  </div>
+						                </div>
+						                <div class="col-md-12">
+											<label for="budget">Budget</label>
+						                  <div class="form-floating">
+						                    <input type="number" class="form-control" id="budget" th:field="*{budget}" placeholder="Budget" data-required="false">
+						                  </div>
+						                </div>
+						                <div class="col-md-12">
+											<label for="floatingSelect">Wedding Type <span style="color:red;">*</span></label>
+						                  <div class="form-floating mb-3">
+						                    <select class="form-select" id="weddingType" th:field="*{weddingTypeId}" aria-label="status" data-required="true">
+						                      <option th:each="type : ${weddingTypes}" th:value="${type.weddingTypeId}" th:text="${type.typeName}"></option>
+						                    </select>
+						                  </div>
+						                </div>
+							      </div>
+							      <div class="modal-footer" style="padding:5%;">
+							        <div class="text-left" style="margin-top: 15px;">
+					                  <button type="submit" class="btn btn-primary" onclick="validateForm(event)">Submit</button>
+					                </div>
+					                <div class="text-left">
+										<span class="error-message"></span>
+									</div>
+							      </div>
+						      </form>
+						    </div>
+						  </div>
+						</div>
+						
+	                    <div class="col-md-4" th:each="wedding : ${weddingList}">
+					        <div class="vendor-card">
+					            <a th:href="@{/weddings/view/{id}(id=${wedding.weddingId})}">
+					                <div class="vendor-cover" th:style="'background-image: url(' + ${wedding.image} + ');'">
+					                    <div class="vendor-info" style="position: absolute; margin: 10px; color: #fff;">
+					                        <div class="category-content" style="text-align: left;">
+					                            <h4 th:text="${wedding.name}" style="font-size: 18px; margin: 0; color: #fff;"></h4>
+					                        </div>
+					                    </div>
+					                </div>
+					            </a>
+					            
+					            <div class="blog-actions" style="margin-top: 10px; text-align: center;">
+					                <a class="btn btn-info" th:href="@{/weddings/view/{id}(id=${wedding.weddingId})}">View</a>
+				
+									<button type="button" class="btn btn-warning" 
+									        data-toggle="modal" 
+									        data-target="#weddingModalCenter" 
+									        th:data-weddingId="${wedding.weddingId}" 
+									        th:data-name="${wedding.name}" 
+									        th:data-date="${wedding.date}" 
+									        th:data-location="${wedding.location}" 
+									        th:data-weddingTypeId="${wedding.typeId}" 
+									        th:data-budget="${wedding.budget}" 
+									        th:data-createdBy="${wedding.createdBy}" 
+									        th:data-createdDate="${wedding.createdDate}" 
+									        th:data-userId="${wedding.userId}" 
+									        onclick="loadWeddingData(this.getAttribute('data-weddingId'),
+									        this.getAttribute('data-name'),
+									        this.getAttribute('data-date'),
+									        this.getAttribute('data-location'),
+									        this.getAttribute('data-weddingTypeId'),
+									        this.getAttribute('data-budget'),
+									        this.getAttribute('data-createdBy'),
+									        this.getAttribute('data-createdDate'),
+									        this.getAttribute('data-userId'))">
+									    Modify
+									</button>
+
+					                <a class="btn btn-danger" th:href="@{/weddings/delete/{id}(id=${wedding.weddingId})}" onclick="return confirm('Are you sure you want to delete this wedding?');">Delete</a>
+					            </div>
+					        </div>
+					    </div>
+					    <script>
+							function loadWeddingData(weddingId,name,date,location,weddingTypeId,budget,createdBy,createdDate,userId) {
+							    document.getElementById("weddingId").value = weddingId;
+							    document.getElementById("name").value = name;
+							    document.getElementById("datePreview").value = date;
+							    document.getElementById("weddingLocation").value = location;
+							    document.getElementById("weddingType").value = weddingTypeId;
+							    document.getElementById("budget").value = budget;
+							    document.getElementById("createdBy").value = createdBy;
+							    document.getElementById("createdDate").value = createdDate;
+							    document.getElementById("weddingUserId").value = userId;
+							}
+							function resetWeddingData() {
+							    document.getElementById("weddingId").value = null;
+							    document.getElementById("name").value = null;
+							    document.getElementById("datePreview").value = null;
+							    document.getElementById("weddingLocation").value = null;
+							    document.getElementById("weddingType").value = null;
+							    document.getElementById("budget").value = null;
+							    document.getElementById("createdBy").value = null;
+							    document.getElementById("createdDate").value = null;
+							    document.getElementById("weddingUserId").value = null;
+							}
+
+						</script>
+					</div>
+                </div>
+                
+                <!-- Add New Blog Section -->
+                <div class="content-card content-section" id="add-new-blog">
+					<div class="row">
+	                    <h3>My Blogs</h3>
+	                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter" onClick="resetBlogData()">
+						  Create Blog
+						</button><br><br>
+						<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" sec:authorize="isAuthenticated()" th:if="${session.user.role.name() == 'CUSTOMER'}">
+						  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+						    <div class="modal-content">
+						      <div class="modal-header">
+						        <h5 class="modal-title" id="exampleModalLongTitle">Blog Details</h5>
+						        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						          <span aria-hidden="true">&times;</span>
+						        </button>
+						      </div>
+						      <form class="row g-3" th:action="@{/blogs}" th:object="${newBlog}" id="blogForm" method="post" autocomplete="off" enctype="multipart/form-data">
+							      <div class="modal-body">
+										<input type="hidden" th:field="*{blogPostId}" id="blogPostId">
+										<input type="hidden" th:field="*{publishedDate}" id="publishedDate">
+										<input type="hidden" th:field="*{updatedDate}" id="updatedDate">
+										<input type="hidden" th:field="*{userId}" id="blogUserId">
+										<input type="hidden" th:field="*{active}" id="active">
+						                <div class="col-md-12">
+										  <label for="title">Title <span style="color:red;">*</span></label>
+						                  <div class="form-floating">
+						                    <input type="text" class="form-control" id="title" th:field="*{title}" placeholder="Title" data-required="true">
+						                  </div>
+						                </div>
+						                <div class="col-md-12">
+											<label for="image">Image</label> &nbsp;&nbsp;<button class="btn btn-primary" type="button" onClick="document.getElementById('image').click();">Change</button>
+							                  <div class="form-floating border">
+							                    
+						              			<img id="imagePreview" th:src="${(newBlog.image!=null && newBlog.image!='')? newBlog.image : '/images/null-cover.jpg'}" alt="" width="100%">
+						              			<input type="file" accept="image/*" id="image" name="image" hidden="" onchange="previewImage(event,'imagePreview')">
+							                  </div>
+						                </div>
+						                <div class="col-md-12">
+											<label for="content">Content <span style="color:red;">*</span></label>
+						                  <div class="form-floating">
+						                    <textarea class="form-control" placeholder="Content" id="content" th:field="*{content}" style="height: 300px;" data-required="true"></textarea>
+						                  </div>
+						                </div>
+							      </div>
+							      <div class="modal-footer" style="padding:5%;">
+							        <div class="text-left" style="margin-top: 15px;">
+					                  <button type="submit" class="btn btn-primary" onclick="validateForm(event)">Submit</button>
+					                </div>
+					                <div class="text-left">
+										<span class="error-message"></span>
+									</div>
+							      </div>
+						      </form>
+						    </div>
+						  </div>
+						</div>
+	                    <div class="col-md-4" th:each="blog : ${blogList}">
+					        <div class="vendor-card">
+					            <!-- Blog image -->
+					            <a th:href="@{/blogs/{id}(id=${blog.blogPostId})}">
+					                <div class="vendor-cover" th:style="'background-image: url(' + ${blog.imagePath} + ');'">
+					                    <div class="vendor-info" style="position: absolute; margin: 10px; color: #fff;">
+					                        <div class="category-content" style="text-align: left;">
+					                            <h4 th:text="${blog.title}" style="font-size: 18px; margin: 0; color: #fff;"></h4>
+					                            <div style="display: flex; gap: 10px; margin-top: 5px;">
+					                                <a style="color: #ffcc00;" th:text="${blog.blogStatus.likeCount} + ' Likes'"></a>
+					                                <a style="color: #00ccff;" th:text="${blog.blogStatus.commentCount} + ' Comments'"></a>
+					                                <a style="color: #ff4444;" th:text="${blog.blogStatus.viewCount} + ' Views'"></a>
+					                            </div>
+					                        </div>
+					                    </div>
+					                </div>
+					            </a>
+					            
+					            <!-- Action Buttons -->
+					            <div class="blog-actions" style="margin-top: 10px; text-align: center;">
+					                <!-- View Button -->
+					                <a class="btn btn-info" th:href="@{/blogs/{id}(id=${blog.blogPostId})}">View</a>
+				
+									<!-- Modify Button -->
+									<button type="button" class="btn btn-warning" 
+									        data-toggle="modal" 
+									        data-target="#exampleModalCenter" 
+									        th:data-blogPostId="${blog.blogPostId}" 
+									        th:data-publishedDate="${blog.publishedDate}" 
+									        th:data-updatedDate="${blog.updatedDate}" 
+									        th:data-userId="${blog.userId}" 
+									        th:data-active="${blog.active}" 
+									        th:data-title="${blog.title}" 
+									        th:data-imagePreview="${blog.imagePath}" 
+									        th:data-content="${blog.content}" 
+									        onclick="loadBlogData(this.getAttribute('data-blogPostId'),
+									        this.getAttribute('data-publishedDate'),
+									        this.getAttribute('data-updatedDate'),
+									        this.getAttribute('data-userId'),
+									        this.getAttribute('data-active'),
+									        this.getAttribute('data-title'),
+									        this.getAttribute('data-imagePreview'),
+									        this.getAttribute('data-content'))">
+									    Modify
+									</button>
+<!--					                <a class="btn btn-warning" data-toggle="modal" data-target="#modifyBlogModal" th:attr="data-blog-id=${blog.blogPostId}" onclick="loadBlogData([[${blog.blogPostId}]])">Modify</a>-->
+
+					                <!-- Delete Button -->
+					                <a class="btn btn-danger" th:href="@{/blogs/delete/{id}(id=${blog.blogPostId})}" onclick="return confirm('Are you sure you want to delete this blog?');">Delete</a>
+					            </div>
+					        </div>
+					    </div>
+					    <script>
+							function loadBlogData(blogPostId,publishedDate,updatedDate,userId,active,title,imagePath,content) {
+							    document.getElementById("blogPostId").value = blogPostId;
+							    document.getElementById("publishedDate").value = publishedDate;
+							    document.getElementById("updatedDate").value = updatedDate;
+							    document.getElementById("blogUserId").value = userId;
+							    document.getElementById("active").value = active;
+							    document.getElementById("title").value = title;
+							    document.getElementById("imagePreview").src = imagePath;
+							    document.getElementById("content").value = content;
+							}
+							function resetBlogData() {
+							    document.getElementById("blogPostId").value = null;
+							    document.getElementById("publishedDate").value = null;
+							    document.getElementById("updatedDate").value = null;
+							    document.getElementById("blogUserId").value = null;
+							    document.getElementById("active").value = true;
+							    document.getElementById("title").value = null;
+							    document.getElementById("imagePreview").src = '/images/null-cover.jpg';
+							    document.getElementById("content").value = null;
+							}
+
+						</script>
+		            </div>
+                </div>
+
+                <!-- Recent Viewed Vendors Section -->
+                <div class="content-card content-section" id="recent-vendors">
+                    <div class="row">
+						<h3>Recently Viewed Vendors</h3>
+	                    <div class="col-md-4" th:each="vendor : ${searchedVendorList}">
+			                <div class="vendor-card">
+			                    <a th:href="@{/vendors/{id}(id=${vendor.vendorId.vendorId})}">
+			                        <div class="vendor-cover" th:style="'background-image: url(' + ${vendor.vendorId.coverImage} + ');'">
+			                            <div class="vendor-logo">
+			                                <img th:src="${(vendor.vendorId.logo!=null && vendor.vendorId.logo!='')? vendor.vendorId.logo : '/images/null-300300.jpg'}" alt="vendor logo">
+			                            </div>
+			                        </div>
+			                    </a>
+			                    <div class="vendor-info">
+			                        
+			                        <div class="vendor-contact-rating">
+			                            <a th:href="@{/vendors/{id}(id=${vendor.vendorId.vendorId})}"><h4 th:text="${vendor.vendorId.companyName}"></h4></a>
+			                            <a class="call-btn" th:text="${vendor.viewCount}"></a>
+			                        </div>
+			                    </div>
+			                    <span th:text="'Viewed On: ' + ${vendor.formattedViewDate}"></span>
+			                </div>
+			            </div>
+			            
+					</div>
+		            <div class="row">
+						<h3>Recently Contacted Vendors</h3>
+						<div class="col-md-7 col-sm-12 row" th:each="vendor : ${contactedVendorList}" style="margin-left:10px;border: 3px solid #000; padding: 10px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); background-color: #f9f9f9; height: auto; display: flex; align-items: center;">
+						    <div class="col-md-3 col-sm-3" style="width: 80px; height: 80px; border-radius: 50%; overflow: hidden; border: 3px solid #fff; display: flex; align-items: center; justify-content: center;">
+						        <img style="width: 100%; height: 100%; object-fit: cover;" th:src="${(vendor.vendorId.logo!=null && vendor.vendorId.logo!='')? vendor.vendorId.logo : '/images/null-300300.jpg'}" alt="vendor logo">
+						    </div>
+						    <div class="col-md-9 col-sm-9" style="display: flex; flex-direction: column; justify-content: center; padding-left: 15px;">
+						        <h3 th:text="${vendor.vendorId.companyName}" style="font-size: 16px; margin: 0; padding: 0; color: #333;"></h3>
+						        <span th:text="'Contacted On: ' + ${vendor.formattedContactDate} + ' | ' + ${vendor.formattedContactTime}" style="font-size: 14px; color: #666; margin-top: 5px;"></span>
+						    </div>
+						</div>
+					</div>
+                </div>
+
+                <!-- Profile Management Section -->
+                <div class="content-card content-section" id="profile-management">
+                    <h3>Profile Management</h3>
+                    <form th:action="@{/users}" th:object="${user}" method="post" class="row g-3" autocomplete="off">				        
+				        <input type="hidden" th:field="*{userId}" data-required="false">
+				        <input type="hidden" th:field="*{role}" data-required="false">
+				        <input type="hidden" th:field="*{gender}" data-required="false">
+				        <input type="hidden" th:field="*{status}" data-required="false">
+				        <input type="hidden" th:field="*{createBy}" data-required="false">
+				        <input type="hidden" th:field="*{createDate}" data-required="false">
+				        <input type="hidden" th:field="*{updateBy}" data-required="false">
+				        <input type="hidden" th:field="*{updateDate}" data-required="false">
+
+				        <div class="col-md-6">
+				            <div class="d-flex align-items-center mb-3">
+				                <label for="firstName" class="form-label me-2">First Name <span style="color:red;">*</span></label>
+				                <input type="text" class="form-control" id="firstName" th:field="*{firstName}" placeholder="First Name"  data-required="true">
+				            </div>
+				        </div>
+				        <div class="col-md-6">
+				            <div class="d-flex align-items-center mb-3">
+				                <label for="lastName" class="form-label me-2">Last Name</label>
+				                <input type="text" class="form-control" id="lastName" th:field="*{lastName}" placeholder="Last Name"  data-required="false">
+				            </div>
+				        </div>
+				        <div class="col-md-6">
+				            <div class="d-flex align-items-center mb-3">
+				                <label for="email" class="form-label me-2">Email <span style="color:red;">*</span></label>
+				                <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="Email"  data-required="true">
+				            </div>
+				        </div>
+				        <div class="col-md-6">
+				            <div class="d-flex align-items-center mb-3">
+				                <label for="mobile" class="form-label me-2">Mobile <span style="color:red;">*</span></label>
+				                <input type="text" class="form-control" id="mobile" th:field="*{mobile}" value="+94" placeholder="Mobile"  data-required="true">
+				            </div>
+				        </div>
+				        <div class="col-md-6">
+				            <div class="d-flex align-items-center mb-3">
+				                <label for="username" class="form-label me-2">Username</label>
+				                <input type="text" class="form-control" id="username" th:field="*{username}" placeholder="Username"  data-required="true" readonly>
+				            </div>
+				        </div>
+				        <div class="col-md-6">
+				            <div class="d-flex align-items-center mb-3">
+				                <label for="password" class="form-label me-2">New Password </label>
+				                <input type="password" class="form-control" id="password" name="password" placeholder="Password"  data-required="false">
+				            </div>
+				        </div>
+				        <div class="col-md-12" style="margin-top: 10px;">
+				            <div class="d-flex align-items-center mb-3">
+								<div class="text-left">
+				                  <button type="submit" class="btn btn-primary" onclick="validateForm(event)">Update Profile</button>
+				                  <button type="reset" class="btn btn-secondary">Cancel</button>
+				                </div>
+				                <div class="text-left">
+									<span class="error-message"></span>
+								</div>
+				            </div>
+				        </div>
+					</form>
+
+                </div>
+            </div>
+        </section>
+        
+        <script>
+	        // JavaScript to handle sidebar navigation
+	        document.addEventListener('DOMContentLoaded', function () {
+	            const sidebarLinks = document.querySelectorAll('.sidebar a');
+	            const sections = document.querySelectorAll('.content-section');
+	
+	            sidebarLinks.forEach(link => {
+	                link.addEventListener('click', function (e) {
+	                    e.preventDefault();
+	
+	                    // Remove active class from all links
+	                    sidebarLinks.forEach(l => l.classList.remove('active'));
+	                    // Add active class to clicked link
+	                    this.classList.add('active');
+	
+	                    // Hide all sections
+	                    sections.forEach(section => section.classList.remove('active'));
+	
+	                    // Show the clicked section
+	                    const target = this.getAttribute('data-target');
+	                    document.getElementById(target).classList.add('active');
+	                });
+	            });
+	        });
+	        
+	        function createWeddingPlan() {
+
+				const planNickName = document.getElementById('planNickName').value.trim();
+			    const errorElement = document.getElementById('planNickNameError');
+			
+			    if (planNickName === '') {
+			        errorElement.style.display = 'inline';
+			        errorElement.textContent = 'Please enter a valid plan nickname.';
+			        return false;
+			    } else if (planNickName.length < 3) {
+			        errorElement.style.display = 'inline';
+			        errorElement.textContent = 'Nickname should be at least 3 characters long.';
+			        return false;
+			    }
+			
+			    errorElement.style.display = 'none';
+			    
+			    const weddingPlanDto = {
+				    planId: document.getElementById("planId").value || null,
+				    userId: null,
+				    weddingTypeId: document.getElementById('weddingType').value,
+				    planNickName: document.getElementById('planNickName').value,
+				    budgetType: 'FIXED',
+				    estimatedTotal: parseFloat(document.getElementById('budget').value),
+				    location: document.getElementById('district').value,
+				    weddingDate: null
+				};
+				
+				const budgetBreakdowns = [];
+				document.querySelectorAll('#budgetBreakdownTable tbody tr').forEach(row => {
+				    const breakdownDto = {
+				        breakdownId: null,
+				        planId: weddingPlanDto.planId,
+				        categoryId: row.querySelector('.catName').getAttribute("data-category-id"),
+				        amount: parseFloat(row.querySelector('.amount').value),
+				        percentage: parseFloat(row.querySelector('.percentage').value)
+				    };
+				    budgetBreakdowns.push(breakdownDto);
+				});
+				
+				const dataToSend = {
+				    weddingPlan: weddingPlanDto,
+				    budgetBreakdowns: budgetBreakdowns
+				};
+				
+				const serializedData = encodeURIComponent(JSON.stringify(dataToSend));
+				const url = `/weddings/saveWeddingPlan?data=${serializedData}`;
+				var addPlan = false;
+				
+				fetch(url, {
+				    method: 'GET'
+				})
+				.then(response => response.json())
+				.then(data => {
+				    if (data.success) {
+						if(!document.getElementById("planId").value){
+							addPlan = true;
+						}
+				        document.getElementById("success-alert").style.display = 'block';
+				        document.getElementById("success-message").textContent = 'Wedding Plan saved successfully!';
+				        
+				        document.getElementById("planId").value = data.plan.planId; // Correct access to planId
+				        
+				        document.getElementById("error-alert").style.display = 'none';
+				        
+				        if(addPlan){
+							addNewPlan(data.plan);	
+						}
+				    } else {
+				        document.getElementById("error-alert").style.display = 'block';
+				        document.getElementById("error-message").textContent = 'Error saving Wedding Plan: ' + data.message;
+				        
+				        document.getElementById("success-alert").style.display = 'none';
+				    }
+				})
+				.catch(error => {
+				    console.error('Error:', error);
+				    
+				    document.getElementById("error-alert").style.display = 'block';
+				    document.getElementById("error-message").textContent = 'An unexpected error occurred. Please try again.';
+				    
+				    document.getElementById("success-alert").style.display = 'none';
+				});
+
+			}
+			
+			function addNewPlan(plan) {
+			    const myPlansContainer = document.getElementById('my-plans').querySelector('.row');
+			
+			    const newPlanDiv = document.createElement('div');
+			    newPlanDiv.classList.add('col-md-4');
+			    
+			    newPlanDiv.innerHTML = `
+			        <div class="vendor-card" id="plan-${plan.planId}">
+			            <a href="/weddings/weddingPlan/view/${plan.planId}" target="_blank">
+			                <div class="vendor-cover" style="background-image: url(images/wedding-plan-card-bg.jpg);">
+			                    <div class="vendor-info" style="position: absolute; margin: 10px; color: #fff;">
+			                        <div class="category-content" style="text-align: left;">
+			                            <h4 style="font-size: 3rem; margin: 0; color: #fff;">${plan.planNickName}</h4>
+			                            <h4 class="number-format" id="estimatedTotal-${plan.planId}" style="font-size: 1.6rem; margin: 0; color: #ffcc00;">${plan.estimatedTotal}</h4>
+			                        </div>
+			                    </div>
+			                </div>
+			            </a>
+			        </div>
+			    `;
+			    
+			    // Append the new plan div to the row
+			    myPlansContainer.appendChild(newPlanDiv);
+			
+			    // Format the number after adding the plan
+			    const estimatedTotalElement = document.getElementById(`estimatedTotal-${plan.planId}`);
+			    const estimatedTotal = parseFloat(estimatedTotalElement.textContent.replace(/,/g, ''));
+			    
+			    if (!isNaN(estimatedTotal)) {
+			        estimatedTotalElement.textContent = estimatedTotal.toLocaleString('en'); // Formats the number with commas
+			    }
+			}
+
+			// Function to format numbers with commas
+			function formatNumberWithCommas(number) {
+			    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+			}
+			
+			// Apply formatting on page load
+			document.addEventListener("DOMContentLoaded", function () {
+			    document.querySelectorAll(".number-format").forEach(element => {
+			        let numberValue;
+			
+			        if (element.tagName === "INPUT") {
+			            // For input fields, get the 'value' and format it
+			            numberValue = element.value;
+			            element.value = formatNumberWithCommas(numberValue);
+			        } else {
+			            // For other elements, get 'innerText' or 'innerHTML' and format it
+			            numberValue = element.innerText || element.innerHTML;
+			            element.innerText = formatNumberWithCommas(numberValue);
+			        }
+			    });
+			});
+
+	    </script>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

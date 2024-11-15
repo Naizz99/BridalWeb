@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+
+<head>
+    <title th:text="'Welcome to ' + #{system.title}"></title>
+	<style>
+		.vendor-gallery {
+		    display: flex;
+		    flex-wrap: wrap; 
+		    gap: 0;
+		    padding-top: 10%;
+		}
+		
+		.vendor-gallery img {
+		    max-width: 300px;
+		    max-height: 300px;
+		    height: auto;
+		    margin: 2px;
+		    padding: 0;
+		    box-sizing: border-box;
+		}
+		
+		.vendor-details{
+			padding-top: 10%;
+		}
+	</style>
+</head>
+<body>
+	<div layout:fragment="content" th:remove="tag">
+        <div class="container">
+            <div class="row">
+				
+				<div class="col-lg-10 col-md-10 col-sm-12 vendor-gallery" th:if="${#lists.size(weddingGallery) > 0}">
+				    <div th:each="image : ${weddingGallery}" class="card">
+						<img th:src="${image.image}" 
+					         alt="image" 
+					         th:if="${(image.image != null && image.image != '')}">
+					    <p sec:authorize="isAuthenticated()" th:if="${session.user.userId==image.weddingId.userId.userId}">
+		              		<a class="btn btn-outline-danger" th:href="@{/weddings/images/delete/{weddingId}(weddingId=${image.weddingGalleryId})}" onclick="return confirm('Are you sure?');">Remove</a>
+		      			</p>
+					</div>
+				</div>
+				
+				<div class="col-lg-2 col-md-2 col-sm-12 vendor-details">
+				    <div class="content-wrapper text-center">
+                        <div class="title-text">
+                            <span class="style-dot-left"></span>
+                            <h3 th:text="${wedding.name}"></h3>
+                            <h5 class="style-dot-right package-price" th:text="'LKR ' + ${wedding.budget}"></h5>
+							<span class="date"><i class="fa fa-calendar" aria-hidden="true"></i>&nbsp;<span th:text="${wedding.date}"></span></span>
+                        </div> 
+                        
+                        <div class="location">
+                            <span>
+								<i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;
+                            	<span th:text="${(wedding.location != null && wedding.location != '') ? wedding.location : ''}"></span>
+							</span>
+
+							<br>
+                                                                
+                            <span
+						          th:text="${wedding.weddingTypeId.typeName}">
+						    </span>
+
+                            
+                        </div> <!-- location -->
+                    </div> <!-- content-wrapper -->
+				</div>
+				
+            </div>
+        </div>
+	</div>
+</body>	
+</html>

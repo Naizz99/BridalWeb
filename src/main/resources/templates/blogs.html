@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+
+<head>
+    <title th:text="'Welcome to ' + #{system.title}"></title>
+
+</head>
+<body>
+	<div layout:fragment="content" th:remove="tag">
+		<section class="slider-section blog-section">
+	        <div class="fixed-image">
+	            <span class="item item-1" data-stellar-ratio="2"><img src="/images/slider/rose-1.png"></span>
+	
+	            <span class="item item-2" data-stellar-ratio="2"><img src="/images/slider/leaf.png"></span>
+	
+	            <span class="item item-3" data-stellar-ratio="2"><img src="/images/slider/rose-2.png"></span>
+	
+	            <span class="item item-4" data-stellar-ratio="2"><img src="/images/slider/rose-3.png"></span>
+	        </div>
+	        
+	        <div class="container">
+	            <div class="section-title text-center">
+	                <br><h2>Our blogs</h2>
+	            </div> 
+	            <div class="row">
+	                <div class="blog-part-one">
+	                    <div class="blog-one-wrapper">
+	                        <div class="post-wrapper item" th:each="blog : ${activeBlogs}">
+	                            <a th:href="@{/blogs/{id}(id=${blog.blogPostId})}"><img th:src="${blog.image}" alt="images"></a>
+	                            <div class="post-content">
+	                                <h4 th:text="${blog.title}"></h4>
+	                                <span class="link theme-color"><a th:href="@{/blogs/{id}(id=${blog.blogPostId})}">Read more</a></span>
+	                            </div>
+	                        </div> 
+	                    </div> 
+	                    
+	                </div> 
+	            </div>
+	        </div>
+	    </section>
+<!--	    <section class="blog-section">-->
+	        
+<!--	    </section> -->
+	
+	</div>
+</body>	
+</html>

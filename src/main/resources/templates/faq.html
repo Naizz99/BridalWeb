@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+
+<head>
+    <title th:text="'Welcome to ' + #{system.title}"></title>
+</head>
+<body>
+	<div layout:fragment="content" th:remove="tag">
+		<section class="slider-section" style="height:0%">
+	        <div class="fixed-image">
+	            <span class="item item-1" data-stellar-ratio="2"><img src="/images/slider/rose-1.png"></span>
+	
+	            <span class="item item-2" data-stellar-ratio="2"><img src="/images/slider/leaf.png"></span>
+	
+	            <span class="item item-3" data-stellar-ratio="2"><img src="/images/slider/rose-2.png"></span>
+	
+	            <span class="item item-4" data-stellar-ratio="2"><img src="/images/slider/rose-3.png"></span>
+	        </div>
+	        
+	    </section>
+	
+	    <section class="blog-section">
+                <div class="blog-divider-part">
+                    <div class="container">
+                        <div class="row">
+							<div class="col-md-2"></div>
+                            <div class="col-md-8">
+                                <div class="blog-left-bar">
+                                    <div class="blog-wrapper">
+										<div class="blog-wrapper">
+	                                        <div class="blog-content ml-45 mr-70 text-center" >
+	                                            <h3>Frequently Asked Questions</h3>
+	                                        </div> 
+	                                    </div>
+									</div>
+									<div class="comments-wrapper">
+                                        <div class="comment-respond" th:each="question : ${activeQuestions}" th:if="${question.question != null}">
+										    <ul class="media-lst">
+										        <li class="media">
+										            <a href="#" class="pull-left"><i class="fa fa-heart"></i></a>
+										            
+										            <div class="media-body">
+										                <h5 th:text="${question.question}"></h5>
+										            </div>
+										        </li>
+										
+										        <li class="media sub-comment">
+										            																							
+										            <div class="media-body">
+										                <h6 th:text="${question.answer}"></h6>
+										            </div>
+										        </li>
+										    </ul> 
+										</div>
+										
+                                    </div>
+                                </div> 
+                            </div> 
+                        </div>
+                    </div> 
+                </div>
+            </section> 
+
+	
+	</div>
+</body>	
+</html>

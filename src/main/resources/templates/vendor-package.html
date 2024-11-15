@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+
+<head>
+    <title th:text="'Welcome to ' + #{system.title}"></title>
+	<style>
+		.package-body{
+			padding-top: 10%;
+			position: relative;
+		}
+		.package-image{
+			padding: 2%;
+		}
+		.package-details{
+			padding: 2%;
+			text-align: center;
+		}
+		.package-name{
+			padding-top: 10px;
+			font-size: 40px;		
+		}
+		.package-price{
+			font-size: 30px;
+		}
+		ul{
+			font-size: 25px;
+			list-style-type: disc;
+		}
+		table{
+			margin-left:20%;
+			padding: 2%;
+			text-align: left;
+			font-size: 20px;
+		}
+		.package-description{
+			font-size: 20px;
+		}
+		
+		.vendor-link {
+		    text-decoration: none;
+		    color: inherit;
+		}
+		
+		.vendor-info-container {
+		    display: flex;
+		    align-items: center;
+		    justify-content: space-between;
+		    padding: 15px;
+		    border: 1px solid #ddd;
+		    border-radius: 8px;
+		    background-color: #f7b5d0;
+		    transition: background-color 0.3s;
+		}
+		
+		.vendor-info-container:hover {
+		    background-color: #f29dc0;
+		}
+		
+		/* Left side: Logo and Name */
+		.vendor-left {
+		    display: flex;
+		    align-items: center;
+		}
+		
+		.vendor-logo-container {
+		    flex: 0 0 50px; /* Adjust width as needed */
+		    margin-right: 15px;
+		}
+		
+		.vendor-logo {
+		    width: 100%;
+		    height: auto;
+		    border-radius: 50%;
+		}
+		
+		.vendor-name h3 {
+		    margin: 0;
+		    font-size: 2em;
+		    color: #333;
+		}
+		
+		/* Right side: Contact Details */
+		.vendor-details {
+		    text-align: right;
+		}
+		
+		.vendor-details span {
+		    margin: 3px 0;
+		    font-size: 0.95em;
+		    color: #555;
+		}
+
+
+
+		
+	</style>
+</head>
+
+<body  class="white-bg">
+	<div layout:fragment="content" th:remove="tag">
+		<div class="container full-wrapper">
+			
+			<div class="row package-body">
+				<div class="col-12">
+					<div th:if="${emailSent}" class="alert alert-success">
+					    <p th:text="${emailSent}"></p>
+					</div>
+				</div>
+				<br>
+				<a th:href="@{/vendors/{id}(id=${vendor.vendorId})}" class="vendor-link">
+				    <div class="vendor-info-container d-flex align-items-center justify-content-between">
+				        <!-- Left side: Logo and Name -->
+				        <div class="d-flex align-items-center vendor-left">
+				            <div class="vendor-logo-container">
+				                <img class="vendor-logo" th:src="${(vendor.logo != null && vendor.logo != '') ? vendor.logo : '/images/null-300300.jpg'}" alt="vendor logo">
+				            </div>
+				            <div class="vendor-name">
+				                <h3 th:text="${package.vendorId.companyName}"></h3>
+				            </div>
+				        </div>
+				        
+				        <!-- Right side: Contact Details -->
+				        <div class="vendor-details text-right">
+				            <span><span th:text="${package.vendorId.address != null && !package.vendorId.address.isEmpty() ? package.vendorId.address : ''}"></span></span><br>
+				            <span>
+	                            <span th:text="${package.vendorId.mobile1 != null && !package.vendorId.mobile1.isEmpty() ? package.vendorId.mobile1 : ''}"></span>
+	                            <span th:text="${package.vendorId.mobile2 != null && !package.vendorId.mobile2.isEmpty() ? ' | ' + package.vendorId.mobile2 : ''}"></span>
+	                            <span th:text="${package.vendorId.mobile3 != null && !package.vendorId.mobile3.isEmpty() ? ' | ' + package.vendorId.mobile3 : ''}"></span>
+	                        </span><br>
+	                        <span><span th:text="${package.vendorId.email != null && !package.vendorId.email.isEmpty() ? package.vendorId.email : ''}"></span></span>
+				        </div>
+				    </div>
+				</a>
+
+				<div class="col-lg-6 col-md-6 col-sm-12 package-image">
+				    <img th:src="${(package.packageImage != null && package.packageImage != '')? package.packageImage : '/images/null.jpg'}" 
+				         alt="image" width="100%">
+				</div>
+				
+				<div class="col-lg-6 col-md-6 col-sm-12 package-details">
+				    <div class="content-wrapper">
+                        <div class="title-text">
+                            <h3 th:text="${package.packageName}" id="packageName" class="package-name"></h3>
+                            <h5 class="style-dot-right package-price" th:text="'LKR ' + ${package.price}"></h5>
+                            <br>                         
+                            <table>
+					            <tr>
+					                <th></th>
+					                <th><h3>Features</h3></th>
+					            </tr>
+					            <tr th:each="feature : ${featuresList}">
+					                <td><i class="fa fa-heart" aria-hidden="true"></i> &nbsp;</td>
+					                <td th:text="${feature.trim()}"></td>
+					            </tr>
+					            
+					        </table>
+                        </div> 
+                        <br>
+                        
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+			                MAKE INQUIRY
+			            </button>
+			            <br><br>
+			            <div th:if="${vendor.whatsapp != null && vendor.whatsapp != ''}">
+						    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#whatsappMesageModel">
+						        Whatsapp
+						    </button>
+						</div>
+                    </div> <!-- content-wrapper -->
+				</div>			
+			</div>
+			
+			<div class="row">
+				<div class="col-12 package-description">
+					<p th:text="${package.description}"></p>
+				</div>
+			</div>
+			
+			<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+			  <div class="modal-dialog modal-dialog-centered" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			          <span aria-hidden="true">&times;</span>
+			        </button>
+			      </div>
+			      <form class="row g-3" th:action="@{/vendors/package/message/send}" th:object="${message}" id="contactForm" method="post" autocomplete="off">
+				      <div class="modal-body">
+			                <input type="hidden" class="form-control" th:value="${vendor.vendorId}" name="vendorId">
+			                <input type="hidden" class="form-control" th:value="${package.packageId}" name="packageId">
+			                <div class="col-md-12">
+			                  	<label for="message"></label>
+			                  	<div class="form-floating">
+									<textarea class="form-control" placeholder="Type a message..." name="message" id="emailMessage" style="height: 150px;" data-required="true"></textarea>
+	                  			</div>
+			                </div>
+				      </div>
+				      <div class="modal-footer">
+						   <div class="col-md-12 text-left" style="margin-top: 15px;">
+			                  <button type="submit" class="btn btn-primary" onclick="sendEmailMessage(event)"><i class="fa fa-envelope" aria-hidden="true"></i> Submit</button>
+			                </div>
+			                <div class="col-md-12 text-left" style="margin-bottom: 30px;">
+								<span class="error-message" id="error1"></span>
+							</div>
+				      </div>
+			       </form>  
+			    </div>
+			  </div>
+			</div>	
+			
+			<div class="modal fade" id="whatsappMesageModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+			  <div class="modal-dialog modal-dialog-centered" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			          <span aria-hidden="true">&times;</span>
+			        </button>
+			      </div>
+			      <form class="row g-3" th:action="@{/vendors/package/message/send}" th:object="${message}" id="contactFormwhatsapp" method="post" autocomplete="off">
+				      <div class="modal-body">
+			                <input type="hidden" class="form-control" th:value="${vendor.vendorId}" name="vendorId">
+			                <input type="hidden" class="form-control" th:value="${package.packageId}" name="packageId">
+			                <input type="hidden" class="form-control" id="mobile" th:value="${vendor.mobile1}">
+			                <div class="col-md-12">
+			                  	<label for="message"></label>
+			                  	<div class="form-floating">
+									<textarea class="form-control" placeholder="Type a message..." id="whatsappMessage" name="message" style="height: 150px;" data-required="true"></textarea>
+	                  			</div>
+			                </div>
+				      </div>
+				      <div class="modal-footer">
+						   <div class="col-md-12 text-left" style="margin-top: 15px;">
+			                  <button type="submit" class="btn btn-success" onclick="sendWhatsappMessage(event)"><i class="fa fa-whatsapp" aria-hidden="true"></i> Send</button>
+			                </div>
+			                <div class="col-md-12 text-left" style="margin-bottom: 30px;">
+								<span class="error-message" id="error2"></span>
+							</div>
+				      </div>
+			       </form>  
+			    </div>
+			  </div>
+			</div>	
+			<script>
+			    function sendEmailMessage(event) {
+			        event.preventDefault();
+			        const message = document.getElementById('emailMessage').value;
+			        if (!message) {
+			            document.getElementById("error1").innerText = "Message cannot be empty";
+			            return;
+			        }
+			        document.getElementById('emailMessage').value = "Hello! I found your profile on BridalWeb and am interested in your " + document.getElementById("packageName").innerHTML + ". Could you share more details? Thanks! \n\n" + message;
+					event.target.closest('form').submit();
+			    }
+			    function sendWhatsappMessage(event) {
+			        event.preventDefault();
+			        const mobile = document.getElementById('mobile').value;
+			        const message = "Hello! I found your profile on BridalWeb and am interested in your " + document.getElementById("packageName").innerHTML + ". Could you share more details? Thanks! \n\n" + document.getElementById('whatsappMessage').value;
+			        /*
+			        if (!mobile || !message) {
+			            document.getElementById("error2").innerText = "Message cannot be empty";
+			            return;
+			        }
+			        */
+			        const encodedMessage = encodeURIComponent(message);
+			        const whatsappUrl = `https://wa.me/${mobile}?text=${encodedMessage}`;
+			        window.open(whatsappUrl, '_blank');
+
+					event.target.closest('form').submit();
+			    }
+			</script>
+				
+		</div>
+	</div>
+</body>
+
+
+
+</html>

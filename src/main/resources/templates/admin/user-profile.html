@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{admin/fragments/layout}">
+
+<body>
+	<div layout:fragment="content" th:remove="tag">
+	<main id="main" class="main">
+
+	    <div class="pagetitle">
+	      <h1>Profile</h1>
+	      <nav>
+	        <ol class="breadcrumb">
+	          <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+	          <li class="breadcrumb-item active">Profile</li>
+	        </ol>
+	      </nav>
+	    </div>
+	
+	    <section class="section">
+	      <div class="row">
+	        <div class="col-lg-7">
+	
+	          <div class="card">
+	            <div class="card-body">
+	              <h5 class="card-title"></h5>
+	
+	              <form class="row g-3" th:action="@{/users/updateProfile}" th:object="${user}" id="userForm" method="post" autocomplete="off" enctype="multipart/form-data">
+
+				    <input type="hidden" class="form-control" id="userId" th:field="*{userId}">
+	                <div th:class="col-md-12">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="firstName" th:field="*{firstName}" placeholder="First Name" data-required="true">
+	                    <label for="firstName">First Name <span style="color:red;">*</span></label>
+	                  </div>
+	                </div>
+	                <div th:class="col-md-12">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="lastName" th:field="*{lastName}" placeholder="Last Name" data-required="true">
+	                    <label for="lastName">Last Name </label>
+	                  </div>
+	                </div>
+	                <div class="col-md-12">
+	                  <div class="form-floating">
+	                    <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="Email" data-required="true">
+	                    <label for="email">Email <span style="color:red;">*</span></label>
+	                  </div>
+	                </div>
+	                <div class="col-md-12">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="mobile" th:field="*{mobile}" value="+94" placeholder="Mobile" data-required="true">
+	                    <label for="mobile">Mobile<span style="color:red;">*</span></label>
+	                  </div>
+	                </div>
+	                <div class="col-md-12">
+					  <div class="form-floating mb-3">
+					    <select class="form-select" id="status" name="gender" aria-label="gender">
+					      <option value="MALE" th:selected="${user.gender.name() == 'MALE'}">MALE</option>
+					      <option value="FEMALE" th:selected="${user.gender.name() == 'FEMALE'}">FEMALE</option>
+					    </select>
+					    <label for="floatingSelect">Status</label>
+					  </div>
+					</div>
+	                <div class="col-md-12">
+	                  	<div class="form-floating">
+	                    	<input type="text" class="form-control" id="username" name="username" th:value="${user.username}" placeholder="Username" data-required="true" autocomplete="false" oninput="validateUsername(this)">
+	                    	<label for="username">Username <span style="color:red;">*</span></label>
+	                  	</div>
+	                  	<div class="text-left">
+							<span class="error-message"></span>
+						</div>
+	                </div>
+	                <div class="text-left">
+	                  <button type="submit" class="btn btn-primary" onclick="validateForm(event)">Submit</button>
+	                  <button type="reset" class="btn btn-secondary">Reset</button>
+	                </div>
+	                <div class="text-left">
+						<span class="error-message"></span>
+					</div>
+	              </form>
+	
+	            </div>
+	          </div>
+	
+	        </div>
+	        
+	        <div class="col-lg-5">
+	
+	          <div class="card">
+	            <div class="card-body">
+	              <h5 class="card-title"> Change Password</h5>
+	
+	              <form class="row g-3" th:action="@{/users/updatePassword}" id="passwordForm" method="post" autocomplete="off">
+					
+					<input type="hidden" class="form-control" id="userId" name="userId" th:value="${user.userId}">
+	                <div th:class="col-md-12">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="currentPassword" name="currentPassword" data-required="true">
+	                    <label for="currentPassword">Current Password <span style="color:red;">*</span></label>
+	                  </div>
+	                </div>
+	                <div th:class="col-md-12">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="newPassword" name="newPassword" data-required="true">
+	                    <label for="newPassword">New Password <span style="color:red;">*</span></label>
+	                  </div>
+	                </div>
+	                <div class="col-md-12">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="newPassword2" name="newPassword2" data-required="true">
+	                    <label for="newPassword2">Re-Type New Password<span style="color:red;">*</span></label>
+	                  </div>
+	                </div>
+	                <div class="text-left">
+	                  <button type="submit" class="btn btn-primary" onclick="validateForm(event)">Update</button>
+	                  <button type="reset" class="btn btn-secondary">Reset</button>
+	                </div>
+	                <div class="text-left">
+						<span class="error-message"></span>
+					</div>
+	              </form>
+	
+	            </div>
+	          </div>
+	
+	        </div>
+	        
+	      </div>
+	    </section>
+	  </main>
+	</div>
+</body>	
+</html>

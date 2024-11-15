@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+
+<head>
+    <title th:text="'Welcome to ' + #{system.title}"></title>
+
+</head>
+<body>
+	<div layout:fragment="content" th:remove="tag">
+		
+			<section class="invitation-section" >
+                <div class="fixed-caption">
+                    <div class="img-parallax item-1" data-stellar-ratio="2"><img src="/images/invite/rose-2.png"></div>
+                    <div class="img-parallax item-2" data-stellar-ratio="2"><img src="/images/invite/rose-1.png"></div>
+                    <div class="img-parallax item-3" data-stellar-ratio="2"><img src="/images/invite/leaf.png"></div>
+                </div>
+
+                <div class="invitation-head text-center">
+                </div> <!-- invitation-head -->
+                
+
+                <div class="wedding-address text-center white-color">
+                    <div class="container">
+                        <div class="row">
+                            <div>
+								<blockquote>
+	                                <p th:text="${settings.aboutUs!=null? settings.aboutUs : ''}"></p>
+	                            </blockquote>
+                            </div> <!-- story-wrapper -->
+                        </div>
+                    </div>
+                </div> <!-- wedding-address -->
+            </section> <!-- blog-slider-section -->
+            
+
+	</div>
+</body>	
+</html>

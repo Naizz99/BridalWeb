@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<style>
+		footer {
+		    background-color: #2d2d2d;
+		    color: white;
+		    padding: 40px 0;
+		    font-family: 'Roboto', sans-serif;
+		}
+		
+		.footer-container h5 {
+		    color: #f8f9fa;
+		    margin-bottom: 15px;
+		    font-size: 18px;
+		    font-weight: bold;
+		}
+		
+		.footer-description p {
+		    font-size: 14px;
+		    line-height: 1.8;
+		}
+		
+		.footer-contact {
+		    text-align: center;
+		}
+		
+		.footer-contact .footer-email,
+		.footer-contact .footer-mobile {
+		    font-size: 14px;
+		    margin-bottom: 10px;
+		}
+		
+		.footer-contact i {
+		    margin-right: 10px;
+		    color: #f8f9fa;
+		}
+		
+		.social-media {
+		    margin-top: 10px;
+		}
+		
+		.social-media .social-icon {
+		    display: inline-block;
+		    margin: 0 10px;
+		    font-size: 20px;
+		    text-decoration: none;
+		}
+		
+		.footer-bottom {
+		    background-color: #1a1a1a;
+		    color: #f1f1f1;
+		    padding: 15px 0;
+		    margin-top: 20px;
+		    font-size: 14px;
+		}
+		
+		.footer-bottom p {
+		    margin: 0;
+		}
+
+	</style>
+</head>
+<body>
+    <th:block th:fragment="footer">
+        <footer style="background-color: #2d2d2d; color: white; padding: 40px 0;">
+            <!-- Footer Main Part -->
+            <div class="footer-container container">
+                <div class="row">
+                    <!-- Footer Logo and Description -->
+                    <div class="col-md-4 mb-4 mb-md-0">
+                        <div class="footer-logo text-center text-md-left">
+                            <img th:src="${settings.systemLogo}" alt="Logo" style="max-width: 150px;" th:if="${(settings.systemLogo!=null && settings.systemLogo!='')}">
+                        </div>
+                        <div class="footer-description text-center text-md-left mt-3">
+                            <p th:text="${settings.footerDescription}" style="font-size: 14px; line-height: 1.8;">
+                                Your one-stop destination for the perfect wedding experience. Discover top vendors, expert tips, and everything you need to make your big day unforgettable.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Footer Contact Information -->
+                    <div class="col-md-4 text-center">
+                        <h5>Contact Us</h5>
+                        <div class="footer-contact">
+                            <div class="footer-email">
+                                <i class="fa fa-envelope"></i> 
+                                <a th:href="'mailto:' + ${settings.email1}" th:text="${settings.email1}" style="color: #f8f9fa;"></a>
+                            </div>
+                            <div class="footer-email mt-2">
+                                <i class="fa fa-envelope"></i> 
+                                <a th:href="'mailto:' + ${settings.email2}" th:text="${settings.email2}" style="color: #f8f9fa;"></a>
+                            </div>
+                            <div class="footer-mobile mt-3">
+                                <i class="fa fa-phone"></i> 
+                                <span th:text="${settings.mobile1}"></span>
+                            </div>
+                            <div class="footer-mobile mt-2">
+                                <i class="fa fa-phone"></i> 
+                                <span th:text="${settings.mobile2}"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer Social Media -->
+                    <div class="col-md-4 text-center">
+                        <h5>Follow Us</h5>
+                        <div class="social-media">
+                            <a th:href="${settings.facebook}" class="social-icon" style="color: #f8f9fa;">
+                                <i class="fa fa-facebook-f"></i>
+                            </a>
+                            <a th:href="${settings.instagram}" class="social-icon" style="color: #f8f9fa;">
+                                <i class="fa fa-instagram"></i>
+                            </a>
+                            <a th:href="${settings.twitter}" class="social-icon" style="color: #f8f9fa;">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                            <!-- Add more social media icons as needed -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Bottom Part -->
+            <div class="footer-bottom text-center py-3 mt-4" style="background-color: #1a1a1a;">
+                <p th:text="'© 2024 ' + ${settings.systemName}" style="margin-bottom: 0; color: #f1f1f1;"></p>
+            </div>
+        </footer>
+    </th:block>
+</body>
+</html>

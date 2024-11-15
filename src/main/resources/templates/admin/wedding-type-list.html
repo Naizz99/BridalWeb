@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{admin/fragments/layout}">
+
+<body>
+	<div layout:fragment="content" th:remove="tag">
+	<main id="main" class="main">
+
+	    <div class="pagetitle">
+	      <h1>Wedding Types</h1>
+	      <nav>
+	        <ol class="breadcrumb">
+	          <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+	          <li class="breadcrumb-item active">Wedding Types</li>
+	        </ol>
+	      </nav>
+	    </div>
+	
+	    <section class="section">
+	      <div class="row">
+	        <div class="col-lg-12">
+	
+			<a type="button" class="btn btn-primary" th:href="@{/weddings/types/new}">Add New</a> <br><br>
+	          <div class="card">
+	            <div class="card-body">
+				  <div class="toast success" th:if="${message}" th:text="${message}" th:classappend="${message} ? 'show' : ''"></div>
+				  <div class="toast error" th:if="${error}" th:text="${error}" th:classappend="${error} ? 'show' : ''"></div>
+				  
+				  <table class="table datatable">
+	                <thead>
+	                  <tr>
+	                    <th scope="col">#</th>
+	                    <th scope="col">Name</th>
+	                    <th scope="col">Image</th>
+	                    <th scope="col">Description</th>
+	                    <th scope="col">Status</th>
+	                    <th>Actions</th>
+	                  </tr>
+	                </thead>
+	                <tbody>
+	                  <tr th:each="type : ${weddingTypes}">
+	                    <th scope="row" th:text="${type.weddingTypeId}"></th>
+	                    <td th:text="${type.typeName}"></td>
+	                    <td><img th:src="${type.image}" th:alt="${type.weddingTypeId}" width="100px" height="100px"></td>
+	                    <td><span th:text="${type.description.length() > 20} ? ${type.description.substring(0, 20)} + '...' : ${type.description}"></span></td>
+	                    <td th:text="${type.active? 'ACTIVE' : 'DEACTIVE'}"></td>
+	                    <td>
+	                        <a type="button" class="btn btn-primary" th:href="@{/weddings/types/edit/{id}(id=${type.weddingTypeId})}">Edit</a> |
+	                        <a type="button" class="btn btn-secondary" th:href="@{/weddings/types/delete/{id}(id=${type.weddingTypeId})}" onclick="return confirm('Are you sure?');">Delete</a>
+	                    </td>
+	                  </tr>
+	                </tbody>
+	              </table>
+                            	
+	            </div>
+	          </div>
+	
+	        </div>
+	      </div>
+	    </section>
+	
+	  </main>
+	</div>
+</body>	
+</html>

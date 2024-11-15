@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+
+<head>
+    <title th:text="'Welcome to ' + #{system.title}"></title>
+
+</head>
+<body>
+	<div layout:fragment="content" th:remove="tag">
+		<section class="slider-section" style="height:0%">
+	        <div class="fixed-image">
+	            <span class="item item-1" data-stellar-ratio="2"><img src="/images/slider/rose-1.png"></span>
+		            <span class="item item-11" data-stellar-ratio="2"><img src="/images/slider/rose-1.png"></span>
+		
+		            <span class="item item-2" data-stellar-ratio="2"><img src="/images/slider/leaf.png"></span>
+		            <span class="item item-22" data-stellar-ratio="2"><img src="/images/slider/leaf.png"></span>
+		            <span class="item item-222" data-stellar-ratio="2"><img src="/images/slider/leaf.png"></span>
+		            <span class="item item-2222" data-stellar-ratio="2"><img src="/images/slider/leaf.png"></span>
+		
+		            <span class="item item-3" data-stellar-ratio="2"><img src="/images/slider/rose-2.png"></span>
+		            <span class="item item-33" data-stellar-ratio="2"><img src="/images/slider/rose-2.png"></span>
+		            <span class="item item-333" data-stellar-ratio="2"><img src="/images/slider/rose-2.png"></span>
+		            <span class="item item-3333" data-stellar-ratio="2"><img src="/images/slider/rose-2.png"></span>
+		            <span class="item item-33333" data-stellar-ratio="2"><img src="/images/slider/rose-2.png"></span>
+		
+		            <span class="item item-4" data-stellar-ratio="2"><img src="/images/slider/rose-3.png"></span>
+		            <span class="item item-44" data-stellar-ratio="2"><img src="/images/slider/rose-3.png"></span>
+		            <span class="item item-444" data-stellar-ratio="2"><img src="/images/slider/rose-3.png"></span>
+	        </div>
+	        
+	    </section>
+	
+	    <section class="blog-section">
+                <div class="blog-divider-part">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="blog-left-bar">
+                                    <div class="blog-wrapper">
+                                        <div class="blog-caption-single mr-70">
+                                            <img th:src="${blog.image}" alt="images">
+                                        </div> 
+
+                                        <div class="blog-content ml-45 mr-70">
+                                            <!--<span class="tag white-color link-color-bg">Wedding</span>-->
+											<div sec:authorize="isAuthenticated()">
+												<span class="tag" title="Liked" th:if="${liked}"><a th:href="@{/blogs/liked/{id}(id=${blog.blogPostId})}"><i class="fa fa-heart-fill" style="font-size: 30px;"></i></a></span>
+												<span class="tag" title="Like" th:if="${!liked}"><a th:href="@{/blogs/liked/{id}(id=${blog.blogPostId})}"><i class="fa fa-heart" style="font-size: 30px;"></i></a></span>
+											</div>
+
+                                            <h3 th:text="${blog.title}"></h3>
+                                            <span class="small-text" th:text="${blog.publishedDate}"></span>
+
+                                            <div class="content-box mt-20">
+                                                <p th:text="${blog.content}"></p>
+                                            </div> 
+                                            
+                                            <h5 th:text="' ~ ' + ${(blog.userId.firstName != null)? blog.userId.firstName : ''} + ' ' + ${(blog.userId.lastName != null)? blog.userId.lastName : ''} + ' ~ '"></h5>
+                                        </div> 
+                                    </div> 
+
+                                    <hr>
+
+                                    <div class="widget ml-45 mr-70">
+                                        
+                                    </div>
+                                    <div class="comments-wrapper ml-45 mr-70">
+										<div class="contact-form-two" sec:authorize="isAuthenticated()">
+                                            <div class="blog-contact-form">
+                                                <div class="">
+                                                    <form class="form-horizontal" th:action="@{/blogs/comment}" th:object="${newComment}" method="post" autocomplete="off">
+														<input type="hidden" name="blogPostId" th:field="*{blogPostId}">
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <textarea class="form-control border border-primary" name="content" th:field="*{content}" placeholder="Post a comment..." rows="2"></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group text-right">
+                                                            <button type="submit" class="subscribeBtn btn btn-primary">Post now  <i class="fa fa-angle-right" aria-hidden="true"></i></button>
+                                                        </div>
+                                                    </form>
+                                                </div> 
+                                            </div>
+                                        </div>
+                                        <h3>Comments</h3>
+
+                                        <div class="comment-respond" th:each="comment : ${commentList}" th:if="${comment.parentCommentId == null}">
+										    <ul class="media-lst">
+										        <li class="media">
+										            <a href="#" class="pull-left"><div class="comment-avater"><span th:text="${#strings.substring(comment.userId.firstName, 0, 1)}"></span></div></a>
+										            
+										            <div class="media-body">
+										                <h5 th:text="${(comment.userId.firstName != null)? comment.userId.firstName : ''} + ' ' + ${(comment.userId.lastName != null)? comment.userId.lastName : ''}"></h5>
+										                <time th:text="${comment.postedDate}"></time>
+										                <p th:text="${comment.content}"></p>
+										                <a class="comment-reply text-danger" th:href="@{/blogs/comment/delete/{id}(id=${comment.blogCommentId})}" onclick="return confirm('Are you sure?');" sec:authorize="isAuthenticated()" th:if="${session.user.userId==comment.userId.userId}">Delete</a>
+										                <a class="comment-reply" href="javascript:void(0);" onclick="(this.nextElementSibling.style.display === 'none')? this.nextElementSibling.style.display = 'block' : this.nextElementSibling.style.display = 'none';" sec:authorize="isAuthenticated()">Reply</a>
+										                
+									                    <div class="reply-form" style="display: none;">
+									                        <form class="form-horizontal" th:action="@{/blogs/comment}" method="post">
+									                            <input type="hidden" name="blogPostId" th:value="${comment.blogPostId.blogPostId}">
+									                            <input type="hidden" name="parentCommentId" th:value="${comment.blogCommentId}">
+									                            <textarea class="form-control" name="content" placeholder="Reply to this comment..." rows="2"></textarea>
+									                            <button type="submit" class="btn btn-primary">Post now</button>
+									                        </form>
+									                    </div>
+										            </div>
+										        </li>
+										
+										        <li class="media sub-comment" 
+										            th:each="subComment : ${subCommentList}"
+										            th:if="${subComment.parentCommentId.blogCommentId == comment.blogCommentId}">
+										            													
+										            <a href="#" class="pull-left"><div class="comment-avater"><span th:text="${#strings.substring(subComment.userId.firstName, 0, 1)}"></span></div></a>
+										
+										            <div class="media-body">
+										                <h5 th:text="${(subComment.userId.firstName != null)? subComment.userId.firstName : ''} + ' ' + ${(subComment.userId.lastName != null)? subComment.userId.lastName : ''}"></h5>
+										                <time th:text="${subComment.postedDate}"></time>
+										                <p th:text="${subComment.content}"></p>
+										                <a class="comment-reply text-danger" th:href="@{/blogs/comment/delete/{id}(id=${subComment.blogCommentId})}" onclick="return confirm('Are you sure?');" sec:authorize="isAuthenticated()" th:if="${session.user.userId==subComment.userId.userId}">Delete</a>
+										                <a class="comment-reply" href="javascript:void(0);" onclick="(this.nextElementSibling.style.display === 'none')? this.nextElementSibling.style.display = 'block' : this.nextElementSibling.style.display = 'none';" sec:authorize="isAuthenticated()">Reply</a>
+									                    
+									                    <div class="reply-form" style="display: none;">
+									                        <form class="form-horizontal" th:action="@{/blogs/comment}" method="post">
+																<input type="hidden" name="blogPostId" th:value="${comment.blogPostId.blogPostId}">
+									                            <input type="hidden" name="parentCommentId" th:value="${comment.blogCommentId}">
+									                            <textarea class="form-control" name="content" placeholder="Reply to this comment..." rows="2"></textarea>
+									                            <button type="submit" class="btn btn-primary">Post now</button>
+									                        </form>
+									                    </div>
+										            </div>
+										        </li>
+										    </ul> 
+										</div>
+										
+                                    </div>
+
+                                </div> 
+                            </div> 
+                        </div>
+                    </div> 
+                </div>
+            </section> 
+				
+	
+	</div>
+</body>	
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title th:text="'Login - ' + #{system.title}"></title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="/images/favicon.png" rel="icon">
+  <link href="admin/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="admin/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="admin/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="admin/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="admin/vendor/quill/quill.snow.css" rel="stylesheet">
+  <link href="admin/vendor/quill/quill.bubble.css" rel="stylesheet">
+  <link href="admin/vendor/remixicon/remixicon.css" rel="stylesheet">
+  <link href="admin/vendor/simple-datatables/style.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="admin/css/style.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons from CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+	
+</head>
+
+<body>
+
+  <main>
+    <div class="container">
+
+      <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+
+              <div class="d-flex justify-content-center py-4">
+                <a href="/index" class="logo d-flex align-items-center w-auto">
+                  <img src="/images/favicon.png" alt="">
+                  <span class="d-none d-lg-block">BridalWeb</span>
+                </a>
+              </div><!-- End Logo -->
+
+              <div class="card mb-3">
+
+                <div class="card-body">
+					<div th:if="${param.error}">
+						<div class="alert alert-danger">Invalid Details. Something went wrong.</div>
+					</div>
+                  <div class="pt-4 pb-2">
+                    <h5 class="card-title text-center pb-0 fs-4">Create an Account</h5>
+                    <p class="text-center small">Enter your details to create account</p>
+                  </div>
+
+                  <form class="row g-3 needs-validation" th:action="@{/users}" th:object="${user}" method="post" novalidate>
+                    
+                    <input type="hidden" th:field="*{userId}" data-required="false">
+			        <input type="hidden" th:field="*{role}" data-required="false">
+			        <input type="hidden" th:field="*{status}" data-required="false">
+			        <input type="hidden" th:field="*{createBy}" data-required="false">
+			        <input type="hidden" th:field="*{createDate}" data-required="false">
+			        <input type="hidden" th:field="*{updateBy}" data-required="false">
+			        <input type="hidden" th:field="*{updateDate}" data-required="false">
+			        
+                    <div class="col-12">
+                      <label for="firstName" class="form-label">First Name <span style="color:red;">*</span></label>
+                      <input type="text" name="firstName" class="form-control" required>
+                      <div class="invalid-feedback">Please, enter your first name!</div>
+                    </div>
+                    
+                    <div class="col-12">
+                      <label for="lastName" class="form-label">Last Name</label>
+                      <input type="text" name="lastName" class="form-control">
+                    </div>
+
+                    <div class="col-12">
+                      <label for="email" class="form-label">Email <span style="color:red;">*</span></label>
+                      <input type="email" name="email" class="form-control" required>
+                      <div class="invalid-feedback">Please enter a valid email adddress!</div>
+                    </div>
+                    
+                    <div class="col-12">
+                      <label for="mobile" class="form-label">Mobile</label>
+                      <input type="text" id="mobile" name="mobile" class="form-control">
+                      <div class="invalid-feedback">Please enter a valid mobile number!</div>
+                    </div>
+                    
+                    <div class="col-12">
+                      <label for="gender" class="form-label">Gender</label>
+                      <select class="form-select" name="gender" aria-label="gender">
+					      <option value="MALE" selected>MALE</option>
+					      <option value="FEMALE">FEMALE</option>
+					  </select>
+                    </div>
+
+                    <div class="col-12">
+                      <label for="username" class="form-label">Username <span style="color:red;">*</span></label>
+<!--                      <div class="input-group has-validation">-->
+<!--                        <span class="input-group-text" id="inputGroupPrepend">@</span>-->
+<!--                        <input type="text" id="username" name="username" class="form-control" oninput="validateUsername(this)" required>-->
+<!--                        <div class="invalid-feedback">Please choose a username.</div>-->
+<!--                      </div>-->
+                      	<div class="input-group form-floating">
+							<span class="input-group-text" id="inputGroupPrepend">@</span>
+	                    	<input type="text" class="form-control" id="username" name="username"  autocomplete="false" data-valid="false" oninput="validateUsername(this)">
+	                  	</div>
+	                  	<div class="text-left">
+							<span class="error-message"></span>
+						</div>
+                    </div>
+
+                    <div class="col-12">
+                      <label for="password" class="form-label">Password <span style="color:red;">*</span></label>
+                      <input type="password" name="password" class="form-control" required>
+                      <div class="invalid-feedback">Please enter your password!</div>
+                    </div>
+
+<!--                    <div class="col-12">-->
+<!--                      <div class="form-check">-->
+<!--                        <input class="form-check-input" name="terms" type="checkbox" value="" id="acceptTerms" required>-->
+<!--                        <label class="form-check-label" for="acceptTerms">I agree and accept the <a href="#">terms and conditions</a></label>-->
+<!--                        <div class="invalid-feedback">You must agree before submitting.</div>-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                    <div class="col-12">-->
+<!--                      <button class="btn btn-primary w-100" type="submit" onclick="validateForm(event)">Create Account</button>-->
+<!--                    </div>-->
+                    <div class="text-left">
+	                  <button type="submit" class="btn btn-primary w-100" onclick="validateForm(event)">Create Account</button>
+	                </div>
+	                <div class="text-left">
+						<span class="error-message"></span>
+					</div>
+	                
+                    <div class="col-12">
+                      <p class="small mb-0">Already have an account? <a href="/login">Sign in</a></p>
+                    </div>
+                  </form>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </main><!-- End #main -->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="admin/vendor/apexcharts/apexcharts.min.js"></script>
+  <script src="admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="admin/vendor/chart.js/chart.min.js"></script>
+  <script src="admin/vendor/echarts/echarts.min.js"></script>
+  <script src="admin/vendor/quill/quill.min.js"></script>
+  <script src="admin/vendor/simple-datatables/simple-datatables.js"></script>
+  <script src="admin/vendor/tinymce/tinymce.min.js"></script>
+  <script src="admin/vendor/php-email-form/validate.js"></script>
+  <script src="js/jquery.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="admin/js/main.js"></script>
+	
+</body>
+
+</html>

@@ -1,0 +1,12 @@
+{"properties": [
+  {
+    "name": "system.title",
+    "type": "java.lang.String",
+    "description": "A description for 'system.title'"
+  },
+  {
+    "name": "system.title1",
+    "type": "java.lang.String",
+    "description": "A description for 'system.title1'"
+  }
+]}

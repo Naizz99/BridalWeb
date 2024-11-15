@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{admin/fragments/layout}">
+
+<body>
+	<div layout:fragment="content" th:remove="tag">
+	<main id="main" class="main">
+
+	    <div class="pagetitle">
+	      <h1>Service Categories</h1>
+	      <nav>
+	        <ol class="breadcrumb">
+	          <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+	          <li class="breadcrumb-item">Vendors</li>
+	          <li class="breadcrumb-item active">Service Categories</li>
+	        </ol>
+	      </nav>
+	    </div>
+	
+	    <section class="section">
+	      <div class="row">
+	        <div class="col-lg-12">
+	
+			<a type="button" class="btn btn-primary" th:href="@{/vendors/categories/new}">Add New</a> <br><br>
+	          <div class="card">
+	            <div class="card-body">
+				  <div class="toast success" th:if="${message}" th:text="${message}" th:classappend="${message} ? 'show' : ''"></div>
+				  <div class="toast error" th:if="${error}" th:text="${error}" th:classappend="${error} ? 'show' : ''"></div>
+				  
+				  <table class="table datatable">
+	                <thead>
+	                  <tr>
+	                    <th scope="col">#</th>
+	                    <th scope="col">Name</th>
+	                    <th scope="col">Image</th>
+	                    <th scope="col">Description</th>
+	                    <th scope="col">Status</th>
+	                    <th>Actions</th>
+	                  </tr>
+	                </thead>
+	                <tbody>
+	                  <tr th:each="cat : ${categories}">
+	                    <th scope="row" th:text="${cat.categoryId}"></th>
+	                    <td th:text="${cat.typeName}"></td>
+	                    <td><img th:src="${cat.image}" th:alt="${cat.categoryId}" width="100px" height="100px"></td>
+	                    <td><span th:text="${cat.description.length() > 20} ? ${cat.description.substring(0, 20)} + '...' : ${cat.description}"></span></td>
+	                    <td th:text="${cat.active? 'ACTIVE' : 'DEACTIVE'}"></td>
+	                    <td>
+	                        <a type="button" class="btn btn-primary" th:href="@{/vendors/categories/edit/{id}(id=${cat.categoryId})}">Edit</a> |
+	                        <a type="button" class="btn btn-secondary" th:href="@{/vendors/categories/delete/{id}(id=${cat.categoryId})}" onclick="return confirm('Are you sure?');">Delete</a>
+	                    </td>
+	                  </tr>
+	                </tbody>
+	              </table>
+                            	
+	            </div>
+	          </div>
+	
+	        </div>
+	      </div>
+	    </section>
+	
+	  </main>
+	</div>
+</body>	
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	<th:block th:fragment="sidebar">
+		<!-- ======= Sidebar ======= -->
+	  <aside id="sidebar" class="sidebar">
+	
+	    <ul class="sidebar-nav" id="sidebar-nav" sec:authorize="isAuthenticated()">
+	
+		  <li class="nav-item">
+	        <a class="nav-link collapsed" href="/dashboard">
+	          <i class="bi bi-grid"></i>
+	          <span>Dashboard</span>
+	        </a>
+	      </l>
+	      
+	      <li class="nav-item" th:if="${session.user.role.name() == 'CUSTOMER'}">
+	        <a class="nav-link collapsed" href="/dashboard">
+	          <i class="bi bi-calendar2-heart"></i>
+	          <span>Wedding Planing</span>
+	        </a>
+	      </l>
+	      
+	      <li class="nav-item" th:if="${(session.user.role.name() == 'ADMIN') || (session.user.role.name() == 'CUSTOMER')}">
+	        <a class="nav-link collapsed" href="/vendors">
+	          <i class="bi bi-building-fill-gear"></i>
+	          <span>Vendors</span>
+	        </a>
+	      </li>
+	      
+	      <li class="nav-item" th:if="${session.user.role.name() == 'VENDOR'}">
+	        <a class="nav-link collapsed" href="/vendors/profile">
+	          <i class="bi bi-building-fill-gear"></i>
+	          <span>Company Profile</span>
+	        </a>
+	      </li>
+	      
+	      <li class="nav-item" th:if="${session.user.role.name() == 'VENDOR'}">
+	        <a class="nav-link collapsed" href="/vendors/profile/views">
+	          <i class="bi bi-eye"></i>
+	          <span>Profile Views</span>
+	        </a>
+	      </li>
+	      
+	      <li class="nav-item" th:if="${session.user.role.name() == 'VENDOR'}">
+	        <a class="nav-link collapsed" href="/vendors/profile/ratings">
+	          <i class="bi bi-star-half"></i>
+	          <span>Ratings</span>
+	        </a>
+	      </li>
+	      
+	      <li class="nav-item" th:if="${session.user.role.name() == 'VENDOR'}">
+	        <a class="nav-link collapsed" href="/vendors/profile/messages">
+	          <i class="bi bi-chat-dots"></i>
+	          <span>Messages</span>
+	        </a>
+	      </li>
+	      
+	      <li class="nav-item" th:if="${session.user.role.name() == 'ADMIN'}">
+	        <a class="nav-link collapsed" href="/users/customers">
+	          <i class="bi bi-person-heart"></i>
+	          <span>Customers</span>
+	        </a>
+	      </li>
+	      
+	      <li class="nav-item" th:if="${session.user.role.name() == 'VENDOR'}">
+	        <a class="nav-link collapsed" href="/vendors/profile/packages">
+	          <i class="bi bi-box2-heart"></i>
+	          <span>Packages</span>
+	        </a>
+	      </li>
+	      
+	      <li class="nav-item" th:if="${session.user.role.name() == 'VENDOR'}">
+	        <a class="nav-link collapsed" href="/vendors/profile/gallery">
+	          <i class="bi bi-images"></i>
+	          <span>Gallerys</span>
+	        </a>
+	      </li>
+	      
+	      <li class="nav-item" th:if="${(session.user.role.name() == 'ADMIN') || (session.user.role.name() == 'CUSTOMER')}">
+	        <a class="nav-link collapsed" href="/weddings">
+	          <i class="bi bi-postcard-heart"></i>
+	          <span>Weddings</span>
+	        </a>
+	      </li>
+	      
+	      <li class="nav-item" th:if="${session.user.role.name() == 'ADMIN'}">
+	        <a class="nav-link collapsed" href="/events">
+	          <i class="bi bi-calendar-x-fill"></i>
+	          <span>Events</span>
+	        </a>
+	      </li>
+	      
+	      <li class="nav-item">
+	        <a class="nav-link collapsed" href="/blogs">
+	          <i class="bi bi-journal-text"></i>
+	          <span>Blogs</span>
+	        </a>
+	      </li>
+	      
+	      <li class="nav-item" th:if="${session.user.role.name() == 'ADMIN'}">
+	        <a class="nav-link collapsed" href="/messages">
+	          <i class="bi bi-chat-left-heart"></i>
+	          <span>Messages</span>
+	        </a>
+	      </li>
+	      
+	      <li class="nav-item" th:if="${session.user.role.name() == 'ADMIN'}">
+	        <a class="nav-link collapsed" href="/faq">
+	          <i class="bi bi-patch-question"></i>
+	          <span>FAQ</span>
+	        </a>
+	      </li>
+	      
+	      <li class="nav-item" th:if="${session.user.role.name() == 'ADMIN'}">
+	        <a class="nav-link collapsed" href="/settings">
+	          <i class="bi bi-gear"></i>
+	          <span>Settings</span>
+	        </a>
+	      </li>
+	      
+	      <li class="nav-item" th:if="${session.user.role.name() == 'ADMIN'}">
+	        <a class="nav-link collapsed" href="/partners">
+	          <i class="bi bi-person-fill-gear"></i>
+	          <span>Partners</span>
+	        </a>
+	      </li>
+	      
+	      <li class="nav-item" th:if="${session.user.role.name() == 'ADMIN'}">
+	        <a class="nav-link collapsed" href="/users/admins">
+	          <i class="bi bi-people"></i>
+	          <span>Admins</span>
+	        </a>
+	      </li>
+	
+	    </ul>
+	
+	  </aside><!-- End Sidebar-->
+
+	</th:block>
+</body>	
+</html>

@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+
+<head>
+    <title th:text="'Welcome to ' + #{system.title}"></title>
+	<style>
+		.vendor-header {
+		    position: relative;
+		}
+		
+		.vendor-sub-header{
+			background: rgba(0, 0, 0, 0.3);
+			width:100%
+		}
+		
+		.vendor-body{
+			padding: 3% 8%;
+		}
+		
+		
+		
+		.vendor-logo {
+		    position: absolute;
+		    bottom: 100px;
+		    left: 20px;
+		    width: 15%;
+		    height: auto;
+		}
+		
+		.vendor-name {
+		    position: absolute;
+		    bottom: 20px;
+		    left: 20px;
+		    width: 100%;
+		    color: white;
+		    font-size: 60px;
+		}
+		
+		.vendor-cat{
+			color: black;
+			font-size: 25px;
+		}
+		
+		.vendor-gallery {
+		    display: flex;
+		    flex-wrap: wrap; 
+		    gap: 0;
+		}
+		
+		.vendor-gallery img {
+		    max-width: 300px;
+		    max-height: 300px;
+		    height: auto;
+		    margin: 2px;
+		    padding: 0;
+		    box-sizing: border-box;
+		}
+		
+		.vendor-packages{
+			padding: 3% 8%;
+		}
+				
+		.packages-list {
+		    display: flex;
+		    flex-wrap: wrap;
+		    gap: 20px;
+		}
+		
+		.package-item {
+		    position: relative;
+		    width: 300px;
+		    max-width: 100%;
+		    margin-bottom: 20px;
+		    overflow: hidden;
+		    border-radius: 10px;
+		    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		}
+		
+		.package-image {
+		    width: 100%;
+		    height: auto;
+		    display: block;
+		    object-fit: cover; /* Ensures the image covers the div without distortion */
+		    border-bottom: 2px solid #ddd; /* Optional, for a border below the image */
+		}
+		
+		.package-info {
+		    padding: 15px;
+		    text-align: center;
+		    background-color: #fff;
+		}
+
+
+
+		@media (max-width: 768px) {
+		    .vendor-logo {
+		        width: 20%;
+		        bottom: 50px;
+		    }
+		    .vendor-name {
+			    font-size: 40px;
+			}
+		}
+		
+		@media (max-width: 576px) {
+		    .vendor-logo {
+		        width: 20%;
+		        bottom: 50px;
+		    }
+		    .vendor-name {
+			    font-size: 40px;
+			}
+		}
+
+		a{
+			color:black
+		}
+		
+        /* Star Rating Styles */
+        .star-rating {
+			margin-left:-110px;
+            display: flex;
+            flex-direction: row-reverse;
+            font-size: 3em;
+            justify-content: center;
+            gap: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .star-rating input {
+            display: none;
+        }
+        .star-rating label {
+            color: #ddd;
+            transition: color 0.2s ease-in-out;
+        }
+        .star-rating input:checked ~ label,
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #ffc107;
+        }
+
+        /* Popup Form Styles */
+        .review-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            width: 300px;
+            border-radius: 8px;
+        }
+        .review-popup h3 {
+            margin-top: 0;
+            text-align: center;
+        }
+        .review-popup textarea {
+            width: 100%;
+            height: 80px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: none;
+        }
+        .review-popup button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: #fa93bd;
+            color: #fff;
+            font-size: 1.2em;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .review-popup button:hover {
+            background-color: #db5643;
+            color: #fff;
+        }
+
+        /* Overlay */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        
+        .display-rating {
+            font-size: 1.5em;
+            color: #ddd; /* Default color for stars (unfilled) */
+        }
+        .display-rating .filled {
+            color: black; /* Color for filled stars */
+        }
+	</style>
+</head>
+<body  class="white-bg">
+	<div layout:fragment="content" th:remove="tag">
+		<div class="container-fluid full-wrapper">
+			<div class="row vendor-header">
+			    <div class="col-12">
+			        <!-- Cover Image -->
+			        <img th:src="${(vendor.coverImage != null && vendor.coverImage != '') ? vendor.coverImage : '/images/null-cover.jpg'}" 
+			             alt="cover image" 
+			             width="100%" 
+			             style="display: block;">
+			             
+			        <div class="vendor-sub-header">
+						<!-- Logo Image -->
+				        <img th:src="${(vendor.logo != null && vendor.logo != '') ? vendor.logo : ''}" 
+				             alt="logo" 
+				             class="vendor-logo"
+				             th:if="${vendor.logo != null && vendor.logo != ''}">
+				        
+				        <div class="vendor-name row">
+							<div class="col-lg-9 col-sm-12"><span class="s" th:text="${vendor.companyName}" th:if="${vendor.coverImage != null && vendor.coverImage != ''}"></span></div>
+							<div class="col-lg-12 col-sm-12"><span class="s" th:text="${vendor.companyName}" th:if="${vendor.coverImage == null || vendor.coverImage == ''}" style="color: black;"></span></div>
+<!--                            <div class="col-lg-3 col-sm-12">-->
+<!--								<button type="button" class="btn btn-outline-primary btn-inquiry" data-toggle="modal" data-target="#exampleModalCenter">-->
+<!--								  MAKE INQUIRY <i class="fa fa-angle-right" aria-hidden="true"></i>-->
+<!--								</button>-->
+<!--							</div>-->
+                        	
+                        </div>
+					</div>
+			    </div>
+			</div>
+			<div class="row vendor-body">
+				<div class="col-12">
+					<div th:if="${emailSent}" class="alert alert-success">
+					    <p th:text="${emailSent}"></p>
+					</div>
+				</div>
+				
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					<h3><span th:each="cat : ${vendorCats}" th:text="'#' + ${cat.categoryId.typeName} + '&nbsp;&nbsp;&nbsp;&nbsp;'"></span></h3>
+				</div>
+				
+				<div class="col-lg-9 col-md-9 col-sm-12 vendor-gallery" th:if="${#lists.size(vendorGallery) > 0}">
+				    <img th:each="image : ${vendorGallery}" 
+				         th:src="${image.image}" 
+				         alt="image" 
+				         th:if="${(image.image != null && image.image != '')}">
+				</div>
+				<div class="col-lg-9 col-md-9 col-sm-12" th:if="${#lists.size(vendorGallery) == 0}">
+			        <div class="packages-list">
+			            <div th:each="package : ${vendorPackages}" class="package-item">
+			                <a th:href="@{/vendors/packages/view/{id}(id=${package.packageId})}">
+								<img th:src="${(package.packageImage != null && package.packageImage != '') ? package.packageImage : '/images/null.jpg'}" alt="Package Image" class="package-image">
+			
+				                <div class="package-info">
+				                    <h3 th:text="${package.packageName != null && package.packageName != '' ? package.packageName : 'Unnamed Package'}"></h3>
+				                    <p th:text="${package.price != null && package.price != '' ? 'Rs.' + package.price : 'Contact for Price'}"></p>
+				                </div>
+							</a>
+			            </div>
+			        </div>
+			    </div>
+				<div class="col-lg-3 col-md-3 col-sm-12">
+				    <div class="content-wrapper text-left">
+				        <div class="title-text">
+				            <span class="style-dot-left"></span>
+				            <h3 th:text="${vendor.companyName != null && !vendor.companyName.isEmpty() ? vendor.companyName : ''}"></h3>
+				            
+				            <div class="display-rating" id="starDisplay">
+							    ★★★★★
+							</div>
+							<input type="hidden" th:value="${avgRatings}" id="avgRatings">
+							<script>
+							    function displayStarRating(rating,id) {
+							        const starDisplay = document.getElementById(id);
+							        const stars = starDisplay.innerText.trim().split('');
+							        starDisplay.innerHTML = stars.map((star, index) => {
+							            return `<span class="${index < rating ? 'filled' : ''}">${star}</span>`;
+							        }).join('');
+							    }
+							    displayStarRating(document.getElementById("avgRatings").value,"starDisplay");  
+							    
+							</script>
+							<br>
+				            Average Price: <h3 th:text="${vendor.averagePrice != null && vendor.averagePrice != 0 ? vendor.averagePrice + '/=' : ''}"></h3>
+				            
+				            <h5 class="style-dot-right" th:text="${vendor.website != null && !vendor.website.isEmpty() ? vendor.website : ''}"></h5>
+				        </div> 
+				        
+				        <div class="location">
+				
+<!--				            <span th:text="${vendor.districts != null && !vendor.districts.isEmpty() ? vendor.districts : ''}"></span>-->
+							<div class="districts">
+							    <a th:href="${vendor.googleMap != null && !vendor.googleMap.isEmpty() ? vendor.googleMap : '#'}" style="color:black">
+					                <i class="fa fa-map-marker" aria-hidden="true"></i>
+					            </a>
+					            Districts: <span th:each="district : ${vendorDistricts}" th:text="' *' + ${district}"></span>
+<!--							    <ul>-->
+<!--							        <li th:each="district : ${vendorDistricts}" th:text="${district}"></li>-->
+<!--							    </ul>-->
+							</div>
+							<br>
+				            <span class="link-color" th:text="${(vendor.openDays != null && !vendor.openDays.isEmpty() ? vendor.openDays + ' | ' : '') + (vendor.openHours != null && !vendor.openHours.isEmpty() ? vendor.openHours : '')}"></span>
+				
+				            <address>
+				                <ul class="text-left">
+				                    <li>
+				                        <i class="fa fa-home" aria-hidden="true"></i>
+				                        <span><strong>Address: </strong> <span th:text="${vendor.address != null && !vendor.address.isEmpty() ? vendor.address : ''}"></span></span>
+				                    </li>
+				
+				                    <li>
+				                        <i class="fa fa-phone" aria-hidden="true"></i>
+				                        <span><strong>Phone: </strong>
+				                            <span th:text="${vendor.mobile1 != null && !vendor.mobile1.isEmpty() ? vendor.mobile1 : ''}"></span>
+				                            <span th:text="${vendor.mobile2 != null && !vendor.mobile2.isEmpty() ? ' | ' + vendor.mobile2 : ''}"></span>
+				                            <span th:text="${vendor.mobile3 != null && !vendor.mobile3.isEmpty() ? ' | ' + vendor.mobile3 : ''}"></span>
+				                        </span>
+				                    </li>
+				
+				                    <li>
+				                        <i class="fa fa-envelope" aria-hidden="true"></i>
+				                        <span><strong>Email: </strong> <span th:text="${vendor.email != null && !vendor.email.isEmpty() ? vendor.email : ''}"></span></span>
+				                    </li>
+				
+				                    <br>
+				                    <ul class="ratting list-inline">
+				                        <li><a th:href="${vendor.facebook != null && !vendor.facebook.isEmpty() ? 'https://' + vendor.facebook : '#'}"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+				                        <li><a th:href="${vendor.instagram != null && !vendor.instagram.isEmpty() ? 'https://' + vendor.instagram : '#'}"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+				                        <li><a th:href="${vendor.youtube != null && !vendor.youtube.isEmpty() ? 'https://' + vendor.youtube : '#'}"><i class="fa fa-youtube" aria-hidden="true"></i></a></li>
+				                        <li><a th:href="${vendor.twitter != null && !vendor.twitter.isEmpty() ? 'https://' + vendor.twitter : '#'}"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+				                        <li><a th:href="${vendor.linkedin != null && !vendor.linkedin.isEmpty() ? 'https://' + vendor.linkedin : '#'}"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
+				                    </ul>
+				                </ul>
+				            </address>
+				
+				            <br>
+				            <h3>Rate Now</h3>
+				            <div class="star-rating">
+							    <input type="radio" id="5-stars" name="rating" value="5" />
+							    <label for="5-stars" title="5 stars">&#9733;</label>
+							
+							    <input type="radio" id="4-stars" name="rating" value="4" />
+							    <label for="4-stars" title="4 stars">&#9733;</label>
+							
+							    <input type="radio" id="3-stars" name="rating" value="3" />
+							    <label for="3-stars" title="3 stars">&#9733;</label>
+							
+							    <input type="radio" id="2-stars" name="rating" value="2" />
+							    <label for="2-stars" title="2 stars">&#9733;</label>
+							
+							    <input type="radio" id="1-star" name="rating" value="1" />
+							    <label for="1-star" title="1 star">&#9733;</label>
+							</div>
+							<div th:if="${rated}" class="alert alert-success">
+							    <p th:text="${rated}"></p>
+							</div>
+							<!-- Overlay -->
+							<div class="overlay" id="overlay"></div>
+							
+							<!-- Review Popup -->
+							<div class="review-popup" id="reviewPopup">
+								<form class="row g-3" th:action="@{/vendors/profile/ratings}" method="post">
+									<h3>Leave a Review</h3>
+									<input type="hidden" name="vendorId" th:value="${vendor.vendorId}" readonly data-required="false">
+									<input type="hidden" name="rating" id="rating" readonly data-required="false">
+								    <textarea class="form-control" placeholder="Write your review here... *" name="review" data-required="false"></textarea>
+								    <div class="text-left">
+										<button class="btn" type="submit" onclick="validateForm(event)">Submit Review</button>
+					                </div>
+					                <div class="text-left">
+										<span class="error-message"></span>
+									</div>
+								</form>
+							</div>
+							
+							<script>
+							    // Show popup when a star is selected
+							    document.querySelectorAll('.star-rating input').forEach(radio => {
+							        radio.addEventListener('change', () => {
+										document.getElementById("rating").value = document.querySelector('.star-rating input:checked').value;
+										
+							            document.getElementById('overlay').style.display = 'block';
+							            document.getElementById('reviewPopup').style.display = 'block';
+							        });
+							    });
+							    // Close popup function
+							    function closePopup() {
+							        document.getElementById('overlay').style.display = 'none';
+							        document.getElementById('reviewPopup').style.display = 'none';
+							        document.getElementById('reviewText').value = '';  // Clear the review text field
+							    }
+							    // Close popup if overlay is clicked
+							    document.getElementById('overlay').addEventListener('click', closePopup);
+							</script>
+							<br>
+							
+				            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+				                MAKE INQUIRY
+				            </button>
+				            <br><br>
+				            <div th:if="${vendor.whatsapp != null && vendor.whatsapp != ''}">
+							    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#whatsappMesageModel">
+							        Whatsapp
+							    </button>
+							</div>
+				        </div> <!-- location -->
+				    </div> <!-- content-wrapper -->
+				</div>
+
+				<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+				  <div class="modal-dialog modal-dialog-centered" role="document">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				          <span aria-hidden="true">&times;</span>
+				        </button>
+				      </div>
+				      <form class="row g-3" th:action="@{/vendors/message/send}" th:object="${message}" id="contactForm" method="post" autocomplete="off">
+					      <div class="modal-body">
+				                <input type="hidden" class="form-control" id="vendorId" th:value="${vendor.vendorId}" name="vendorId">
+				                <div class="col-md-12">
+				                  	<label for="message"></label>
+				                  	<div class="form-floating">
+										<textarea class="form-control" placeholder="Type a message..." name="message" id="emailMessage" style="height: 150px;" data-required="true"></textarea>
+		                  			</div>
+				                </div>
+					      </div>
+					      <div class="modal-footer">
+							   <div class="col-md-12 text-left" style="margin-top: 15px;">
+				                  <button type="submit" class="btn btn-primary" onclick="sendEmailMessage(event)"><i class="fa fa-envelope" aria-hidden="true"></i> Submit</button>
+				                </div>
+				                <div class="col-md-12 text-left" style="margin-bottom: 30px;">
+									<span class="error-message" id="error1"></span>
+								</div>
+					      </div>
+				       </form>  
+				    </div>
+				  </div>
+				</div>	
+				
+				<div class="modal fade" id="whatsappMesageModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+				  <div class="modal-dialog modal-dialog-centered" role="document">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				          <span aria-hidden="true">&times;</span>
+				        </button>
+				      </div>
+				      <form class="row g-3" th:action="@{/vendors/message/send}" th:object="${message}" id="contactFormwhatsapp" method="post" autocomplete="off">
+					      <div class="modal-body">
+				                <input type="hidden" class="form-control" th:value="${vendor.vendorId}" name="vendorId">
+				                <input type="hidden" class="form-control" id="mobile" th:value="${vendor.mobile1}">
+				                <div class="col-md-12">
+				                  	<label for="message"></label>
+				                  	<div class="form-floating">
+										<textarea class="form-control" placeholder="Type a message..." id="whatsappMessage" name="message" style="height: 150px;" data-required="true"></textarea>
+		                  			</div>
+				                </div>
+					      </div>
+					      <div class="modal-footer">
+							   <div class="col-md-12 text-left" style="margin-top: 15px;">
+				                  <button type="submit" class="btn btn-success" onclick="sendWhatsappMessage(event)"><i class="fa fa-whatsapp" aria-hidden="true"></i> Send</button>
+				                </div>
+				                <div class="col-md-12 text-left" style="margin-bottom: 30px;">
+									<span class="error-message" id="error2"></span>
+								</div>
+					      </div>
+				       </form>  
+				    </div>
+				  </div>
+				</div>	
+				<script>
+				    function sendEmailMessage(event) {
+				        event.preventDefault();
+				        const message = document.getElementById('emailMessage').value;
+				        if (!message) {
+				            document.getElementById("error1").innerText = "Message cannot be empty";
+				            return;
+				        }
+				        document.getElementById('emailMessage').value = "I just found your profile on BridalWeb and would love your help with my inquiries! \n\n" + message;
+						event.target.closest('form').submit();
+				    }
+				    function sendWhatsappMessage(event) {
+				        event.preventDefault();
+				        const mobile = document.getElementById('mobile').value;
+				        const message = "I just found your profile on BridalWeb and would love your help with my inquiries! \n\n" + document.getElementById('whatsappMessage').value;
+				        /*
+				        if (!mobile || !message) {
+				            document.getElementById("error2").innerText = "Message cannot be empty";
+				            return;
+				        }
+				        */
+				        const encodedMessage = encodeURIComponent(message);
+				        const whatsappUrl = `https://wa.me/${mobile}?text=${encodedMessage}`;
+				        window.open(whatsappUrl, '_blank');
+
+						event.target.closest('form').submit();
+				    }
+				</script>	
+			</div>
+			
+			<div class="row vendor-packages" th:if="${#lists.size(vendorGallery) > 0}">
+			    <div class="col-12">
+					<h3> Our Packages </h3>
+			        <div class="packages-list">
+			            <div th:each="package : ${vendorPackages}" class="package-item">
+			                <a th:href="@{/vendors/packages/view/{id}(id=${package.packageId})}">
+								<img th:src="${(package.packageImage != null && package.packageImage != '') ? package.packageImage : '/images/null.jpg'}" alt="Package Image" class="package-image">
+			
+				                <div class="package-info">
+				                    <h3 th:text="${package.packageName != null && package.packageName != '' ? package.packageName : 'Unnamed Package'}"></h3>
+				                    <p th:text="${package.price != null && package.price != '' ? 'Rs.' + package.price : 'Contact for Price'}"></p>
+				                </div>
+							</a>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

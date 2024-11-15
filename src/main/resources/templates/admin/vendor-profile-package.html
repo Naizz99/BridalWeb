@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{admin/fragments/layout}">
+
+<body>
+	<div layout:fragment="content" th:remove="tag">
+	<main id="main" class="main">
+
+	    <div class="pagetitle">
+	      <h1>Packages</h1>
+	      <nav>
+	        <ol class="breadcrumb">
+	          <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+	          <li class="breadcrumb-item active">Packages</li>
+	        </ol>
+	      </nav>
+	    </div>
+	
+	    <section class="section">
+			<a type="button" class="btn btn-primary" th:href="@{/vendors/packages/new/{id}(id=${vendor.vendorId})}">Add New</a><br><br>
+	      	<div class="row">
+	        	<div class="col-lg-3 card" th:each="package : ${packages}">
+	            	<a th:href="@{/vendors/packages/edit/{id}(id=${package.packageId})}">
+						<img th:src="${package.packageImage}" class="card-img-top" alt="..." height="250px">
+		            	<div class="card-body">
+		              		<h5 class="card-title" th:text="${package.packageName}"></h5>
+		              		<p class="card-text" th:text="${package.description.length() > 80 ? #strings.substring(package.description, 0, 80) + '...' : package.description}"></p>
+		            	</div>
+					</a>
+	        	</div>
+	      </div>
+	    </section>
+	
+	  </main>
+	</div>
+</body>	
+</html>

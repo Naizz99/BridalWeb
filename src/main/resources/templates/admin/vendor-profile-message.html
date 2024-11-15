@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{admin/fragments/layout}">
+
+<body>
+	<div layout:fragment="content" th:remove="tag">
+	<main id="main" class="main">
+
+	    <div class="pagetitle">
+	      <h1>Messages</h1>
+	      <nav>
+	        <ol class="breadcrumb">
+	          <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+	          <li class="breadcrumb-item active">Messages</li>
+	        </ol>
+	      </nav>
+	    </div>
+	
+	    <section class="section vendor-profile-view">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"></h5>
+
+                    <form class="row mb-3" method="get">
+						<input class="form-control" type="hidden" id="vendorId" th:value="${vendor.vendorId}" placeholder="User ID">
+					    <div class="col-md-3">
+							<input class="form-control" type="text" id="userId" placeholder="User ID">
+						</div>
+						<div class="col-md-3">
+							<input class="form-control" type="text" id="contactDate" placeholder="Date (YYYYMMDD)">
+						</div>
+						<div class="col-md-3">
+							<button type="button" class="btn btn-secondary" onClick="searchReport()">Search</button>
+						</div>
+					</form>
+					
+                    <!-- Visitor Details Table -->
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped" id="dataTable">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>User</th>
+                                <th>Message</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="message, stat : ${profileContacts}">
+                                <td th:text="${stat.index + 1}"></td>
+                                <td th:text="${message.userId != null ? message.userId.firstName : 'Guest'}"></td>
+                                <td th:text="${message.message}"></td>
+                                <td style="width:150px" th:text="${message.contactDate.toString().substring(0, 4)} + '-' + ${message.contactDate.toString().substring(4, 6)} + '-' + ${message.contactDate.toString().substring(6, 8)}"></td>
+                                <td>
+									<a type="button" class="btn btn-danger" th:href="@{/vendors/profile/messages/delete/{id}(id=${message.contactId})}" onclick="return confirm('Are you sure?');">Delete</a>
+								</td>
+                            </tr>
+
+                            <tr th:if="${#lists.isEmpty(profileContacts)}">
+                                <td colspan="5" class="text-center">No ratings available</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+	
+		<script>
+			function searchReport() {
+			    var vendorId = document.getElementById('vendorId').value;
+			    var userId = document.getElementById('userId').value;
+			    var contactDate = document.getElementById('contactDate').value;
+
+			    var query = "?";
+			    if (userId) query += "userId=" + encodeURIComponent(userId) + "&";
+			    if (contactDate) query += "contactDate=" + encodeURIComponent(contactDate) + "&";
+
+			    if (query.endsWith("&")) {
+			        query = query.slice(0, -1);
+			    }
+
+			    fetch(`/vendors/${vendorId}/profile/messages/searchVendorMessages${query}`)
+			        .then(response => response.json())
+			        .then(data => {
+			            updateTable(data);
+			        })
+			        .catch(error => console.error('Error fetching data:', error));
+			}
+			
+			
+			function updateTable(data) {
+
+			    var tableBody = document.querySelector("#dataTable tbody");
+			    tableBody.innerHTML = "";
+			
+				let count = 1;
+			    data.forEach(message => {
+			        var row = `<tr>
+			            <td>${count++}</td>
+			            <td>${message.userId != null ? message.userId.firstName : 'Guest'}</td>
+			            <td>${message.message}</td>
+			            <td style="width:150px" >${message.contactDate.toString().substring(0, 4)}-${message.contactDate.toString().substring(4, 6)}-${message.contactDate.toString().substring(6, 8)}</td>
+			        	<td>
+							<a type="button" class="btn btn-danger" th:href="@{/vendors/profile/messages/delete/{id}(id=${message.contactId})}" onclick="return confirm('Are you sure?');">Delete</a>
+						</td>
+			        </tr>`;
+			        tableBody.innerHTML += row;
+			    });
+			}
+		</script>
+		
+	  </main>
+	</div>
+</body>	
+</html>

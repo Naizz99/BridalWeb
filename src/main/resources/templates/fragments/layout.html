@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BridalWeb</title>
+    <link href="/images/favicon.png" rel="favicon icon">
+    <link href="https://fonts.googleapis.com/css?family=Handlee|Libre+Baskerville:400,700|Varela+Round" rel="stylesheet">
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="/owl.carousel/owl.carousel.css" rel="stylesheet" type="text/css">
+    <link href="/owl.carousel/owl.theme.css" rel="stylesheet" type="text/css">
+    <link href="/slick-slider/slick.css" rel="stylesheet" type="text/css">
+    <link href="/slick-slider/slick-theme.css" rel="stylesheet" type="text/css">
+    <link href="/prettyPhoto/css/prettyPhoto.css" rel="stylesheet">
+    <link href="/gallery-plugin/css/demo.css" rel="stylesheet" type="text/css">
+    <link href="/gallery-plugin/css/style.css" rel="stylesheet" type="text/css">
+    <link href="/css/animate.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="/rs-plugin/css/settings.css" media="screen" />
+    <link href="/css/offcanvas.css" rel="stylesheet" type="text/css">
+    <link type="text/css" href="/css/style.css" rel="stylesheet">
+    <style>
+		@media (max-width:767px){
+			.hidden-xs{
+				display:block!important}
+		}
+		@media (min-width:768px) and (max-width:991px){
+			.hidden-sm{
+				display:block!important}
+		}
+	</style>        
+</head>
+
+<body class="bg-color-1">
+    <!-- Preloader -->
+		<div id="preloader">
+	        <div id="status">
+	            <div class="loader loader20">
+	                <div class="loader2"></div>
+	            </div>
+	        </div>
+	    </div>
+    <!-- Preloader -->
+
+    <div class="full-wrapper">
+		<th:block th:replace="~{fragments/header :: header}"/>
+		<th:block layout:fragment="content"/>   
+		<th:block th:replace="~{fragments/footer :: footer}"/>
+
+        <div id="toTop" class="hidden-xs">
+            <i class="fa fa-chevron-up"></i>
+        </div> 
+        <div id="toTopChat" class="hidden-xs" style="background: url(/images/music/whatsapp.png) no-repeat;" 
+     		th:data-whatsapp="${settings.whatsapp}" 
+     		th:data-title="${settings.systemName}" onclick="sendMessage(this)">
+		</div>
+		
+		<script>
+		    function sendMessage(input) {
+		        var whatsappNumber = input.getAttribute('data-whatsapp');
+		        var systemName = input.getAttribute('data-title');
+		        
+		        var messageText = "Message via " + systemName + " \n\nHello, I would like to get more information.\n\n";
+		        
+		        var whatsappUrl = 'https://wa.me/' + whatsappNumber + '?text=' + encodeURIComponent(messageText);
+		        
+		        window.open(whatsappUrl, '_blank');
+		    }
+		</script>
+
+    </div>
+
+    <script src="/js/jquery.js"></script>
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/owl.carousel/owl.carousel.min.js"></script>
+    <script src="/slick-slider/slick.min.js" type="text/javascript"></script>
+    <script src="/js/gmap3.min.js"></script>
+    <script src="/rs-plugin/js/jquery.themepunch.tools.min.js" type="text/javascript"></script>
+    <script src="/rs-plugin/js/jquery.themepunch.revolution.min.js" type="text/javascript"></script>
+    <script src="/js/smoothscroll.js"></script>
+    <script src="/js/jquery.easing.min.js"></script>
+    <script src="/js/coundown-timer.js"></script>
+    <script src="/js/jquery.easyaudioeffects.1.0.0.min.js"></script>
+    <script src="/js/staller.js"></script>
+    <script src="/js/parallax.min.js"></script>
+    <script src="/js/pace.js"></script>
+    <script src="/prettyPhoto/js/jquery.prettyPhoto.js"></script>
+    <script src="/js/offcanvas.js" type="text/javascript"></script> 
+
+    <script src="/js/main.js"></script>     
+
+    <script>
+		
+        $(function () {
+            var fenway = [34.019270,-118.281084];
+			
+            $('#googleMap')
+              .gmap3({
+                center:fenway,
+                zoom: 13
+              })
+
+            .streetviewpanorama(
+                '#googleMap',
+                {
+                     position: fenway,
+                     pov: {
+                        heading: 34,
+                        pitch: 10,
+                        zoom: 1
+                     }
+                }
+            );
+        });
+    </script>
+</body>
+</html>

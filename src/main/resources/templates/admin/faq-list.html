@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{admin/fragments/layout}">
+
+<head>
+	<!--
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+ 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  	-->
+</head>
+<body>
+	<div layout:fragment="content" th:remove="tag">
+	<main id="main" class="main">
+
+	    <div class="pagetitle">
+	      <h1>Frequently Asked Questions</h1>
+	      <nav>
+	        <ol class="breadcrumb">
+	          <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+	          <li class="breadcrumb-item active">FAQ</li>
+	        </ol>
+	      </nav>
+	    </div>
+	
+	    <section class="section">
+		    <div class="row">
+		        <div class="col-lg-12">
+		            <div class="card">
+		                <div class="card-body"> 
+							<br>
+							<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="resetQue()">Add New</button>
+              
+							<br><br>       
+		                    <div class="accordion" id="accordionExample">
+		                        <div class="accordion-item" th:each="question, indx : ${questions}">
+		                            <h2 class="accordion-header" th:id="'heading' + ${question.faqId}">
+		                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+		                                        th:data-bs-target="'#que' + ${question.faqId}" 
+		                                        aria-expanded="false" th:aria-controls="'collapse' + ${question.faqId}" 
+		                                        th:data-faq-id="${question.faqId}" 
+		                                        th:data-question="${question.question}" 
+		                                        th:data-answer="${question.answer}" 
+		                                        onclick="setQue(this)">
+		                                    <span th:text="${indx.index + 1} + '. ' + ${question.question}" style="font-size:15px;"></span>
+		                                </button>
+		                            </h2>
+		                            <div th:id="'que'+${question.faqId}" class="accordion-collapse collapse" th:aria-labelledby="'heading' + ${question.faqId}" data-bs-parent="#accordionExample">
+		                                <div class="accordion-body">
+		                                    <span th:text="${question.answer}"></span>
+		                                    <br>
+		                                    <button type="button" class="btn btn-warning mt-2" data-bs-toggle="modal" data-bs-target="#exampleModal">Edit</button>
+		                                </div>
+		                            </div>
+		                        </div>
+		                    </div>
+		                </div>    
+		            </div>
+		
+		            <!-- Modal -->
+		            <div class="modal fade" id="exampleModal" tabindex="-1">
+		                <div class="modal-dialog modal-dialog-centered modal-lg">
+		                    <div class="modal-content">
+		                        <div class="modal-header">
+		                            <h5 class="modal-title" id="exampleModalLabel">Question Form</h5>
+		                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		                        </div>
+		                        <form th:action="@{/faq}" method="post">
+			                        <div class="modal-body">
+			                                <input type="hidden" name="faqId" id="faqId">
+			                                <div class="form-group">
+			                                    <label for="message-text" class="col-form-label">Question <span style="color:red;">*</span></label>
+			                                    <textarea class="form-control" name="question" id="question" data-required="true"></textarea>
+			                                </div>
+			                                <div class="form-group">
+			                                    <label for="message-text" class="col-form-label">Answer <span style="color:red;">*</span></label>
+			                                    <textarea class="form-control" name="answer" id="answer" data-required="true"></textarea>
+			                                </div>
+			                        </div>
+			                        <div class="modal-footer">
+										<div class="text-left" style="width:100%">
+						                  	<a type="button" class="btn btn-danger" id="btnDelete" onclick="return confirm('Are you sure?');">Delete</a>
+											<button type="submit" class="btn btn-success" onclick="validateForm(event)">Save</button> <br>
+						                </div>
+						                <div class="text-left">
+											<span class="error-message"></span>
+										</div>
+									</div>
+								</form>
+		                    </div>
+		                </div>
+		            </div>
+		        </div>
+		    </div>
+		</section>
+		
+		<script>
+		    function setQue(buttonElement) {
+		        const id = buttonElement.getAttribute('data-faq-id');
+		        const que = buttonElement.getAttribute('data-question');
+		        const ans = buttonElement.getAttribute('data-answer');
+				        
+		        document.getElementById('faqId').value = id;
+		        document.getElementById('question').value = que;
+		        document.getElementById('answer').value = ans;
+		        document.getElementById('btnDelete').href = "/faq/delete/" + id;
+		    }
+		    function resetQue() {
+		        document.getElementById('faqId').value = '';
+		        document.getElementById('question').value = '';
+		        document.getElementById('answer').value = '';
+		        document.getElementById('btnDelete').href = '';
+		    }
+		</script>
+
+	  </main>
+	</div>
+</body>	
+</html>

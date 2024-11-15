@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{admin/fragments/layout}">
+
+<head>
+<!--	<style>-->
+<!--		.selected-items-container {-->
+<!--		    margin-top: 10px;-->
+<!--		    padding: 5px;-->
+<!--		    border: 1px solid #ddd;-->
+<!--		    min-height: 50px;-->
+<!--		    display: flex;-->
+<!--		    flex-wrap: wrap;-->
+<!--		    gap: 10px;-->
+<!--		    background-color: #f9f9f9;-->
+<!--		    border-radius: 5px;-->
+<!--		}-->
+		
+<!--		.selected-item {-->
+<!--		    background-color: #f878ab;-->
+<!--		    color: white;-->
+<!--		    padding: 5px 10px;-->
+<!--		    border-radius: 20px;-->
+<!--		    display: flex;-->
+<!--		    align-items: center;-->
+<!--		    gap: 5px;-->
+<!--		}-->
+		
+<!--		.selected-item .close-btn {-->
+<!--		    cursor: pointer;-->
+<!--		    font-size: 14px;-->
+<!--		    margin-left: 5px;-->
+<!--		}-->
+		
+<!--		.dropdown-list {-->
+<!--		    border: 1px solid #ddd;-->
+<!--		    max-height: 150px;-->
+<!--		    overflow-y: auto;-->
+<!--		    background-color: white;-->
+<!--		    display: none; -->
+<!--		    position: absolute;-->
+<!--		    z-index: 1000;-->
+<!--		    width: 100%;-->
+<!--		}-->
+		
+<!--		.dropdown-item {-->
+<!--		    padding: 8px;-->
+<!--		    cursor: pointer;-->
+<!--		    transition: background-color 0.2s;-->
+<!--		}-->
+		
+<!--		.dropdown-item:hover {-->
+<!--		    background-color: #f878ab;-->
+<!--		    color: white;-->
+<!--		}-->
+<!--	</style>-->
+</head>
+<body>
+	<div layout:fragment="content" th:remove="tag">
+	<main id="main" class="main">
+
+	    <div class="pagetitle">
+	      <h1>Vendor Profile</h1>
+	      <nav>
+	        <ol class="breadcrumb">
+	          <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+	          <li class="breadcrumb-item active">Vendor Profile</li>
+	        </ol>
+	      </nav>
+	    </div>
+	
+	    <section class="section profile">
+	      <div class="row">
+	        	<div class="col-xl-12">
+	          		<div class="card">
+
+<!--					  <img th:src="${(vendor.coverImage != null && vendor.coverImage != '') ? vendor.coverImage : '/images/null-cover.jpg'}" alt="Cover Image" width="100%">-->
+					  
+<!--					  <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">-->
+
+<!--					    <img th:src="${(vendor.logo != null && vendor.logo != '') ? vendor.logo : '/images/null-logo.jpg'}" alt="Profile Image">-->
+					    
+<!--					    <h2 th:text="${vendor.companyName}"></h2>-->
+<!--					    <b><span class="vendor-cat" th:each="cat : ${categories}" th:text="'#' + ${cat.categoryId.typeName} + '&nbsp;&nbsp;&nbsp;&nbsp;'"></span></b>-->
+					    
+<!--					    <div class="social-links mt-2">-->
+<!--					      <a th:href="${vendor.facebook != null && vendor.facebook != '' ? 'https://' + vendor.facebook : '#'}" class="facebook" ><i class="bi bi-facebook"></i></a>-->
+<!--					      <a th:href="${vendor.instagram != null && vendor.instagram != '' ? 'https://' + vendor.instagram : '#'}" class="instagram"><i class="bi bi-instagram"></i></a>-->
+<!--					      <a th:href="${vendor.youtube != null && vendor.youtube != '' ? 'https://' + vendor.youtube : '#'}" class="linkedin"><i class="bi bi-youtube"></i></a>-->
+<!--					      <a th:href="${vendor.linkedin != null && vendor.linkedin != '' ? 'https://' + vendor.linkedin : '#'}" class="linkedin"><i class="bi bi-linkedin"></i></a>-->
+<!--					      <a th:href="${vendor.twitter != null && vendor.twitter != '' ? 'https://' + vendor.twitter : '#'}" class="twitter"><i class="bi bi-twitter"></i></a>-->
+					      
+<!--					    </div>-->
+<!--					  </div>-->
+					</div>
+	        	</div>
+	
+		        <div class="col-xl-12">
+		
+		          <div class="card">
+		            <div class="card-body pt-3">
+<!--						<form class="row g-3" th:action="@{/vendors}" th:object="${vendor}" id="vendorForm" method="post" autocomplete="off" enctype="multipart/form-data">-->
+
+<!--			              <ul class="nav nav-tabs nav-tabs-bordered">-->
+			
+<!--			                <li class="nav-item">-->
+<!--			                  <button type="button" class="nav-link active" data-bs-toggle="tab" data-bs-target="#basic">Basic Information</button>-->
+<!--			                </li>-->
+			
+<!--			                <li class="nav-item">-->
+<!--			                  <button type="button" class="nav-link" data-bs-toggle="tab" data-bs-target="#contact">Contact Details</button>-->
+<!--			                </li>-->
+			
+<!--			                <li class="nav-item">-->
+<!--			                  <button type="button" class="nav-link" data-bs-toggle="tab" data-bs-target="#social">Social Media Links</button>-->
+<!--			                </li>-->
+			
+<!--			                <li class="nav-item">-->
+<!--			                  <button type="button" class="nav-link" data-bs-toggle="tab" data-bs-target="#business">Business Details</button>-->
+<!--			                </li>-->
+<!--			                <li>-->
+<!--								<div class="text-left" style="margin-left: 30px;">-->
+<!--									<button type="submit" class="btn btn-primary" onclick="validateForm(event)">Submit</button>-->
+<!--									<button type="reset" class="btn btn-secondary">Reset</button>-->
+<!--								</div>-->
+<!--								<div class="text-left">-->
+<!--									<span class="error-message"></span>-->
+<!--								</div>-->
+<!--							</li>-->
+<!--			              </ul>-->
+<!--		              	<div class="tab-content pt-2">-->
+		
+<!--			                <div class="tab-pane fade show active profile-overview" id="basic">-->
+<!--							  <input type="hidden" class="form-control" id="vendorId" th:field="*{vendorId}" placeholder="Vendor Id" readonly data-required="false">	-->
+<!--			                  <div class="row">-->
+<!--			                    <div class="col-lg-3 col-md-4 label ">Company Name <span style="color:red;">*</span></div>-->
+<!--			                    <div class="col-lg-9 col-md-8">-->
+<!--									<input type="text" class="form-control" id="companyName" th:field="*{companyName}" placeholder="Company Name" data-required="true">-->
+<!--								</div>-->
+<!--			                  </div>-->
+			
+<!--			                  <div class="row">-->
+<!--			                    <div class="col-lg-3 col-md-4 label">Description <span style="color:red;">*</span></div>-->
+<!--			                    <div class="col-lg-9 col-md-8">-->
+<!--									<textarea class="form-control" placeholder="Description" id="description" th:field="*{description}" style="height: 200px;" data-required="true"></textarea>-->
+<!--								</div>-->
+<!--			                  </div>-->
+			                  
+<!--			                  <div class="row">-->
+<!--			                    <div class="col-lg-3 col-md-4 label">Categories</div>-->
+<!--			                    <div class="col-lg-9 col-md-8">-->
+<!--									<input type="text" class="form-control" id="vendorCats" name="vendorCats" th:value="${selectedCats}">-->
+<!--									<div>-->
+<!--								        <div id="selected-items-container" class="selected-items-container">-->
+<!--											<div class="selected-item" th:each="cat:${categories}" th:data-id="${cat.categoryId.categoryId}" th:data-name="${cat.categoryId.typeName}">-->
+<!--												<span th:text="${cat.categoryId.typeName}"></span>-->
+<!--												<span class="close-btn" onClick="removeSelectedItem(this.parentNode)">✖</span>-->
+<!--											</div>-->
+<!--										</div>-->
+<!--								        <input type="text" class="form-control" id="categoryInput" placeholder="Type to search..." oninput="filterCategories()">-->
+<!--								    </div>-->
+								    
+<!--								    <div id="dropdown-list" class="dropdown-list">-->
+										
+<!--									</div>-->
+<!--									<select class="form-control" id="categories" name="categories">-->
+<!--									    <option th:each="category : ${serviceCategoryList}" th:value="${category.categoryId}" th:text="${category.typeName}"></option>-->
+<!--									</select>-->
+<!--								</div>-->
+<!--			                  </div>-->
+			
+<!--							  <div class="row">-->
+<!--			                    <div class="col-lg-3 col-md-4 label">Registratered Date</div>-->
+<!--			                    <div class="col-lg-9 col-md-8"><span th:text="${vendor.registrationDate}"></span></div>-->
+<!--			                  </div>-->
+			                  
+<!--			                  <div class="row">-->
+<!--			                    <div class="col-lg-3 col-md-4 label">Logo(300x300) &nbsp;&nbsp;&nbsp; <button class="btn btn-outline-dark" type="button" onClick="document.getElementById('logo').click();">Change</button></div>-->
+<!--			                    <div class="col-lg-9 col-md-8">-->
+<!--									<img id="logoimagePreview" th:src="${vendor.logo}" alt="" width="300px" height="300px">-->
+<!--			              			<input type="file" accept="image/*" id="logo" name="logo" hidden="" onchange="previewImage(event,'logoimagePreview')">-->
+<!--			              			<p style="position: absolute; top: 40%; left: 35%; transform: translate(-50%, -50%);" onClick="document.getElementById('logo').click();">-->
+<!--			              				<button class="btn btn-dark" type="button">Change</button>-->
+<!--			              			</p>-->
+<!--								</div>-->
+<!--			                  </div>-->
+			
+<!--			                  <div class="row">-->
+<!--			                    <div class="col-lg-3 col-md-4 label">Cover Image(1600x920) &nbsp;&nbsp;&nbsp; <button class="btn btn-outline-dark" type="button" onClick="document.getElementById('coverImage').click();">Change</button></div>-->
+<!--			                    <div class="col-lg-9 col-md-8">-->
+<!--									<img id="coverImagePreview" th:src="${vendor.coverImage}" alt="" width="100%">-->
+<!--			              			<input type="file" accept="image/*" id="coverImage" name="coverImage" hidden="" onchange="previewImage(event,'coverImagePreview')">-->
+<!--			              			<p style="position: absolute; top: 75%; left: 63%; transform: translate(-50%, -50%);" onClick="document.getElementById('coverImage').click();">-->
+<!--			              				<button class="btn btn-dark" type="button">Change</button>-->
+<!--			              			</p>-->
+<!--								</div>-->
+<!--			                  </div>-->
+			
+<!--			                </div>-->
+			
+<!--			                <div class="tab-pane fade profile-edit pt-3" id="contact">-->
+			
+<!--							  	<div class="row mb-3">-->
+<!--				                    <label for="contactName" class="col-md-4 col-lg-3 col-form-label">Contact Person <span style="color:red;">*</span></label>-->
+<!--				                    <div class="col-md-8 col-lg-9">-->
+<!--										<input type="hidden" class="form-control" id="userId" th:value="${vendor.userId.userId}" data-required="false">-->
+<!--		                    			<input type="text" class="form-control" id="contactName" name="contactName" th:value="${vendor.userId.firstName}" placeholder="First Name" data-required="true">-->
+<!--									</div>-->
+<!--			                  	</div>-->
+			                  
+<!--			                    <div class="row mb-3">-->
+<!--			                      <label for="email" class="col-md-4 col-lg-3 col-form-label">Email <span style="color:red;">*</span></label>-->
+<!--			                      <div class="col-md-8 col-lg-9">-->
+<!--			                      	<input type="email" class="form-control" id="email" th:field="*{email}" placeholder="Email" data-required="true">-->
+<!--			                      </div>-->
+<!--			                    </div>-->
+			
+<!--			                    <div class="row mb-3">-->
+<!--			                      <label for="mobile1" class="col-md-4 col-lg-3 col-form-label">Mobile 1 <span style="color:red;">*</span></label>-->
+<!--			                      <div class="col-md-8 col-lg-9">-->
+<!--			                      	<input type="text" class="form-control" id="mobile1" th:field="*{mobile1}" placeholder="Mobile 1" data-required="true">-->
+<!--			                      </div>-->
+<!--			                    </div>-->
+			
+<!--			                    <div class="row mb-3">-->
+<!--			                      <label for="mobile2" class="col-md-4 col-lg-3 col-form-label">Mobile 2</label>-->
+<!--			                      <div class="col-md-8 col-lg-9">-->
+<!--								  	<input type="text" class="form-control" id="mobile2" th:field="*{mobile2}" placeholder="Mobile 2" data-required="false">-->
+<!--			                      </div>-->
+<!--			                    </div>-->
+			
+<!--			                    <div class="row mb-3">-->
+<!--			                      <label for="mobile3" class="col-md-4 col-lg-3 col-form-label">Mobile 3</label>-->
+<!--			                      <div class="col-md-8 col-lg-9">-->
+<!--			                        <input type="text" class="form-control" id="mobile2" th:field="*{mobile3}" placeholder="Mobile 3" data-required="false">-->
+<!--			                      </div>-->
+<!--			                    </div>-->
+			
+<!--			                    <div class="row mb-3">-->
+<!--			                      <label for="whatsapp" class="col-md-4 col-lg-3 col-form-label">Whatsapp</label>-->
+<!--			                      <div class="col-md-8 col-lg-9">-->
+<!--			                        <input type="text" class="form-control" id="whatsapp" th:field="*{whatsapp}" placeholder="Whatsapp" data-required="false">-->
+<!--			                      </div>-->
+<!--			                    </div>-->
+			
+<!--			                    <div class="row mb-3">-->
+<!--			                      <label for="address" class="col-md-4 col-lg-3 col-form-label">Address</label>-->
+<!--			                      <div class="col-md-8 col-lg-9">-->
+<!--			                        <textarea class="form-control" placeholder="Address" id="address" th:field="*{address}" style="height: 100px;" data-required="false"></textarea>-->
+<!--			                      </div>-->
+<!--			                    </div>-->
+			
+<!--			                    <div class="row mb-3">-->
+<!--			                      <label for="branches" class="col-md-4 col-lg-3 col-form-label">Branches</label>-->
+<!--			                      <div class="col-md-8 col-lg-9">-->
+<!--			                        <textarea class="form-control" placeholder="branch 01 | branch 02 | branch 03" id="branches" th:field="*{branches}" style="height: 100px;" data-required="false"></textarea>-->
+<!--			                      </div>-->
+<!--			                    </div>-->
+			
+<!--								<div class="row mb-3" title="Hold Ctrl (or Cmd on Mac) to select multiple districts">					    -->
+<!--									<label for="district" class="col-md-4 col-lg-3 col-form-label">Select District(s) <span style="color:red;">*</span></label>-->
+<!--									<div class="col-md-8 col-lg-9">-->
+<!--				                        <select id="district" class="form-control" name="districts" th:field="*{districts}" multiple data-required="true">-->
+<!--									        <option th:each="district : ${T(com.kdm360.bridalweb.model.Vendor$DISTRICT).values()}"-->
+<!--									                th:value="${district.name()}"-->
+<!--									                th:text="${district.name()}"-->
+<!--									                th:selected="${vendorDistricts.contains(district.name())}">-->
+<!--									        </option>-->
+<!--									    </select>-->
+<!--				                    </div>-->
+<!--								</div>-->
+					
+<!--			                    <div class="row mb-3">-->
+<!--			                      <label for="website" class="col-md-4 col-lg-3 col-form-label">Website</label>-->
+<!--			                      <div class="col-md-8 col-lg-9">-->
+<!--			                        <input type="text" class="form-control" id="website" th:field="*{website}" placeholder="Web Site" data-required="false">-->
+<!--			                      </div>-->
+<!--			                    </div>-->
+			
+<!--			                    <div class="row mb-3">-->
+<!--			                      <label for="googleMap" class="col-md-4 col-lg-3 col-form-label">Google Map</label>-->
+<!--			                      <div class="col-md-8 col-lg-9">-->
+<!--			                        <input type="text" class="form-control" id="googleMap" th:field="*{googleMap}" placeholder="Google Map" data-required="false">-->
+<!--			                      </div>-->
+<!--			                    </div>-->
+			
+<!--			                </div>-->
+		
+<!--			                <div class="tab-pane fade pt-3" id="social">-->
+					
+<!--								<div class="row mb-3">-->
+<!--			                      <label for="facebook" class="col-md-3 col-lg-2 col-form-label">Facebook</label>-->
+<!--			                      <div class="col-md-9 col-lg-10">-->
+<!--			                        <input type="text" class="form-control" id="facebook" th:field="*{facebook}" placeholder="Facebook" data-required="false">-->
+<!--			                      </div>-->
+<!--			                    </div>-->
+			
+<!--			                    <div class="row mb-3">-->
+<!--			                      <label for="instagram" class="col-md-3 col-lg-2 col-form-label">Instagram</label>-->
+<!--			                      <div class="col-md-9 col-lg-10">-->
+<!--			                        <input type="text" class="form-control" id="instagram" th:field="*{instagram}" placeholder="Instagram" data-required="false">-->
+<!--			                      </div>-->
+<!--			                    </div>-->
+			
+<!--			                    <div class="row mb-3">-->
+<!--			                      <label for="youtube" class="col-md-3 col-lg-2 col-form-label">YouTube</label>-->
+<!--			                      <div class="col-md-9 col-lg-10">-->
+<!--			                        <input type="text" class="form-control" id="youtube" th:field="*{youtube}" placeholder="YouTube" data-required="false">-->
+<!--			                      </div>-->
+<!--			                    </div>-->
+			
+<!--			                    -->
+<!--									<div class="row mb-3">-->
+<!--			                      <label for="tiktok" class="col-md-4 col-lg-3 col-form-label">TikTok</label>-->
+<!--			                      <div class="col-md-8 col-lg-9">-->
+<!--			                        <input type="text" class="form-control" id="tiktok" th:field="*{tiktok}" placeholder="TikTok" data-required="false">-->
+<!--			                      </div>-->
+<!--			                    </div>-->
+<!--			                    -->
+			
+<!--			                    <div class="row mb-3">-->
+<!--			                      <label for="twitter" class="col-md-3 col-lg-2 col-form-label">Twitter</label>-->
+<!--			                      <div class="col-md-9 col-lg-10">-->
+<!--			                        <input type="text" class="form-control" id="twitter" th:field="*{twitter}" placeholder="Twitter" data-required="false">-->
+<!--			                      </div>-->
+<!--			                    </div>-->
+			
+<!--			                    <div class="row mb-3">-->
+<!--			                      <label for="linkedin" class="col-md-3 col-lg-2 col-form-label">LinkedIn</label>-->
+<!--			                      <div class="col-md-9 col-lg-10">-->
+<!--			                        <input type="text" class="form-control" id="linkedin" th:field="*{linkedin}" placeholder="LinkedIn" data-required="false">-->
+<!--			                      </div>-->
+<!--			                    </div>-->
+			
+<!--			                </div>-->
+		
+<!--			                <div class="tab-pane fade pt-3" id="business">-->
+			
+<!--			                    <div class="row mb-3">-->
+<!--			                      <label for="discount" class="col-md-3 col-lg-2 col-form-label">Discount</label>-->
+<!--			                      <div class="col-md-9 col-lg-10">-->
+<!--			                        <input type="text" class="form-control" id="discount" th:field="*{discount}" placeholder="Discount" data-required="false">-->
+<!--			                      </div>-->
+<!--			                    </div>-->
+			
+<!--			                    <div class="row mb-3">-->
+<!--			                      <label for="advance" class="col-md-3 col-lg-2 col-form-label">Advance</label>-->
+<!--			                      <div class="col-md-9 col-lg-10">-->
+<!--			                        <input type="text" class="form-control" id="advance" th:field="*{advance}" placeholder="Advance" data-required="false">-->
+<!--			                      </div>-->
+<!--			                    </div>-->
+			
+<!--			                    <div class="row mb-3">-->
+<!--			                      <label for="averagePrice" class="col-md-3 col-lg-2 col-form-label">Average Price</label>-->
+<!--			                      <div class="col-md-9 col-lg-10">-->
+<!--			                        <input type="number" class="form-control" id="averagePrice" th:field="*{averagePrice}" placeholder="Average Price" data-required="false">-->
+<!--			                      </div>-->
+<!--			                    </div>-->
+			
+<!--			                    <div class="row mb-3">-->
+<!--			                      <label for="openDays" class="col-md-3 col-lg-2 col-form-label">Open Days</label>-->
+<!--			                      <div class="col-md-9 col-lg-10">-->
+<!--			                        <input type="text" class="form-control" id="openDays" th:field="*{openDays}" placeholder="Open Days" data-required="false">-->
+<!--			                      </div>-->
+<!--			                    </div>-->
+			
+<!--			                    <div class="row mb-3">-->
+<!--			                      <label for="openHours" class="col-md-3 col-lg-2 col-form-label">Open Hours</label>-->
+<!--			                      <div class="col-md-9 col-lg-10">-->
+<!--			                        <input type="text" class="form-control" id="openHours" th:field="*{openHours}" placeholder="Open Hours" data-required="false">-->
+<!--			                      </div>-->
+<!--			                    </div>-->
+					
+<!--			                </div>-->
+		
+<!--		              	</div>-->
+<!--		              </form>-->
+		
+		            </div>
+		          </div>
+		
+		        </div>
+	        </form>
+	      </div>
+	    </section>
+		
+<!--		<script>-->
+<!--			const dataIdList = [];-->
+
+<!--			document.addEventListener('DOMContentLoaded', function () {-->
+<!--			    const inputElement = document.getElementById('categoryInput');-->
+<!--			    const selectElement = document.getElementById('categories');-->
+<!--			    const dropdownList = document.getElementById('dropdown-list');-->
+<!--			    const selectedItemsContainer = document.getElementById('selected-items-container');-->
+			    						    
+<!--			    const categories = Array.from(document.getElementById('categories').options).map(option => ({-->
+<!--			        id: option.value,-->
+<!--			        name: option.textContent-->
+<!--			    }));-->
+			
+<!--			    function filterCategories() {-->
+<!--			        const filter = inputElement.value.toLowerCase();-->
+			        						
+<!--			        categories.forEach(category => {-->
+<!--			            if (category.name.toLowerCase().includes(filter)) {-->
+<!--			                const item = document.createElement('div');-->
+<!--			                item.className = 'dropdown-item';-->
+<!--			                item.textContent = category.name;-->
+<!--			                item.onclick = function() {-->
+<!--			                    addSelectedItem(category);-->
+<!--			                    //dropdownList.style.display = 'none'; -->
+<!--			                };-->
+<!--			                dropdownList.appendChild(item);-->
+<!--			            }-->
+<!--			        });-->
+			
+<!--			        dropdownList.style.display = dropdownList.children.length ? 'block' : 'none';-->
+<!--			    }-->
+			
+<!--			    function addSelectedItem(category) {-->
+<!--			        if (!Array.from(selectedItemsContainer.children).some(child => child.textContent.includes(category.name))) {-->
+<!--			            const selectedItemDiv = document.createElement('div');-->
+<!--			            selectedItemDiv.className = 'selected-item';-->
+<!--			            selectedItemDiv.textContent = category.name;-->
+<!--			            selectedItemDiv.setAttribute('data-id', category.id);-->
+<!--			            selectedItemDiv.setAttribute('data-name', category.name);-->
+			
+<!--			            const closeBtn = document.createElement('span');-->
+<!--			            closeBtn.className = 'close-btn';-->
+<!--			            closeBtn.textContent = '✖';-->
+<!--			            closeBtn.onclick = function () {-->
+<!--			                selectedItemDiv.remove();-->
+<!--			                removeSelectedItem(selectedItemDiv);-->
+<!--			            };-->
+			
+<!--			            selectedItemDiv.appendChild(closeBtn);-->
+<!--			            selectedItemsContainer.appendChild(selectedItemDiv);-->
+<!--			            document.getElementById('categoryInput').value = '';-->
+			            
+<!--			            document.getElementById('vendorCats').value += category.id+',';-->
+<!--			        }-->
+<!--			    }-->
+			    
+			    
+			
+<!--				selectElement.addEventListener('change', function () {-->
+<!--			        Array.from(selectElement.selectedOptions).forEach(option => {-->
+
+<!--						const category = {-->
+<!--					        id: option.value,-->
+<!--					        name: option.textContent-->
+<!--					    };-->
+<!--			            addSelectedItem(category);-->
+<!--			        });-->
+<!--			    });-->
+<!--			    inputElement.addEventListener('input', filterCategories);-->
+<!--			});-->
+
+<!--			function removeSelectedItem(item){-->
+<!--		        const dataId = item.getAttribute('data-id');-->
+		        
+<!--		        const vendorCatsInput = document.getElementById('vendorCats');-->
+<!--				vendorCatsInput.value = vendorCatsInput.value.replace(dataId + ',', '')-->
+<!--		        updateDataIdList();-->
+
+<!--				item.remove();-->
+<!--			}-->
+
+<!--			function updateDataIdList() {-->
+<!--			        const vendorCatsValue = document.getElementById('vendorCats').value;-->
+<!--			        dataIdList.length = 0;-->
+<!--			        dataIdList.push(...vendorCatsValue.split(',').filter(Boolean));-->
+<!--			    }-->
+<!--		</script>-->
+		
+	  </main>
+	</div>
+</body>	
+</html>

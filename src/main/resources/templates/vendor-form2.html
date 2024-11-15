@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+
+<head>
+	<style>
+		
+		
+		/* Container for selected items */
+		.selected-items-container {
+		    margin-top: 10px;
+		    padding: 5px;
+		    border: 1px solid #ddd;
+		    min-height: 50px;
+		    display: flex;
+		    flex-wrap: wrap;
+		    gap: 10px;
+		    background-color: #f9f9f9;
+		    border-radius: 5px;
+		}
+		
+		/* Styles for each selected item tag */
+		.selected-item {
+		    background-color: #f878ab;
+		    color: white;
+		    padding: 5px 10px;
+		    border-radius: 20px;
+		    display: flex;
+		    align-items: center;
+		    gap: 5px;
+		}
+		
+		/* Close button for each selected item */
+		.selected-item .close-btn {
+		    cursor: pointer;
+		    font-size: 14px;
+		    margin-left: 5px;
+		}
+		
+		/* Dropdown list styles */
+		.dropdown-list {
+		    border: 1px solid #ddd;
+		    max-height: 150px;
+		    overflow-y: auto;
+		    background-color: white;
+		    display: none; /* Initially hidden */
+		    position: absolute;
+		    z-index: 1000;
+		    width: 100%;
+		}
+		
+		.dropdown-item {
+		    padding: 8px;
+		    cursor: pointer;
+		    transition: background-color 0.2s;
+		}
+		
+		.dropdown-item:hover {
+		    background-color: #f878ab;
+		    color: white;
+		}
+
+
+	</style>
+</head>
+<body>
+	<div layout:fragment="content" th:remove="tag">
+	<main id="main" class="main">
+
+	    <div class="pagetitle">
+	      <h1>Vendors</h1>
+	      <nav>
+	        <ol class="breadcrumb">
+	          <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+	          <li class="breadcrumb-item active">Vendors</li>
+	        </ol>
+	      </nav>
+	    </div>
+	
+	    <section class="section">
+	      <div class="row">
+	        <div class="col-lg-12">
+	
+	          <div class="card">
+	            <div class="card-body">
+	              <h5 class="card-title"></h5>
+	
+					<div class="col-md-2">
+	                  <div class="form-floating">
+	                    <a type="button" class="btn btn-secondary" th:href="@{/vendors/packages/{id}(id=${vendor.vendorId})}" th:if="${vendor.vendorId != null}">Vendor Packages</a>
+	                  </div>
+	                </div><br>
+	              <form class="row g-3" th:action="@{/vendors}" th:object="${vendor}" id="vendorForm" method="post" autocomplete="off" enctype="multipart/form-data">
+					<div th:if="${error}" class="alert alert-danger">
+					    <p th:text="${error}"></p>
+					</div>
+					<div th:if="${message}" class="alert alert-success">
+					    <p th:text="${message}"></p>
+					</div>
+	                <div class="col-md-2" th:if="${vendor.vendorId != null}">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="vendorId" th:field="*{vendorId}" placeholder="Vendor Id" readonly data-required="false">
+	                    <label for="vendorId">Vendor Id</label>
+	                  </div>
+	                </div>
+	                <div th:class="${vendor.vendorId != null? 'col-md-5' : 'col-md-6'}">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="companyName" th:field="*{companyName}" placeholder="Company Name" data-required="true">
+	                    <label for="companyName">Company Name <span style="color:red;">*</span></label>
+	                  </div>
+	                </div>
+	                <div th:class="${vendor.vendorId != null? 'col-md-5' : 'col-md-6'}">
+	                  <div class="form-floating">
+	                    <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="Email" data-required="true">
+	                    <label for="email">Email <span style="color:red;">*</span></label>
+	                  </div>
+	                </div>
+	                <div class="col-md-4">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="mobile1" th:field="*{mobile1}" placeholder="Mobile 1" data-required="true">
+	                    <label for="mobile1">Mobile 1 <span style="color:red;">*</span></label>
+	                  </div>
+	                </div>
+	                <div class="col-md-4">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="mobile2" th:field="*{mobile2}" placeholder="Mobile 2" data-required="false">
+	                    <label for="mobile2">Mobile 2</label>
+	                  </div>
+	                </div>
+	                <div class="col-md-4">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="mobile3" th:field="*{mobile3}" placeholder="Mobile 3" data-required="false">
+	                    <label for="mobile3">Mobile 3</label>
+	                  </div>
+	                </div>
+	                <div class="col-6">
+	                  <div class="form-floating">
+	                    <textarea class="form-control" placeholder="Address" id="address" th:field="*{address}" style="height: 100px;" data-required="false"></textarea>
+	                    <label for="address">Address</label>
+	                  </div>
+	                </div>
+	                <div class="col-6">
+	                  <div class="form-floating">
+	                    <textarea class="form-control" placeholder="branch 01 | branch 02 | branch 03" id="branches" th:field="*{branches}" style="height: 100px;" data-required="false"></textarea>
+	                    <label for="branches">Branches</label>
+	                  </div>
+	                </div>
+	                <div class="col-md-6">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="whatsapp" th:field="*{whatsapp}" placeholder="Whatsapp" data-required="false">
+	                    <label for="whatsapp">Whatsapp</label>
+	                  </div>
+	                </div>
+	                <div class="col-md-6">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="website" th:field="*{website}" placeholder="Web Site" data-required="false">
+	                    <label for="website">Web Site</label>
+	                  </div>
+	                </div>
+	                <div class="col-md-6">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="googleMap" th:field="*{googleMap}" placeholder="Google Map" data-required="false">
+	                    <label for="googleMap">Google Map</label>
+	                  </div>
+	                </div>
+	                <div class="col-md-6">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="facebook" th:field="*{facebook}" placeholder="Facebook" data-required="false">
+	                    <label for="facebook">Facebook</label>
+	                  </div>
+	                </div>
+	                <div class="col-md-6">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="instagram" th:field="*{instagram}" placeholder="Instagram" data-required="false">
+	                    <label for="instagram">Instagram</label>
+	                  </div>
+	                </div>
+	                <div class="col-md-6">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="youtube" th:field="*{youtube}" placeholder="YouTube" data-required="false">
+	                    <label for="youtube">YouTube</label>
+	                  </div>
+	                </div>
+	                <div class="col-md-6">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="tiktok" th:field="*{tiktok}" placeholder="TikTok" data-required="false">
+	                    <label for="tiktok">TikTok</label>
+	                  </div>
+	                </div>
+	                <div class="col-md-6">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="twitter" th:field="*{twitter}" placeholder="Twitter" data-required="false">
+	                    <label for="twitter">Twitter</label>
+	                  </div>
+	                </div>
+	                <div class="col-md-6">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="linkedin" th:field="*{linkedin}" placeholder="LinkedIn" data-required="false">
+	                    <label for="linkedin">LinkedIn</label>
+	                  </div>
+	                </div>
+	                <div class="col-12">
+	                  <div class="form-floating">
+	                    <textarea class="form-control" placeholder="Description" id="description" th:field="*{description}" style="height: 200px;" data-required="true"></textarea>
+	                    <label for="description">Description <span style="color:red;">*</span></label>
+	                  </div>
+	                </div>
+					<!--
+						<div class="col-md-12">
+						  <div>
+						      <select class="form-control" id="categories" name="categories" multiple style="height:400px;" hidden>
+						      	<option th:each="category : ${serviceCategoryList}" th:value="${category.categoryId}" th:text="${category.typeName}"></option>
+						      </select>
+						    
+						  </div>
+						</div>
+						-->
+					<input type="text" class="form-control" id="vendorCats" name="vendorCats" th:value="${selectedCats}">
+					<div class="col-md-12">
+					    <div>
+					        <label for="categoryInput">Select Categories</label>
+					        <div id="selected-items-container" class="selected-items-container">
+								<div class="selected-item" th:each="cat:${categories}" th:data-id="${cat.categoryId.categoryId}" th:data-name="${cat.categoryId.typeName}">
+									<span th:text="${cat.categoryId.typeName}"></span>
+									<span class="close-btn" onClick="removeSelectedItem(this.parentNode)">✖</span>
+								</div>
+							</div>
+					        <input type="text" class="form-control" id="categoryInput" placeholder="Type to search..." oninput="filterCategories()">
+					    </div>
+					    
+					    <div id="dropdown-list" class="dropdown-list">
+							
+						</div>
+						<select class="form-control" id="categories" name="categories">
+						    <option th:each="category : ${serviceCategoryList}" th:value="${category.categoryId}" th:text="${category.typeName}"></option>
+						</select>
+					</div>
+					
+					
+					<script>
+						const dataIdList = [];
+
+						document.addEventListener('DOMContentLoaded', function () {
+						    const inputElement = document.getElementById('categoryInput');
+						    const selectElement = document.getElementById('categories');
+						    const dropdownList = document.getElementById('dropdown-list');
+						    const selectedItemsContainer = document.getElementById('selected-items-container');
+						    						    
+						    const categories = Array.from(document.getElementById('categories').options).map(option => ({
+						        id: option.value,
+						        name: option.textContent
+						    }));
+						
+						    function filterCategories() {
+						        const filter = inputElement.value.toLowerCase();
+						        						
+						        categories.forEach(category => {
+						            if (category.name.toLowerCase().includes(filter)) {
+						                const item = document.createElement('div');
+						                item.className = 'dropdown-item';
+						                item.textContent = category.name;
+						                item.onclick = function() {
+						                    addSelectedItem(category);
+						                    //dropdownList.style.display = 'none'; 
+						                };
+						                dropdownList.appendChild(item);
+						            }
+						        });
+						
+						        dropdownList.style.display = dropdownList.children.length ? 'block' : 'none';
+						    }
+						
+						    function addSelectedItem(category) {
+						        if (!Array.from(selectedItemsContainer.children).some(child => child.textContent.includes(category.name))) {
+						            const selectedItemDiv = document.createElement('div');
+						            selectedItemDiv.className = 'selected-item';
+						            selectedItemDiv.textContent = category.name;
+						            selectedItemDiv.setAttribute('data-id', category.id);
+						            selectedItemDiv.setAttribute('data-name', category.name);
+						
+						            const closeBtn = document.createElement('span');
+						            closeBtn.className = 'close-btn';
+						            closeBtn.textContent = '✖';
+						            closeBtn.onclick = function () {
+						                selectedItemDiv.remove();
+						                removeSelectedItem(selectedItemDiv);
+						            };
+						
+						            selectedItemDiv.appendChild(closeBtn);
+						            selectedItemsContainer.appendChild(selectedItemDiv);
+						            document.getElementById('categoryInput').value = '';
+						            
+						            document.getElementById('vendorCats').value += category.id+',';
+						        }
+						    }
+						    
+						    
+						
+							selectElement.addEventListener('change', function () {
+						        Array.from(selectElement.selectedOptions).forEach(option => {
+	
+									const category = {
+								        id: option.value,
+								        name: option.textContent
+								    };
+						            addSelectedItem(category);
+						        });
+						    });
+						    inputElement.addEventListener('input', filterCategories);
+						});
+
+						function removeSelectedItem(item){
+					        const dataId = item.getAttribute('data-id');
+					        
+					        const vendorCatsInput = document.getElementById('vendorCats');
+        					vendorCatsInput.value = vendorCatsInput.value.replace(dataId + ',', '')
+					        updateDataIdList();
+
+        					item.remove();
+						}
+
+						function updateDataIdList() {
+						        const vendorCatsValue = document.getElementById('vendorCats').value;
+						        dataIdList.length = 0;
+						        dataIdList.push(...vendorCatsValue.split(',').filter(Boolean));
+						        /*
+						        console.log('Current dataIdList:', dataIdList);
+						        dataIdList.forEach(dataId => {
+						            console.log('Processing ID:', dataId);
+						        });*/
+						    }
+					</script>
+	                <div class="col-md-12">
+	                  <div class="form-floating">
+						  	<label for="logo">Logo (300x300)</label>
+		                    <img id="logoimagePreview" th:src="${vendor.logo}" alt="" width="300px" height="300px">
+	              			<input type="file" accept="image/*" id="logo" name="logo" hidden="" onchange="previewImage(event,'logoimagePreview')">
+	              			<p style="position: absolute; top: 50%; left: 15%; transform: translate(-50%, -50%);" onClick="document.getElementById('logo').click();">
+	              				<button class="btn btn-outline-primary" type="button">Change</button>
+	              			</p>
+	                  </div>
+	                </div>
+	                <div class="col-md-12">
+	                  <div class="form-floating">
+	                    <label for="coverImage">Cover Image (1600x920)</label>
+	                    <img id="coverImagePreview" th:src="${vendor.coverImage}" alt="" width="800px" height="450px">
+              			<input type="file" accept="image/*" id="coverImage" name="coverImage" hidden="" onchange="previewImage(event,'coverImagePreview')">
+              			<p style="position: absolute; top: 50%; left: 35%; transform: translate(-50%, -50%);" onClick="document.getElementById('coverImage').click();">
+              				<button class="btn btn-outline-primary" type="button">Change</button>
+              			</p>
+	                  </div>
+	                </div>
+	                
+	                
+	                <!--
+						<div class="col-md-12">
+	                  <div class="form-floating">
+	                    <label for="headerVideo">Header Video (1500x420)</label>
+	                    <div style="width:1500px;height:420px;">
+		                    <video id="headerVideoPreview" controls width="1500px" height="420px" style="display: none;">
+							    <source th:src="${vendor.headerVideo}" type="video/mp4">
+							    Your browser does not support the video tag.
+							</video>
+							<input type="file" accept="video/*" id="headerVideo" name="headerVideo" hidden onchange="previewVideo(event)">
+							<p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+							    <button class="btn btn-outline-primary" type="button" onclick="document.getElementById('headerVideo').click();">Change</button>
+							</p>
+						</div>
+	                  </div>
+	                </div>
+	                -->
+	                <div class="col-md-4">
+	                  <div class="form-floating">
+	                    <input type="number" class="form-control" id="discount" th:field="*{discount}" placeholder="Discount" data-required="false">
+	                    <label for="discount">Discount</label>
+	                  </div>
+	                </div>
+	                <div class="col-md-4">
+	                  <div class="form-floating">
+	                    <input type="number" class="form-control" id="advance" th:field="*{advance}" placeholder="Advance" data-required="false">
+	                    <label for="advance">Advance</label>
+	                  </div>
+	                </div>
+	                <div class="col-md-4">
+	                  <div class="form-floating">
+	                    <input type="number" class="form-control" id="averagePrice" th:field="*{averagePrice}" placeholder="Average Price" data-required="false">
+	                    <label for="averagePrice">Average Price</label>
+	                  </div>
+	                </div>
+	                <div class="col-md-4">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="openDays" th:field="*{openDays}" placeholder="Open Days" data-required="false">
+	                    <label for="openDays">Open Days</label>
+	                  </div>
+	                </div>
+	                <div class="col-md-4">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="openHours" th:field="*{openHours}" placeholder="Open Hours" data-required="false">
+	                    <label for="openHours">Open Hours</label>
+	                  </div>
+	                </div>
+	                <!--
+						<div class="col-md-12">
+	                  <div class="form-floating">
+	                    <input type="checkbox" class="form-control" id="isOnlinePaymentApproved" th:field="*{isOnlinePaymentApproved}">
+	                    <label for="isOnlinePaymentApproved">Online Payment Approved</label>
+	                  </div>
+	                </div>
+	                -->
+	                <div class="col-md-4">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="registrationDate" th:field="*{registrationDate}" placeholder="Registered Date" readonly data-required="false">
+	                    <label for="registrationDate">Registered Date</label>
+	                  </div>
+	                </div>
+	                
+	                <div class="col-md-4">
+	                  <div class="form-floating">
+	                    <input type="hidden" class="form-control" id="userId" th:value="${vendor.userId.userId}" data-required="false">
+	                    <input type="text" class="form-control" id="contactName" name="contactName" th:value="${vendor.userId.firstName}" placeholder="First Name" data-required="true">
+	                    <label for="firstName">Contact Person<span style="color:red;">*</span></label>
+	                  </div>
+	                </div>
+	                <div class="col-md-4">
+	                  	<div class="form-floating">
+	                    	<input type="text" class="form-control" id="username" name="username" th:value="${vendor.userId.username}" placeholder="Username" data-required="true" autocomplete="false" oninput="validateUsername(this)">
+	                    	<label for="username">Username <span style="color:red;">*</span></label>
+	                  	</div>
+	                  	<div class="text-left">
+							<span class="error-message"></span>
+						</div>
+	                </div>
+	                <div class="col-md-4">
+	                  <div class="form-floating">
+	                    <input type="password" class="form-control" id="password" name="password" placeholder="Password" data-required="false" autocomplete="false">
+	                    <label for="password">Password</label>
+	                  </div>
+	                </div>
+	                <div class="col-md-4">
+	                  <div class="form-floating mb-3">
+	                    <select class="form-select" id="status" th:field="*{userId.status}" aria-label="status">
+	                      <option value="ACTIVE" selected>ACTIVE</option>
+	                      <option value="SUSPEND">SUSPEND</option>
+	                      <option value="DEACTIVE">DEACTIVE</option>
+	                    </select>
+	                    <label for="floatingSelect">Status</label>
+	                  </div>
+	                </div>
+	                <div class="col-md-3">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="createBy" th:field="*{userId.createBy}" placeholder="Create By" readonly data-required="false">
+	                    <label for="createBy">Create By</label>
+	                  </div>
+	                </div>
+	                <div class="col-md-3">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="createDate" th:field="*{userId.createDate}" placeholder="Create Date" readonly data-required="false">
+	                    <label for="createDate">Create Date</label>
+	                  </div>
+	                </div>
+	                <div class="col-md-3">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="updateBy" th:field="*{userId.updateBy}" placeholder="Updated By" readonly data-required="false">
+	                    <label for="updateBy">Updated By</label>
+	                  </div>
+	                </div>
+	                <div class="col-md-3">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="updateDate" th:field="*{userId.updateDate}" placeholder="Update Date" readonly data-required="false">
+	                    <label for="updateDate">Update Date</label>
+	                  </div>
+	                </div>
+	                <!--
+						<div class="col-md-6">
+	                  <div class="col-md-12">
+	                    <div class="form-floating">
+	                      <input type="text" class="form-control" id="floatingCity" placeholder="City">
+	                      <label for="floatingCity">City</label>
+	                    </div>
+	                  </div>
+	                </div>
+	                <div class="col-md-4">
+	                  <div class="form-floating mb-3">
+	                    <select class="form-select" id="floatingSelect" aria-label="State">
+	                      <option selected>New York</option>
+	                      <option value="1">Oregon</option>
+	                      <option value="2">DC</option>
+	                    </select>
+	                    <label for="floatingSelect">State</label>
+	                  </div>
+	                </div>
+	                -->
+	                <div class="col-md-12">
+		                  <div class="form-floating">
+		                    <label for="images">Images</label> <br><br>
+	              			<input type="file" accept="image/*" id="images" name="images" multiple  data-required="false">
+		                  </div>
+	                </div>
+	                <div class="col-md-12">
+		                  <div class="row">
+							<div class="col-2" th:each="image : ${images}" if="${images}">
+					         	<div class="card">
+						            <img th:src="${image.image}" class="card-img-top" th:alt="${image.vendorId.vendorId}">
+						            <p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+			              				<a class="btn btn-outline-danger" th:href="@{/vendors/images/delete/{vendorId}(vendorId=${image.vendorGalleryId})}" onclick="return confirm('Are you sure?');">Remove</a>
+			              			</p>
+						        </div>
+					        </div>
+						  </div>
+	                </div>
+	                <div class="text-left">
+	                  <button type="submit" class="btn btn-primary" onclick="validateForm(event)">Submit</button>
+	                  <button type="reset" class="btn btn-secondary">Reset</button>
+	                </div>
+	                <div class="text-left">
+						<span class="error-message"></span>
+					</div>
+	              </form><!-- End floating Labels Form -->
+	
+	            </div>
+	          </div>
+	
+	        </div>
+	      </div>
+	    </section>
+	
+		
+	  </main>
+	</div>
+</body>	
+</html>

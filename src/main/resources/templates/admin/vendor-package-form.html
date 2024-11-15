@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{admin/fragments/layout}">
+
+<body>
+	<div layout:fragment="content" th:remove="tag">
+	<main id="main" class="main">
+
+	    <div class="pagetitle">
+	      <h1>Vendor Packages</h1>
+	      <nav>
+	        <ol class="breadcrumb">
+	          <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+	          <li class="breadcrumb-item active">Vendor Packages</li>
+	        </ol>
+	      </nav>
+	    </div>
+	
+	    <section class="section">
+	      <div class="row">
+	        <div class="col-lg-6">
+	
+	          <div class="card">
+	            <div class="card-body">
+	              <h5 class="card-title"></h5>
+	
+	              <form class="row g-3" th:action="@{/vendors/packages}" th:object="${vendorPackage}" method="post" autocomplete="off" enctype="multipart/form-data">
+					<div th:if="${error}" class="alert alert-danger">
+					    <p th:text="${error}"></p>
+					</div>
+					<div th:if="${message}" class="alert alert-success">
+					    <p th:text="${message}"></p>
+					</div>
+	                <div class="col-12" th:if="${vendorPackage.packageId != null}">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="packageId" th:field="*{packageId}" placeholder="Package Id" readonly data-required="false">
+	                    <label for="packageId">Package Id</label>
+	                  </div>
+	                </div>
+	                <div th:class="${vendorPackage.packageId != null? 'col-12' : 'col-12'}">
+	                  <div class="form-floating">
+	                    <input type="hidden" class="form-control" id="vendorId" th:field="*{vendorId}" data-required="false">
+	                    <input type="text" class="form-control" id="packageName" th:field="*{packageName}" placeholder="Package Name" data-required="true">
+	                    <label for="packageName">Package Name <span style="color:red;">*</span></label>
+	                  </div>
+	                </div>
+	                <div class="col-12">
+	                  <div class="form-floating">
+	                    <textarea class="form-control" placeholder="Description" id="description" th:field="*{description}" style="height: 200px;" data-required="false"></textarea>
+	                    <label for="description">Description</label>
+	                  </div>
+	                </div>
+	                <div class="col-12">
+	                  <div class="form-floating">
+						  	<label for="logo">Image (480x480)</label>
+		                    <img id="packageImagePreview" th:src="${vendorPackage.packageImage}" alt="" width="300px" height="300px">
+	              			<input type="file" accept="image/*" id="packageImage" name="packageImage" hidden="" onchange="previewImage(event,'packageImagePreview')">
+	              			<p style="position: absolute; top: 50%; left: 30%; transform: translate(-50%, -50%);" onClick="document.getElementById('packageImage').click();">
+	              				<button class="btn btn-outline-primary" type="button">Change</button>
+	              			</p>
+	                  </div>
+	                </div>
+	                <div class="col-12">
+	                  <div class="form-floating">
+	                    <input type="number" class="form-control" id="price" th:field="*{price}" placeholder="Price" data-required="true">
+	                    <label for="price">Price <span style="color:red;">*</span></label>
+	                  </div>
+	                </div>
+	                <div class="col-12">
+	                  <div class="form-floating">
+	                    <textarea class="form-control" placeholder="Feature 01, Feature 02, Feature 03" id="features" th:field="*{features}" style="height: 200px;" data-required="false"></textarea>
+	                    <label for="features">Features [Feature01, Feature02, Feature03]</label>
+	                  </div>
+	                </div>
+	                <div class="col-12">
+	                  <div class="form-floating mb-3">
+	                    <select class="form-select" id="active" th:field="*{active}" aria-label="status" data-required="false">
+	                      <option value="true">ACTIVE</option>
+	                      <option value="false">DEACTIVE</option>
+	                    </select>
+	                    <label for="floatingSelect">Status</label>
+	                  </div>
+	                </div>
+	                <div class="col-12">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="creatednDate" th:field="*{creationDate}" placeholder="Create Date" readonly data-required="false">
+	                    <label for="creationDate">Created Date</label>
+	                  </div>
+	                </div>
+	                
+	                <div class="text-left">
+	                  <button type="submit" class="btn btn-primary" onclick="validateForm(event)">Submit</button>
+	                  <button type="reset" class="btn btn-secondary">Reset</button>
+	                  <a type="button" class="btn btn-danger" th:href="@{/vendors/packages/delete/{id}(id=${vendorPackage.packageId})}" onclick="return confirm('Are you sure?');">Delete Package</a>
+	                </div>
+	                <div class="text-left">
+						<span class="error-message"></span>
+					</div>
+	              </form><!-- End floating Labels Form -->
+	
+	            </div>
+	          </div>
+	
+	        </div>
+	      </div>
+	    </section>
+	
+		
+	  </main>
+	</div>
+</body>	
+</html>

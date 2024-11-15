@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+
+<head>
+    <title th:text="'Welcome to ' + #{system.title}"></title>
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
+    <style>
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 500px;
+            margin: auto;
+        }
+
+        .modal-content h2 {
+            font-family: 'Times New Roman', serif;
+            font-size: 36px;
+            color: #333;
+        }
+
+        .modal-content p {
+            font-size: 18px;
+            color: #777;
+        }
+
+        .modal-content .start-button {
+            background-color: #f878ab;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .modal-content .start-button:hover {
+            background-color: #ff9dbf;
+        }
+        
+        /* Default styles for larger screens */
+		.search-container {
+		  text-align: center;
+		  margin-top: 40px;
+		}
+		
+		.search-form {
+		  display: flex;
+		  align-items: center;
+		  justify-content: center;
+		  gap: 10px;
+		}
+		
+		.search-input, 
+		.sc-dropdown, 
+		.search-button {
+		  padding: 10px;
+		  font-size: 16px;
+		}
+		
+		.search-input {
+		  width: 300px;
+		}
+		
+		.sc-dropdown {
+		  width: 180px;
+		}
+		
+		.search-button {
+		  padding: 10px 20px;
+		  background-color: #f878ab;
+		  border: none;
+		  color: white;
+		  cursor: pointer;
+		}
+		
+ 		@media (max-width: 767px) {
+		  .tp-caption.fullrounded.customin {
+		    width: 100%; /* Make the caption container fit the screen */
+		    padding: 20px;
+		  }
+		  
+		  .search-form {
+		    flex-direction: column;
+		    gap: 15px;
+		  }
+		
+		  .search-input {
+		    width: 100%;
+		    padding: 12px;
+		    font-size: 14px;
+		  }
+		
+		  .sc-dropdown {
+		    width: 100%;
+		    padding: 12px;
+		    font-size: 14px;
+		  }
+		
+		  .search-button {
+		    width: 100%;
+		    padding: 12px;
+		    font-size: 16px;
+		  }
+		
+		  .search-container {
+		    padding: 15px;
+		  }
+		  
+		  .revslider-initialised {
+			    height: 410px !important;
+			}
+			
+			.search{
+				top: 125px !important;
+			}
+		}
+		
+        #calendar {
+            max-width: 600px;
+            margin: 0 auto;
+            border: 2px solid #f878ab; /* Add a border around the calendar */
+            border-radius: 8px;      /* Optional: Add rounded corners */
+            padding: 10px;           /* Optional: Add some padding inside the border */
+        }
+        
+        #calendar .fc-scroller {
+		    overflow: hidden !important;
+		}
+
+        .fc-toolbar-title {
+		    font-size: 1.8em;       /* Make the title larger */
+		    font-weight: bold;      /* Make the title bold */
+		    color: #ff58ab;         /* Change color */
+		    text-align: center;     /* Center the text */
+		}
+
+        /* Style to center the day numbers */
+        .fc-daygrid-day-top {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%; /* Full cell height for proper centering */
+        }
+
+        .fc-daygrid-day-number {
+            font-size: 1.5em; /* Makes the date numbers larger */
+            font-weight: bold;
+        }
+
+        /* Adjust other cell elements to make calendar more compact */
+        .fc .fc-daygrid-day-frame {
+            height: 60px; /* Make day cells shorter */
+        }
+
+        .fc-toolbar {
+            font-size: 0.9em; /* Reduce header font size */
+        }
+
+        /* Adjust the font size of event titles (if any events are displayed) */
+        .fc-event {
+            font-size: 0.8em;
+        }
+
+		/* Custom styling for events with a heart icon */
+        .event-heart {
+            cursor: pointer;
+            color: red;
+            margin-left: 5px;
+            font-size: 1.2em;
+        }
+
+		.fc .fc-daygrid-day-events {
+		    margin-top: -65px;
+		}
+        /* Popup styling */
+        #popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 2px solid #333;
+            padding: 20px;
+            z-index: 1000;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            font-family: Arial, sans-serif;
+            width: 400px;
+        }
+
+        /* Popup content layout */
+        .popup-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* Text styling for popup */
+        .popup-text {
+            flex: 1;
+        }
+        .popup-text h3 {
+            font-family: 'Georgia', serif;
+            margin-top: 0;
+        }
+        .popup-text p {
+            font-family: 'Georgia', serif;
+        }
+
+        /* Image styling */
+        .popup-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 5px;
+            object-fit: cover;
+        }
+
+        /* Background overlay for the popup */
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+	
+	<div layout:fragment="content" th:remove="tag">
+		<!-- Wedding Modal -->
+		<div id="weddingModal" class="modal">
+		    <div class="modal-content">
+		        <h2>Start Planning Your Dream Wedding</h2>
+		        <p>Make your special day unforgettable. Begin planning now!</p>
+		        <button class="start-button" id="startPlanningButton">Start Planning</button>
+		    </div>
+		</div>
+		
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script>
+		    // Hide preloader after the page is fully loaded
+		    $(window).on('load', function () {
+		        $('#preloader').delay(300).fadeOut(800, function() {
+		            // Show the modal after preloader fades out
+		            $('#weddingModal').fadeIn(500);
+		        });
+		    });
+		
+		    // Redirect to dashboard on button click
+		    $('#startPlanningButton').on('click', function () {
+		        window.location.href = '/dashboard';
+		    });
+		    
+		    // Close modal when clicking outside the modal content
+		    $(window).on('click', function (event) {
+		        const modal = $('#weddingModal');
+		        if (event.target == modal[0]) {
+		            modal.fadeOut(500);
+		        }
+		    });
+		</script>
+		
+		
+		<section class="slider-section">
+		
+  			<div id="imageSlideshow" class="background-images">
+			  <div th:each="image : ${backgroundImages}" class="image-container">
+			    <img th:src="${image.path}" th:if="${image.type.name() == 'IMAGE'}" width="100%" height="100%">
+			
+			    <video muted width="100%" height="100%" 
+			           th:if="${image.type.name() == 'VIDEO'}">
+			      <source th:src="@{${image.path}}" type="video/mp4">
+			    </video>
+			  </div>
+		  	</div>
+			
+		  	<div class="overlay-content">
+			    <div class="fixed-image">
+		            <span class="item item-1" data-stellar-ratio="2"><img src="/images/slider/rose-1.png"></span>
+		
+		            <span class="item item-2" data-stellar-ratio="2"><img src="/images/slider/leaf.png"></span>
+		
+		            <span class="item item-3" data-stellar-ratio="2"><img src="/images/slider/rose-2.png"></span>
+		
+		            <span class="item item-4" data-stellar-ratio="2"><img src="/images/slider/rose-3.png"></span>
+		        </div>
+		        
+		        <div class="slider-content text-center">
+		            <div class="tp-banner-container">
+		                <div class="tp-banner">
+		                    <ul>
+		                        <li data-transition="fade" data-slotamount="7">
+		
+		                            <div class="tp-caption lft customout rs-parallaxlevel-0"
+		                                data-x="center" data-hoffset="0"
+		                                data-y="center" data-voffset="-140"
+		                                data-customout="x:0;y:0;z:0;rotationX:0;rotationY:0;rotationZ:0;scaleX:0.75;scaleY:0.75;skewX:0;skewY:0;opacity:0;transformPerspective:600;transformOrigin:50% 50%;"
+		                                data-speed="700"
+		                                data-start="500"
+		                                data-easing="Power3.easeInOut"
+		                                data-elementdelay="0.1"
+		                                data-endelementdelay="0.1"
+		                                data-endspeed="500"
+		                                style="z-index: 4;"><img src="/images/pattern2.png" alt="" data-lazyload="/images/border.png" width="750px">
+		                            </div>
+		                            
+		                            <div class="tp-caption fullrounded customin rs-parallaxlevel-10"
+		                                data-x="center" data-hoffset="0"
+		                                data-y="center" data-voffset="-240"
+		                                data-customin="x:0;y:0;z:0;rotationX:0;rotationY:0;rotationZ:0;scaleX:0;scaleY:0;skewX:0;skewY:0;opacity:0;transformPerspective:600;transformOrigin:50% 50%;"
+		                                data-speed="1000"
+		                                data-start="1000"
+		                                data-easing="Power4.easeInOut"
+		                                data-elementdelay="0.1"
+		                                data-endelementdelay="0.1"
+		                                data-endspeed="1200"
+		                                style="z-index: 16;">
+		                                <div class=" rs-slideloop" data-easing="Power3.easeInOut"
+		                                    data-speed="2"
+		                                    data-xs="0"
+		                                    data-xe="0"
+		                                    data-ys="0"
+		                                    data-ye="0"
+		                                    >
+		                                    <img src="/images/slider-heart.png" alt="" data-lazyload="/images/header-heart.png">
+		                                </div>
+		                            </div>
+		
+		                            <div class="tp-caption heading-text black_heavy_70 customin randomrotateout tp-resizeme rs-parallaxlevel-5"
+		                                data-x="center" data-hoffset="0"
+		                                data-y="center" data-voffset="-140"
+		                                data-customin="x:0;y:100;z:0;rotationX:0;rotationY:0;rotationZ:0;scaleX:1;scaleY:3;skewX:0;skewY:0;opacity:0;transformPerspective:600;transformOrigin:0% 0%;"
+		                                data-speed="1000"
+		                                data-start="1500"
+		                                data-easing="Power3.easeInOut"
+		                                data-splitin="chars"
+		                                data-splitout="none"
+		                                data-elementdelay="0.1"
+		                                data-endelementdelay="0.1"
+		                                data-endspeed="1000"
+		                                style="z-index: 6; max-width: auto; max-height: auto; white-space: nowrap;">
+		
+		                               <div class="title-text">
+		                                    <span class="text">Making Your Big Day Unforgettable</span>
+		                                </div>
+		                            </div>
+		
+		                            <div class="tp-caption caption-text lft customout rs-parallaxlevel-0"
+		                               data-x="center" data-hoffset="0"
+                                        data-y="center" data-voffset="-35"
+		                                data-customout="x:0;y:0;z:0;rotationX:0;rotationY:0;rotationZ:0;scaleX:0.75;scaleY:0.75;skewX:0;skewY:0;opacity:0;transformPerspective:600;transformOrigin:50% 50%;"
+		                                data-speed="1500"
+		                                data-start="3300"
+		                                data-easing="Power3.easeInOut"
+		                                data-elementdelay="0.1"
+		                                data-endelementdelay="0.1"
+		                                data-endspeed="500"
+		                                style="z-index: 4;">
+		                                <span style="color: floralwhite;font-family: 'Brush Script MT', cursive;text-shadow: 0 10px 20px rgba(0, 0, 0, 0.5); white-space: nowrap;">Your Day, Your Way!</span>
+		                            </div>
+		                            
+		                            <div class="tp-caption search fullrounded customin rs-parallaxlevel-10"
+                                        data-x="center" data-hoffset="0"
+                                        data-y="center" data-voffset="115"
+                                        data-customin="x:0;y:0;z:0;rotationX:0;rotationY:0;rotationZ:0;scaleX:0;scaleY:0;skewX:0;skewY:0;opacity:0;transformPerspective:600;transformOrigin:50% 50%;"
+                                        data-speed="1000"
+                                        data-start="1000"
+                                        data-easing="Power4.easeInOut"
+                                        data-elementdelay="0.1"
+                                        data-endelementdelay="0.1"
+                                        data-endspeed="1200"
+                                        style="z-index: 16;">
+                                        <div class=" rs-slideloop" data-easing="Power3.easeInOut"
+                                            data-speed="2"
+                                            data-xs="0"
+                                            data-xe="0"
+                                            data-ys="0"
+                                            data-ye="0"
+                                            >
+                                            <div class="search-container">
+											  <form th:action="@{/vendors/search}" th:object="${vendorSearch}" method="post" class="search-form">
+											    <input type="text" name="companyName" class="search-input" placeholder="Who are you looking for?">
+											    <input type="hidden" name="startAveragePrice" value="10000">
+											    <input type="hidden" name="endAveragePrice" value="100000000">
+											    <select name="vendorCats" class="sc-dropdown">
+											      <option value="">Any Category</option>
+											      <option th:each="category : ${serviceCategoryList}" th:value="${category.categoryId}" th:text="${category.typeName}"></option>
+											    </select>
+											   <select name="districts" class="sc-dropdown">
+												    <option value="">All of Sri Lanka</option>
+												    <option th:each="district : ${T(com.kdm360.bridalweb.model.Vendor$DISTRICT).values()}"
+												            th:value="${district.name()}"
+												            th:text="${district.name()}">
+												    </option>
+												</select>
+											    <button type="submit" class="search-button">SEARCH</button>
+											  </form>
+											</div>
+                                        </div>
+                                    </div>
+                                   
+		                        </li>
+		                    </ul>
+		                </div>
+		            </div>
+		        </div>
+			</div>
+			<script>
+			   document.addEventListener('DOMContentLoaded', function () {
+			    const slides = document.querySelectorAll('.image-container');
+			    let currentIndex = 0;
+			    
+			    function showNextSlide() {
+			        slides[currentIndex].classList.remove('active');
+			        
+			        currentIndex = (currentIndex + 1) % slides.length;
+			        
+			        slides[currentIndex].classList.add('active');
+			        
+			        const video = slides[currentIndex].querySelector('video');
+			        if (video) {
+			            video.currentTime = 0;
+			            video.play();
+			            video.onended = showNextSlide;
+			        } else {
+			            setTimeout(showNextSlide, 5000);
+			        }
+			    }
+			    
+			    showNextSlide();
+			});
+
+			</script>
+	    </section>
+	
+	    <section id="blog" class="blog-section">
+            <div class="container">
+                <div class="row">
+                    <div class="blog-part-two">
+                        <div class="second-title text-center">
+                            <h2>Featured Categories</h2>
+                            <span class="sub-title"> ~ Browse a variety of vendor categories ~ </span>
+                        </div>
+
+                        <div class="featured-categories">
+						    <div class="category-slider">
+						        <div th:each="category : ${vendorCategoryList}" class="category-item">
+									<div class="category-bg" 
+									     th:style="${category.imagePath != null && !category.imagePath.isEmpty()} ? 'background-image: url(' + ${category.imagePath} + ');' : 'background-image: url(/images/null-cover.jpg);'">
+									    <div class="category-content">
+									        <h3 th:text="${category.typeName}" style="color: white;">Category Name</h3>
+									        <form th:action="@{/vendors/search}" th:object="${vendorSearch}" method="post">
+									            <input type="hidden" name="vendorCats" th:value="${category.categoryId}" class="search-input">
+									            <button type="submit" class="btn-primary"><span th:text="'List ' + ${category.vendorCount + ' Vendors'}"></span></button>
+									        </form>
+									    </div>
+									</div>
+						        </div>
+						    </div>
+						    <button class="slide-prev" id="slide-prev1">❮</button>
+						    <button class="slide-next" id="slide-next1">❯</button>
+						</div>
+
+                    </div>
+                </div>
+            </div>
+            <script>
+			    const slider = document.querySelector('.category-slider');
+			    const slidePrev = document.getElementById('slide-prev1');
+			    const slideNext = document.getElementById('slide-next1');
+			
+			    let scrollAmount = 0;
+			    const slideSpeed = 300;
+			
+			    slideNext.addEventListener('click', () => {
+			        scrollAmount += slider.offsetWidth / 4;
+			        if (scrollAmount > slider.scrollWidth - slider.offsetWidth) {
+			            scrollAmount = 0;
+			        }
+			        slider.scrollTo({
+			            top: 0,
+			            left: scrollAmount,
+			            behavior: 'smooth'
+			        });
+			    });
+			
+			    slidePrev.addEventListener('click', () => {
+			        scrollAmount -= slider.offsetWidth / 4;
+			        if (scrollAmount < 0) {
+			            scrollAmount = slider.scrollWidth - slider.offsetWidth;
+			        }
+			        slider.scrollTo({
+			            top: 0,
+			            left: scrollAmount,
+			            behavior: 'smooth'
+			        });
+			    });
+			
+			    setInterval(() => {
+			        slideNext.click();
+			    }, 5000);
+			</script>
+
+        </section>
+        
+        <section id="blog" class="blog-section">
+            <div class="container">
+                <div class="row">
+                    <div class="blog-part-two">
+                        <div class="second-title text-center">
+                            <h2>Vendors</h2>
+                            <span class="sub-title"> ~ Find trusted vendors to bring your wedding vision to life ~ </span>
+                        </div>
+
+                        <div class="featured-categories">
+						    <div class="category-slider" id="vendor-slider">
+						        <div th:each="vendor : ${activeVendors}" class="category-item">
+						            <a th:href="@{/vendors/{id}(id=${vendor.vendorId})}">
+										<div class="category-bg" th:style="'background-image: url(' + ${vendor.coverImage} + ');'">
+							                <div class="category-logo">
+							                    <img th:src="${vendor.logo}" alt="Vendor Logo" th:if="${vendor.logo!=null && vendor.logo!=''}">
+							                </div>
+							                <div class="category-content">
+							                    <h3 th:text="${vendor.companyName}" style="color: white;">Company Name</h3>
+							                </div>
+							            </div>
+									</a>
+						        </div>
+						    </div>
+						    <button class="slide-prev" id="slide-prev2">❮</button>
+						    <button class="slide-next" id="slide-next2">❯</button>
+						</div>
+						<div class="extra-section text-center mb-50">
+                            <a class="btn btn-primary" type="button" href="/vendors">View All</a>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+			<script>
+			    const slider1 = document.getElementById('vendor-slider');
+			    const slidePrev1 = document.getElementById('slide-prev2');
+			    const slideNext1 = document.getElementById('slide-next2');
+			
+			    let scrollAmount1 = 0;
+			    const slideSpeed1 = 300;
+			
+			    slideNext1.addEventListener('click', () => {
+			        scrollAmount1 += slider1.offsetWidth / 4;
+			        if (scrollAmount1 > slider1.scrollWidth - slider1.offsetWidth) {
+			            scrollAmount1 = 0;
+			        }
+			        slider1.scrollTo({
+			            top: 0,
+			            left: scrollAmount1,
+			            behavior: 'smooth'
+			        });
+			    });
+			
+			    slidePrev1.addEventListener('click', () => {
+			        scrollAmount1 -= slider1.offsetWidth / 4;
+			        if (scrollAmount1 < 0) {
+			            scrollAmount1 = slider1.scrollWidth - slider1.offsetWidth;
+			        }
+			        slider1.scrollTo({
+			            top: 0,
+			            left: scrollAmount1,
+			            behavior: 'smooth'
+			        });
+			    });
+			
+			    setInterval(() => {
+			        slideNext1.click();
+			    }, 5000);
+			</script>
+        </section>
+        		
+		<script>
+		    document.addEventListener("DOMContentLoaded", function() {
+		        	
+		        var maxLength = 200;		
+		        if (document.getElementById('content1').textContent.length > maxLength) {
+		            document.getElementById('content1').textContent = document.getElementById('content1').textContent.substring(0, maxLength) + '...';
+		        }
+		        if (document.getElementById('content2').textContent.length > maxLength) {
+		            document.getElementById('content2').textContent = document.getElementById('content2').textContent.substring(0, maxLength) + '...';
+		        }
+		        if (document.getElementById('content3').textContent.length > maxLength) {
+		            document.getElementById('content3').textContent = document.getElementById('content3').textContent.substring(0, maxLength) + '...';
+		        }
+		    });
+		</script>
+		<br><br><br><br><br><br><br>
+        <section id="event" class="event-section">
+            <div class="event-part-one">
+                <span class="shap-style"></span>
+                <span class="shap-style-2"></span>
+
+                <span class="scroll text-center"><a class="page-scroll" href="#event"><img src="images/angel.png" alt="image"></a></span>
+
+                <div class="fixed-image">
+                    <span class="item item-1" data-stellar-ratio="2" data-stellar-vertical-offset="-300"><img src="images/invite/leaf.png"></span>
+
+                    <span class="item item-2" data-stellar-ratio="2" ><img src="images/invite/rose-5.png"></span>
+
+                    <span class="item item-3" data-stellar-ratio="2" data-stellar-vertical-offset="-650"><img src="images/invite/rose-1.png"></span>
+                </div> <!-- fixed-image -->
+
+				<section id="gallery" class="gallery-section">
+			        <div class="gallery-section-one">
+			            <div>
+			                <div class="section-title text-left">
+			                    <h2>Events</h2>
+			                </div>
+			            </div>
+			            
+			            <div class="main">
+			                <div class="ia-container"> 
+			                    <div class="container">
+				                    <div class="row">
+				                        <div class="col-md-12">
+				                            <div class="event-left-bar white-bg">
+				                                <div class="row">
+				                                    <div class="col-md-5">
+				                                        <div class="event-caption">
+				                                            <img src="images/calender1.jpg" alt="images">
+				                                        </div> <!-- event-caption -->
+				                                    </div>
+				
+				                                    <div class="col-md-7">
+				                                        <div class="tab-content white-bg">
+				                                            <div role="tabpanel" class="tab-pane active" id="home">
+				                                                <div class="content-wrapper text-center">
+				                                                	<div id="calendar"></div>
+				                                                	<!-- Popup and overlay for event details -->
+																    <div id="overlay" onclick="closePopup()"></div>
+																    <div id="popup">
+																        <div class="popup-content">
+																            <div class="popup-text">
+																				<img id="popup-image" class="popup-image" src="" alt="Event Image">
+																                <h3 id="popup-title"></h3>
+																                <p id="popup-details"></p>
+																            </div>
+																            
+																        </div>
+																        <button class="btn btn-primary" onclick="closePopup()">Close</button>
+																    </div>
+																    <script>
+																        document.addEventListener('DOMContentLoaded', function() {
+															            var calendarEl = document.getElementById('calendar');
+															            
+															            // Initialize FullCalendar
+															            var calendar = new FullCalendar.Calendar(calendarEl, {
+															                initialView: 'dayGridMonth',
+															                headerToolbar: {
+															                    left: 'prev,next',
+															                    center: 'title',
+															                    right: ''
+															                },
+															                events: [],
+															                eventContent: function(arg) {
+															                    let customHtml = `<span>${arg.event.title}</span><span class="event-heart" onclick="showPopup(event, '${arg.event.title}', '${arg.event.extendedProps.details}', '${arg.event.extendedProps.imageUrl}')">&#10084;</span>`;
+                    															return { html: customHtml };
+															                }
+															            });
+															            
+															            // Fetch data and populate events in the calendar
+															            fetch(`/events/getEventList`)
+															                .then(response => response.json())
+															                .then(data => {
+															                    // Convert the fetched events into the required format for FullCalendar
+															                    const events = data.map(event => ({
+															                        title: event.title,
+															                        start: formatDate(event.date), // Format the integer date to 'YYYY-MM-DD'
+															                        details: event.content,
+															                        imageUrl: event.image ? `${event.image}` : ''
+															                    }));
+															                    // Add events to the calendar
+															                    calendar.addEventSource(events);
+															                    calendar.render();
+															                })
+															                .catch(error => console.error('Error fetching data:', error));
+															            
+															            // Function to format integer date to YYYY-MM-DD
+															            function formatDate(dateInt) {
+															                const dateStr = dateInt.toString();
+															                console.log(`${dateStr.substring(0, 4)}-${dateStr.substring(4, 6)}-${dateStr.substring(6, 8)}`);
+															                return `${dateStr.substring(0, 4)}-${dateStr.substring(4, 6)}-${dateStr.substring(6, 8)}`;
+															            }
+															        });
+															
+															        // Function to display the popup with event details
+															        function showPopup(event, title, details, imageUrl) {
+															            event.stopPropagation(); // Prevents calendar click events from firing
+															            document.getElementById('popup-title').innerText = title;
+															            document.getElementById('popup-details').innerText = details;
+															            document.getElementById('popup-image').src = imageUrl;
+															            document.getElementById('popup').style.display = 'block';
+															            document.getElementById('overlay').style.display = 'block';
+															        }
+															
+															        // Function to close the popup
+															        function closePopup() {
+															            document.getElementById('popup').style.display = 'none';
+															            document.getElementById('overlay').style.display = 'none';
+															        }
+																    </script>    
+				                                                </div> <!-- content-wrapper -->
+				                                            </div>
+				
+				                                            
+				                                        </div> <!-- tab-content -->
+				                                    </div> 
+				                                </div> <!-- row -->
+				                            </div> <!-- event-left-bar -->
+				                        </div>
+				                    </div>
+				                </div>
+			                </div>
+			            </div>
+			            
+
+			        </div>
+			    </section>
+                
+            </div> <!-- event-part-one -->
+        </section> <!-- event-section -->
+        
+	    
+	    
+	    <section id="story" class="story-section">
+	        <div class="container">
+	            <div class="row">
+	                <div class="story-part-one">
+	                    <div class="story-container">
+	                        <div class="col-md-6">
+	                            
+	                            <div class="story-wrapper first-story left-border">
+	                                <div class="story-media">
+	                                    <img th:src="${blogList[blogList.size() - 1].image}" alt="images">
+	                                    <!--<span class="date"> <span class="black-color">24th</span> august <span class="link-color">2016</span></span>-->
+	                                    <span class="date" th:text="${blogList[blogList.size() - 1].publishedDate}" ></span>
+	                                </div>
+	
+	                                <div class="story-content text-center">
+	                                    <h3 th:text="${blogList[blogList.size() - 1].title}"></h3>
+	                                    <p id="content1" th:text="${blogList[blogList.size() - 1].content}"></p>
+	                                    <a class="btn btn-default" type="button" th:href="@{/blogs/{id}(id=${blogList[blogList.size() - 1].blogPostId})}">Read more</a>
+	                                </div>
+	
+	                                <div class="icon-effect text-center">
+	                                    <span class="icon-1 effect">
+	                                        <span class="shado-effect"></span>
+	                                        <i class="fa fa-heart" aria-hidden="true"></i>
+	                                    </span>
+	
+	                                    <span class="icon-2 effect">
+	                                        <span class="shado-effect"></span>
+	                                        <i class="fa fa-heart" aria-hidden="true"></i>
+	                                    </span>
+	
+	                                    <span class="icon-3 effect">
+	                                        <span class="shado-effect"></span>
+	                                        <i class="fa fa-heart" aria-hidden="true"></i>
+	                                    </span>
+	                                </div>
+	                            </div>
+	                        </div>
+	
+	                        <div class="col-md-6">
+	                            <div class="story-wrapper second-story right-border pt-15">
+	                                <div class="story-media">
+	                                    <img th:src="${blogList[blogList.size()-2].image}" alt="images">
+	                                    <!--<span class="date"> <span class="black-color">24th</span> august <span class="link-color">2016</span></span>-->
+	                                    <span class="date" th:text="${blogList[blogList.size()-2].publishedDate}" ></span>
+	                                </div>
+	
+	                                <div class="story-content text-center">
+	                                    <h3 th:text="${blogList[blogList.size()-2].title}"></h3>
+	                                    <p id="content2" th:text="${blogList[blogList.size()-2].content}"></p>
+	                                    <a class="btn btn-default" type="button" th:href="@{/blogs/{id}(id=${blogList[blogList.size() - 2].blogPostId})}">Read more</a>
+	                                </div>
+	                            </div>
+	
+	                            <div class="story-wrapper third-story right-border">
+	                                <div class="story-media">
+	                                    <img th:src="${blogList[blogList.size()-3].image}" alt="images">
+	                                    <!--<span class="date"> <span class="black-color">24th</span> august <span class="link-color">2016</span></span>-->
+	                                    <span class="date" th:text="${blogList[blogList.size()-3].publishedDate}" ></span>
+	                                </div>
+	
+	                                <div class="story-content text-center">
+	                                    <h3 th:text="${blogList[blogList.size()-3].title}"></h3>
+	                                    <p id="content3" th:text="${blogList[blogList.size()-3].content}"></p>
+	                                    <a class="btn btn-default" type="button" th:href="@{/blogs/{id}(id=${blogList[blogList.size()-3].blogPostId})}">Read more</a>
+	                                </div>
+	                            </div>
+	                        </div>
+	
+	                        <div class="extra-section text-center mb-50">
+	                            <a class="btn btn-primary" type="button" href="/blogs">Read more</a>
+	                        </div> 
+	                    </div> 
+	
+	                    <div class="small-view hidden-md hidden-lg text-center">
+	                        <img src="/images/car.png" alt="images">
+	                    </div>
+	
+	                    <!-- <div class="demo">
+	                        <div id="trigger" class="spacer s1"></div>
+	                        <div class="spacer s0"></div>
+	                        <div id="destroybox" class="box1">
+	                            <div class="horse-car hidden-sm hidden-xs">
+	                                <img class="car" src="/images/story-one/carriage.png" alt="images">
+	                                <img class="wheel-one round" src="/images/story-one/wheel-front.png" alt="images">
+	                                <img class="wheel-two round" src="/images/story-one/wheel-rear.png" alt="images">
+	                            </div> 
+	                        </div>
+	
+	                    </div> -->
+						<br>
+	                    <div class="horse-car hidden-sm hidden-xs">
+	                        <img class="car" src="/images/story-one/carriage.png" alt="images">
+	                        <img class="wheel-one round" src="/images/story-one/wheel-front.png" alt="images">
+	                        <img class="wheel-two round" src="/images/story-one/wheel-rear.png" alt="images">
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </section>
+	
+	
+	    <section id="event" class="event-section">
+	        <div class="event-part-one">
+	            <span class="shap-style"></span>
+	            <span class="shap-style-2"></span>
+	
+			     <section id="gallery" class="gallery-section">
+			        <div class="gallery-section-one">
+			            <div>
+			                <div class="section-title text-left">
+			                    <h2>Gallery</h2>
+			                </div>
+			            </div>
+			            
+			            <div class="main">
+			                <div class="ia-container"> 
+			                    <figure th:each="image, iterStat : ${gallery}">
+						            <img th:src="${image.image}" alt="image">
+						            <input type="radio" name="radio-set">
+						            <figcaption>
+						                <span th:text="${image.caption != null ? image.caption : ''}"></span>
+						                <div th:id="'lightgallery' + ${iterStat.index}">
+						                    
+						                </div>
+						            </figcaption>
+						            <span class="title-number" th:text="${iterStat.index + 1}"></span>
+			                </div>
+			            </div>
+			            
+<!--			            <div class="main">-->
+<!--						    <div class="ia-container-wrapper">						        -->
+<!--						        <div class="ia-container">-->
+<!--						            <div class="gallery-container">-->
+<!--								      <img th:src="${image.image}" alt="image" th:each="image, iterStat : ${gallery}">-->
+<!--								    </div>-->
+<!--						        </div>-->
+<!--						    </div>-->
+<!--						</div>-->
+						<script>
+							document.addEventListener("DOMContentLoaded", function() {
+								const galleryContainer = document.querySelector('.gallery-container');
+
+								let isDragging = false;
+								let startX;
+								let scrollLeft;
+								
+								galleryContainer.addEventListener('mousedown', (e) => {
+								  isDragging = true;
+								  galleryContainer.classList.add('active');
+								  startX = e.pageX - galleryContainer.offsetLeft; 
+								  scrollLeft = galleryContainer.scrollLeft;
+								  e.preventDefault(); 
+								});
+								
+								galleryContainer.addEventListener('mouseleave', () => {
+								  isDragging = false;
+								  galleryContainer.classList.remove('active'); 
+								});
+								
+								galleryContainer.addEventListener('mouseup', () => {
+								  isDragging = false;
+								  galleryContainer.classList.remove('active'); 
+								});
+								
+								galleryContainer.addEventListener('mousemove', (e) => {
+								  if (!isDragging) return; 
+								  e.preventDefault();
+								  const x = e.pageX - galleryContainer.offsetLeft;
+								  const walk = (x - startX) * 2; 
+								  galleryContainer.scrollLeft = scrollLeft - walk;
+								});
+
+
+							});
+						</script>
+
+			        </div>
+			    </section>
+	   		</div>
+	    </section>
+	    
+        <section id="blog" class="blog-section">
+            <div class="container">
+                <div class="row">
+                    <div class="blog-part-two">
+                        <div class="second-title text-center">
+                            <h2>Our Partners</h2>
+<!--                            <span class="sub-title"></span>-->
+                        </div>
+
+                        <div class="featured-categories">
+						    <div class="category-slider" id="client-slider">
+						        <div th:each="client : ${clients}" class="category-item">
+						            <a th:href="${(client.webSite!=null && client.webSite!='')? 'https://'+ client.webSite : ''}" >
+										
+							            <img th:src="${client.image}" th:if="${client.image!=null && client.image!=''}" width="280px" hight="120px">
+									</a>
+						        </div>
+						    </div>
+						    <button class="slide-prev" id="slide-prev3">❮</button>
+						    <button class="slide-next" id="slide-next3">❯</button>
+						</div>
+                    </div>
+                </div>
+            </div>
+			<script>
+			    const slider3 = document.getElementById('client-slider');
+			    const slidePrev3 = document.getElementById('slide-prev3');
+			    const slideNext3 = document.getElementById('slide-next3');
+			
+			    let scrollAmount3 = 0;
+			    const slideSpeed3 = 300;
+			
+			    slideNext3.addEventListener('click', () => {
+			        scrollAmount3 += slider3.offsetWidth / 4;
+			        if (scrollAmount3 > slider3.scrollWidth - slider3.offsetWidth) {
+			            scrollAmount3 = 0;
+			        }
+			        slider3.scrollTo({
+			            top: 0,
+			            left: scrollAmount3,
+			            behavior: 'smooth'
+			        });
+			    });
+			
+			    slidePrev3.addEventListener('click', () => {
+			        scrollAmount3 -= slider3.offsetWidth / 4;
+			        if (scrollAmount3 < 0) {
+			            scrollAmount3 = slider3.scrollWidth - slider3.offsetWidth;
+			        }
+			        slider3.scrollTo({
+			            top: 0,
+			            left: scrollAmount3,
+			            behavior: 'smooth'
+			        });
+			    });
+			
+			    setInterval(() => {
+			        slideNext3.click();
+			    }, 5000);
+			</script>
+        </section>
+        
+        
+	</div>
+</body>	
+</html>

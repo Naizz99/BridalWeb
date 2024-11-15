@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{admin/fragments/layout}">
+
+<body>
+	<div layout:fragment="content" th:remove="tag">
+	<main id="main" class="main">
+
+	    <div class="pagetitle">
+	      <h1>Wedding Types</h1>
+	      <nav>
+	        <ol class="breadcrumb">
+	          <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+	          <li class="breadcrumb-item active">Wedding Types</li>
+	        </ol>
+	      </nav>
+	    </div>
+	
+	    <section class="section">
+	      <div class="row">
+	        <div class="col-lg-6 col-md-6 col-sm-12">
+	          <div class="card">
+	            <div class="card-body">
+	              <h5 class="card-title"></h5>
+	
+	              <form class="row g-3" th:action="@{/weddings/types}" th:object="${type}" id="typeForm" method="post" autocomplete="off" enctype="multipart/form-data">
+					<div th:if="${error}" class="alert alert-danger">
+					    <p th:text="${error}"></p>
+					</div>
+					<div th:if="${message}" class="alert alert-success">
+					    <p th:text="${message}"></p>
+					</div>
+	                <div class="col-md-12" th:if="${type.weddingTypeId != null}">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="weddingTypeId" th:field="*{weddingTypeId}" placeholder="Id" readonly data-required="false">
+	                    <label for="weddingTypeId">Type Id</label>
+	                  </div>
+	                </div>
+	                <div th:class="${type.weddingTypeId != null? 'col-md-12' : 'col-md-12'}">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="typeName" th:field="*{typeName}" placeholder="Type Name" data-required="true">
+	                    <label for="typeName">Type Name<span style="color:red;">*</span></label>
+	                  </div>
+	                </div>
+	                <div class="col-md-12">
+	                  <div class="form-floating">
+						  	<label for="logo">Image (300x300)</label>
+		                    <img id="imagePreview" th:src="${type.image}" alt="" width="300px" height="300px">
+	              			<input type="file" accept="image/*" id="image" name="image" hidden="" onchange="previewImage(event,'imagePreview')">
+	              			<p style="position: absolute; top: 50%; left: 30%; transform: translate(-50%, -50%);" onClick="document.getElementById('image').click();">
+	              				<button class="btn btn-outline-primary" type="button">Change</button>
+	              			</p>
+	                  </div>
+	                </div>
+	                <div th:class="${type.weddingTypeId != null? 'col-md-12' : 'col-md-12'}">
+	                  <div class="form-floating">
+	                    <textarea class="form-control" id="description" th:field="*{description}" placeholder="Description" style="height: 100px;" data-required="true"></textarea>
+	                    <label for="description">Description <span style="color:red;">*</span></label>
+	                  </div>
+	                </div>
+	                <div class="col-md-12">
+	                  <div class="form-floating mb-3">
+	                    <select class="form-select" id="active" th:field="*{active}" aria-label="status" data-required="false">
+	                      <option value="true">ACTIVE</option>
+	                      <option value="false">DEACTIVE</option>
+	                    </select>
+	                    <label for="floatingSelect">Status</label>
+	                  </div>
+	                </div>
+	                <div class="text-left">
+	                  <button type="submit" class="btn btn-primary" onclick="validateForm(event)">Submit</button>
+	                  <button type="reset" class="btn btn-secondary">Reset</button>
+	                </div>
+	                <div class="text-left">
+						<span class="error-message"></span>
+					</div>
+	              </form>
+	
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+	    </section>
+	
+		
+	  </main>
+	</div>
+</body>	
+</html>

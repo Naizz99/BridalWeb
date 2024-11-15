@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{admin/fragments/layout}">
+
+<body>
+	<div layout:fragment="content" th:remove="tag">
+	<main id="main" class="main">
+
+	    <div class="pagetitle">
+	      <h1>Weddings</h1>
+	      <nav>
+	        <ol class="breadcrumb">
+	          <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+	          <li class="breadcrumb-item active">Weddings</li>
+	        </ol>
+	      </nav>
+	    </div>
+	
+	    <section class="section">
+	      <div class="row">
+	        <div class="col-lg-5 col-md-5 col-sm-12">
+	          <div class="card">
+	            <div class="card-body">
+	              <h5 class="card-title"></h5>
+	
+	              <form class="row g-3" th:action="@{/weddings}" th:object="${wedding}" id="weddingForm" method="post" autocomplete="off" enctype="multipart/form-data">
+					<div th:if="${error}" class="alert alert-danger">
+					    <p th:text="${error}"></p>
+					</div>
+					<div th:if="${message}" class="alert alert-success">
+					    <p th:text="${message}"></p>
+					</div>
+	                <div class="col-md-12" th:if="${wedding.weddingId != null}">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="weddingId" th:field="*{weddingId}" placeholder="Wedding Id" readonly data-required="false">
+	                    <label for="weddingId">Wedding Id</label>
+	                  </div>
+	                </div>
+	                <div th:class="${wedding.weddingId != null? 'col-md-12' : 'col-md-12'}">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="Bride & Groom" data-required="true">
+	                    <label for="name">Name (Bride & Groom)<span style="color:red;">*</span></label>
+	                  </div>
+	                </div>
+	                <div th:class="${wedding.weddingId != null? 'col-md-12' : 'col-md-12'}">
+	                  <div class="form-floating">
+						<!-- Date input for selecting the date -->
+						<input type="date" class="form-control" id="date" 
+						       th:field="*{date}" placeholder="Date" data-required="false"
+						       onchange="document.getElementById('datePreview').value=this.value">
+       					<label for="date">Wedding Date</label>
+	                    <!-- Text input for previewing the date -->
+						<input type="text" class="form-control" id="datePreview" 
+						       th:value="${wedding.date}" placeholder="Date" data-required="false"
+						       onClick="document.getElementById('date').click();">
+	                  </div>
+	                </div>
+	                <div class="col-md-12">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="location" th:field="*{location}" placeholder="Location" data-required="false">
+	                    <label for="location">Location</label>
+	                  </div>
+	                </div>
+	                <div class="col-md-12">
+	                  <div class="form-floating">
+	                    <input type="number" class="form-control" id="budget" th:field="*{budget}" placeholder="Budget" data-required="false">
+	                    <label for="budget">Budget</label>
+	                  </div>
+	                </div>
+	                <div class="col-md-12">
+	                  <div class="form-floating mb-3">
+	                    <select class="form-select" id="weddingTypeId" th:field="*{weddingTypeId}" aria-label="status" data-required="true">
+	                      <option th:each="type : ${weddingTypes}" th:value="${type.weddingTypeId}" th:text="${type.typeName}"></option>
+	                    </select>
+	                    <label for="floatingSelect">Wedding Type <span style="color:red;">*</span></label>
+	                  </div>
+	                </div>
+	                <div class="col-md-12">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="createBy" th:field="*{createdBy}" placeholder="Create By" readonly data-required="false">
+	                    <label for="createBy">Create By</label>
+	                  </div>
+	                </div>
+	                <div class="col-md-12">
+					    <div class="form-floating">
+					        <input type="text" class="form-control" id="createdDate" th:field="*{createdDate}" placeholder="Create Date" readonly>
+					        <label for="createdDate">Create Date</label>
+					    </div>
+					</div>
+
+	                
+	                <div class="text-left">
+	                  <button type="submit" class="btn btn-primary" onclick="validateForm(event)">Submit</button>
+	                  <button type="reset" class="btn btn-secondary">Reset</button>
+	                </div>
+	                <div class="text-left">
+						<span class="error-message"></span>
+					</div>
+	              </form><!-- End floating Labels Form -->
+	
+	            </div>
+	          </div>
+	        </div>
+	        
+	        <div class="col-lg-7 col-md-7 col-sm-12" th:if="${wedding.weddingId != null}">
+	          <div class="card">
+	            <div class="card-body">
+	              <h5 class="card-title"></h5>
+	
+	              <form class="row g-3" th:action="@{/weddings/images}" th:object="${image}" id="imageForm" method="post" autocomplete="off" enctype="multipart/form-data">
+					<div th:if="${error}" class="alert alert-danger">
+					    <p th:text="${error}"></p>
+					</div>
+					<div th:if="${message}" class="alert alert-success">
+					    <p th:text="${message}"></p>
+					</div>
+	                <div class="col-6">
+	                  <div class="form-floating">
+	              			<input type="hidden" id="weddingId" name="weddingId" th:value="${wedding.weddingId}" data-required="false">
+	              			<input type="file" accept="image/*" id="image" name="image" multiple  data-required="false">
+	                  </div>
+	                </div>
+	                <div class="text-left col-6">
+	                  <button type="submit" class="btn btn-primary" onclick="validateForm(event)">Add</button>
+	                  <button type="reset" class="btn btn-secondary">Clear</button>
+	                </div>
+	                <div class="text-left">
+						<span class="error-message"></span>
+					</div>
+	              </form>
+					<hr>
+					
+					<div class="row">
+						<div class="col-2" th:each="image : ${images}">
+				         	<div class="card">
+					            <img th:src="${image.image}" class="card-img-top" th:alt="${image.weddingId.weddingId}">
+					            <p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+		              				<a class="btn btn-outline-danger" th:href="@{/weddings/images/delete/{weddingId}(weddingId=${image.weddingGalleryId})}" onclick="return confirm('Are you sure?');">Remove</a>
+		              			</p>
+					        </div>
+				        </div>
+					</div>
+	          </div>
+	        </div>
+	      </div>
+	    </section>
+	
+		
+	  </main>
+	</div>
+</body>	
+</html>

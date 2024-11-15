@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+
+<head>
+    <title th:text="'Welcome to ' + #{system.title}"></title>
+
+</head>
+<!--
+	<body>
+	<div layout:fragment="content" th:remove="tag">
+		<div class="container">
+            <div class="row">
+                <div class="col-md-12">
+					<img th:src="${(vendor.coverImage!=null && vendor.coverImage!='')? vendor.coverImage!=null : '/images/null.jpg'}" width="1500px" height="420px" alt="images">
+                    <div class="blog-left-bar">
+                        <div class="blog-wrapper">
+                            <div class="blog-caption-single mr-70">
+                                
+                            </div> 
+
+                            <div class="blog-content ml-45 mr-70">
+                                <span class="tag white-color link-color-bg">Wedding</span>
+								<span class="tag white-color link-color-bg" title="Liked"><i class="fa fa-heart-fill"></i></span>
+								
+								<span class="tag white-color link-color-bg" title="Like"><i class="fa fa-heart"></i></span>
+
+                                <h3 th:text="${vendor.companyName}"></h3>
+                                <span class="small-text" th:text="${vendor.branches}"></span>
+
+                                <div class="content-box mt-20">
+                                    <p th:text="${vendor.description}"></p>
+                                </div> 
+                            </div> 
+                        </div> 
+                    </div> 
+                </div> 
+            </div>
+        </div> 
+	</div>
+</body>	
+-->
+
+<body  class="white-bg">
+	<div layout:fragment="content" th:remove="tag">
+		<div class="container-fluid full-wrapper">
+			
+			<section class="slider-second-section" 
+			         th:style="'background: url(' + ${(vendor.coverImage != null && vendor.coverImage != '') ? vendor.coverImage : '/images/slider-2/slider.jpg'} + ') no-repeat;width:100%;'">
+	            
+				<div class="heart">
+	                <img src="/images/creative-heart.png" alt="image">
+	            </div>
+	
+	            <div class="slider-content text-center">
+	                <div class="tp-banner-container">
+	                    <div class="tp-banner">
+	                        <ul>
+	                            <li data-transition="fade" data-slotamount="7">
+	
+	                                <!-- LAYER NR. 1 -->
+	                                <div class="tp-caption caption-text customin fadeout tp-resizeme rs-parallaxlevel-3"
+	                                    data-x="center" data-hoffset="0"
+	                                    data-y="center" data-voffset="0"
+	                                    data-customin="x:0;y:0;z:0;rotationX:0;rotationY:0;rotationZ:0;scaleX:0;scaleY:0;skewX:0;skewY:0;opacity:0;transformPerspective:600;transformOrigin:50% 50%;"
+	                                    data-speed="600"
+	                                    data-start="500"
+	                                    data-easing="Power4.easeInOut"
+	                                    data-splitin="none"
+	                                    data-splitout="none"
+	                                    data-elementdelay="0.1"
+	                                    data-endelementdelay="0.1"
+	                                    style="z-index: 2; max-width: auto; max-height: auto; white-space: nowrap;"><h1>AAAAA</h1>
+	                                </div>
+	                            </li>
+	                        </ul>
+	                    </div> <!-- tp-banner -->
+	                </div> <!-- tp-banner-container -->
+	            </div> <!-- slider-content -->
+	        </section> <!-- slider-section -->
+	
+	
+			<section id="couple" class="couple-section">
+	            <div class="container">
+	                <div class="row">
+	                    <div class="col-md-4">
+	                        <div class="section-wrapper">
+	                            <div class="section-caption m-ml-115">
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="col-md-4">
+	                        <div class="section-wrapper section-middle-bar text-center">
+	                            <div class="heart">
+	                                <img src="/images/creative-heart.png" alt="image">
+	                            </div> 
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	        </section>
+	
+	        <section id="gallery" class="gallery-section bg-color-1">
+	            <div class="gallery-section-two" style="background-color: white;">
+	                <div class="container">
+	                    
+	                    <div class="portfolio gallery-grid">
+	                        <div class="row">
+	                            
+	                            <div class="gallery-wrapper">
+	                                <ul class="portfolio-items courses list-unstyled" id="grid">
+	                                    <li class="col-md-4 col-sm-4 col-xs-6" data-groups='["people"]'>
+	                                        <figure class="portfolio-item gallery-caption">
+	                                            <a href="#">
+	                                                <img src="/images/gallery-two/g-5.jpg">
+	
+	                                                <div id="lightgallery1" class="hover-view"><a href="/images/gallery-two/g-5.jpg" rel="prettyPhoto"><i class="fa fa-search-plus"></i></a></div>
+	                                            </a>
+	                                        </figure>
+	                                    </li>
+	
+	                                    <li class="col-md-4 col-sm-4 col-xs-6" data-groups='["people"]'>
+	                                        <figure class="portfolio-item gallery-caption">
+	                                            <a href="#">
+	                                                <img src="/images/gallery-two/g-2.jpg">
+	
+	                                                <div id="lightgallery2" class="hover-view"><a href="/images/gallery-two/g-2.jpg" rel="prettyPhoto"><i class="fa fa-search-plus"></i></a></div>
+	                                            </a>
+	                                        </figure>
+	                                    </li>
+	
+	                                    <li class="col-md-4 col-sm-4 col-xs-6" data-groups='["futurama"]'>
+	                                        <figure class="portfolio-item gallery-caption">
+	                                            <a href="#">
+	                                                <img src="/images/gallery-two/g-4.jpg">
+	
+	                                                <div id="lightgallery3" class="hover-view"><a href="/images/gallery-two/g-4.jpg" rel="prettyPhoto"><i class="fa fa-search-plus"></i></a></div>
+	                                            </a>
+	                                        </figure>
+	                                    </li>
+	
+	                                    <li class="col-md-4 col-sm-4 col-xs-6" data-groups='["futurama"]'>
+	                                        <figure class="portfolio-item gallery-caption">
+	                                            <a href="#">
+	                                                <img src="/images/gallery-two/g-3.jpg">
+	
+	                                                <div id="lightgallery4" class="hover-view"><a href="/images/gallery-two/g-3.jpg" rel="prettyPhoto"><i class="fa fa-search-plus"></i></a></div>
+	                                            </a>
+	                                        </figure>
+	                                    </li>
+	
+	                                    <li class="col-md-4 col-sm-4 col-xs-6" data-groups='["simpsons", "people"]'>
+	                                        <figure class="portfolio-item gallery-caption">
+	                                            <a href="#">
+	                                                <img src="/images/gallery-two/g-1.jpg">
+	
+	                                                <div id="lightgallery5" class="hover-view"><a href="/images/gallery-two/g-1.jpg" rel="prettyPhoto"><i class="fa fa-search-plus"></i></a></div>
+	                                            </a>
+	                                        </figure>
+	                                    </li>
+	                                </ul> <!--end portfolio grid -->
+	                            </div> <!-- gallery-wrapper -->
+	                        </div> <!--end row -->
+	                    </div>
+	                </div> <!-- container -->
+	            </div> <!-- gallery-section-two -->
+	        </section> <!-- gallery-section -->
+	
+	        <section id="blog" class="blog-section">
+	            <div class="container">
+	                <div class="row">
+	                    <div class="blog-part-two">
+	                        <div class="second-title text-center">
+	                            <h2>Wedding News</h2>
+	                            <span class="sub-title"> ~ What they say ~ </span>
+	                        </div> <!-- second-title -->
+	
+	
+	                        <div class="blog-wrapper">
+	                            <div class="col-md-3 effect">
+	                                <div class="post-wrapper">
+	                                    <img src="/images/blog-two/b2-1.jpg" alt="images">
+	
+	                                    <ul class="wedding-box list-inline text-center">
+	                                        <li><a href="#">Wedding</a></li>
+	                                        <li><a href="#">Style</a></li>
+	                                    </ul> <!-- wedding-box -->
+	
+	                                    <div class="post-content">
+	                                        <h3><a href="#">What a difference a day can make me Alone witout your Touch!</a></h3>
+	                                        <p>What a difference a day can make me Alone witout You & your Touch!</p>
+	
+	                                        <span class="post-date text-uppercase">Mark Tailor - 27 Sep,2014 - <i class="fa fa-comment-o" aria-hidden="true"></i>1</span>
+	                                    </div> <!-- post-content -->
+	                                </div> <!-- post-wrapper -->
+	                            </div> <!-- col-md-3 -->
+	
+	                            <div class="col-md-3 effect">
+	                                <div class="post-wrapper">
+	                                    <img src="/images/blog-two/b2-2.jpg" alt="images">
+	
+	                                    <ul class="wedding-box list-inline text-center">
+	                                        <li><a href="#">Wedding</a></li>
+	                                        <li><a href="#">Style</a></li>
+	                                    </ul> <!-- wedding-box -->
+	
+	                                    <div class="post-content">
+	                                        <h3><a href="#">Friends always tell me a foolish boy because I can not stay!</a></h3>
+	                                        <p>What a difference a day can make me Alone witout You & your Touch!</p>
+	
+	                                        <span class="post-date text-uppercase">Mark Tailor - 27 Sep,2014 - <i class="fa fa-comment-o" aria-hidden="true"></i>1</span>
+	                                    </div> <!-- post-content -->
+	                                </div> <!-- post-wrapper -->
+	                            </div> <!-- col-md-3 -->
+	
+	                            <div class="col-md-3 effect">
+	                                <div class="post-wrapper">
+	                                    <img src="/images/blog-two/b2-3.jpg" alt="images">
+	
+	                                    <ul class="wedding-box list-inline text-center">
+	                                        <li><a href="#">Wedding</a></li>
+	                                        <li><a href="#">Style</a></li>
+	                                    </ul> <!-- wedding-box -->
+	
+	                                    <div class="post-content">
+	                                        <h3><a href="#">What to stay with you for a long time.</a></h3>
+	                                        <p>What a difference a day can make me Alone witout You & your Touch!</p>
+	
+	                                        <span class="post-date text-uppercase">Mark Tailor - 27 Sep,2014 - <i class="fa fa-comment-o" aria-hidden="true"></i>1</span>
+	                                    </div> <!-- post-content -->
+	                                </div> <!-- post-wrapper -->
+	                            </div> <!-- col-md-3 -->
+	
+	                            <div class="col-md-3 effect">
+	                                <div class="post-wrapper">
+	                                    <img src="/images/blog-two/b2-4.jpg" alt="images">
+	
+	                                    <ul class="wedding-box list-inline text-center">
+	                                        <li><a href="#">Wedding</a></li>
+	                                        <li><a href="#">Style</a></li>
+	                                    </ul> <!-- wedding-box -->
+	
+	                                    <div class="post-content">
+	                                        <h3><a href="#">I love you n can’t pass a daywithout you! Believe me or not.</a></h3>
+	                                        <p>What a difference a day can make me Alone witout You & your Touch!</p>
+	
+	                                        <span class="post-date text-uppercase">Mark Tailor - 27 Sep,2014 - <i class="fa fa-comment-o" aria-hidden="true"></i>1</span>
+	                                    </div> <!-- post-content -->
+	                                </div> <!-- post-wrapper -->
+	                            </div> <!-- col-md-3 -->
+	                        </div> <!-- blog-wrapper -->
+	                    </div> <!-- blog-part-two -->
+	                </div>
+	            </div>
+	        </section> <!-- blog-section -->
+	
+		</div>
+	</div>
+</body>
+
+</html>

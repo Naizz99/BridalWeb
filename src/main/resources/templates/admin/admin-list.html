@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{admin/fragments/layout}">
+
+<body>
+	<div layout:fragment="content" th:remove="tag">
+	<main id="main" class="main">
+
+	    <div class="pagetitle">
+	      <h1>Admin Users</h1>
+	      <nav>
+	        <ol class="breadcrumb">
+	          <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+	          <li class="breadcrumb-item active">Admins</li>
+	        </ol>
+	      </nav>
+	    </div>
+	
+	    <section class="section">
+	      <div class="row">
+	        <div class="col-lg-12">
+	
+			<a type="button" class="btn btn-primary" th:href="@{/users/admins/new}">Add New</a> <br><br>
+	          <div class="card">
+	            <div class="card-body">
+	            	  	
+					<div class="toast success" th:if="${message}" th:text="${message}" th:classappend="${message} ? 'show' : ''"></div>
+					<div class="toast error" th:if="${error}" th:text="${error}" th:classappend="${error} ? 'show' : ''"></div>
+	
+		              <table class="table datatable">
+		                <thead>
+		                  <tr>
+		                  	<th scope="col">#</th>
+		                    <th scope="col">Name</th>
+		                    <th scope="col">Email</th>
+		                    <th scope="col">Mobile</th>
+		                    <th scope="col">Status</th>
+		                    <th>Actions</th>
+		                  </tr>
+		                </thead>
+		                <tbody>
+		                  <tr th:each="admin : ${admins}">
+		                    <th scope="row" th:text="${admin.userId}"></th>
+		                    <td th:text="${admin.firstName} + ' ' + ${admin.lastName}"></td>
+		                    <td th:text="${admin.email}"></td>
+		                    <td th:text="${admin.mobile}"></td>
+		                    <td th:text="${admin.status}"></td>
+		                    <td>
+		                        <a type="button" class="btn btn-primary" th:href="@{/users/edit/{id}(id=${admin.userId})}">Edit</a> |
+		                        <a type="button" class="btn btn-secondary" th:href="@{/users/delete/{id}(id=${admin.userId})}" onclick="return confirm('Are you sure?');">Delete</a>
+		                    </td>
+		                  </tr>
+		                </tbody>
+		              </table>
+	
+	            </div>
+	          </div>
+	
+	        </div>
+	      </div>
+	    </section>
+	
+	  </main>
+	</div>
+</body>	
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+	<title th:text="'Dashboard - ' + #{system.title}"></title>
+	<meta content="" name="description">
+	<meta content="" name="keywords">
+
+	<!-- Favicons -->
+	<link th:href="@{/images/favicon.png}" rel="icon">
+	<link th:href="@{/admin/img/apple-touch-icon.png}" rel="apple-touch-icon">
+	
+	<!-- Google Fonts -->
+	<link href="https://fonts.gstatic.com" rel="preconnect">
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+	
+	<!-- Vendor CSS Files -->
+	<link th:href="@{/admin/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+	<link th:href="@{/admin/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet">
+	<link th:href="@{/admin/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet">
+	<link th:href="@{/admin/vendor/quill/quill.snow.css}" rel="stylesheet">
+	<link th:href="@{/admin/vendor/quill/quill.bubble.css}" rel="stylesheet">
+	<link th:href="@{/admin/vendor/remixicon/remixicon.css}" rel="stylesheet">
+	<link th:href="@{/admin/vendor/simple-datatables/style.css}" rel="stylesheet">
+	
+	
+	<!-- Template Main CSS File -->
+	<link th:href="@{/admin/css/style.css}" rel="stylesheet">
+		
+
+	<!-- Bootstrap Icons from CDN -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+</head>
+
+<body>
+
+  <th:block th:replace="~{admin/fragments/header :: header}"/>
+	<th:block th:replace="~{admin/fragments/sidebar :: sidebar}"/>
+	<th:block layout:fragment="content"/>
+	<th:block th:replace="~{admin/fragments/footer :: footer}"/>
+
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+	<!-- Vendor JS Files -->
+	<script th:src="@{/admin/vendor/apexcharts/apexcharts.min.js}"></script>
+	<script th:src="@{/admin/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+	<script th:src="@{/admin/vendor/chart.js/chart.min.js}"></script>
+	<script th:src="@{/admin/vendor/echarts/echarts.min.js}"></script>
+	<script th:src="@{/admin/vendor/quill/quill.min.js}"></script>
+	<script th:src="@{/admin/vendor/simple-datatables/simple-datatables.js}"></script>
+	<script th:src="@{/admin/vendor/tinymce/tinymce.min.js}"></script>
+	<script th:src="@{/js/jquery.js}"></script>
+	<!--<script th:src="@{/admin/vendor/php-email-form/validate.js}"></script>-->
+
+	<!-- Template Main JS File -->
+	<script th:src="@{/admin/js/main.js}"></script>
+	<script th:src="@{/js/service.manage.js}"></script>
+
+	<script>
+		$(document).ready(function(){
+
+		});
+	</script>
+</body>
+
+</html>

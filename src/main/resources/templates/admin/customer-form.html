@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{admin/fragments/layout}">
+
+<body>
+	<div layout:fragment="content" th:remove="tag">
+	<main id="main" class="main">
+
+	    <div class="pagetitle">
+	      <h1>Customers</h1>
+	      <nav>
+	        <ol class="breadcrumb">
+	          <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+	          <li class="breadcrumb-item active">Customers</li>
+	        </ol>
+	      </nav>
+	    </div>
+	
+	    <section class="section">
+	      <div class="row">
+	        <div class="col-lg-12">
+	
+	          <div class="card">
+	            <div class="card-body">
+	              <h5 class="card-title"></h5>
+	
+	              <form class="row g-3" th:action="@{/users}" th:object="${customer}" id="customerForm" method="post" autocomplete="off" enctype="multipart/form-data">
+					<div th:if="${error}" class="alert alert-danger">
+					    <p th:text="${error}"></p>
+					</div>
+					<div th:if="${message}" class="alert alert-success">
+					    <p th:text="${message}"></p>
+					</div>
+				    <input type="hidden" class="form-control" id="role" th:field="*{role}">
+	                <div class="col-md-12" th:if="${customer.userId != null}">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="userId" th:field="*{userId}" placeholder="User Id" readonly data-required="false">
+	                    <label for="userId">User Id</label>
+	                  </div>
+	                </div>
+	                <div th:class="col-md-6">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="firstName" th:field="*{firstName}" placeholder="First Name" data-required="true">
+	                    <label for="firstName">First Name <span style="color:red;">*</span></label>
+	                  </div>
+	                </div>
+	                <div th:class="col-md-6">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="lastName" th:field="*{lastName}" placeholder="Last Name" data-required="true">
+	                    <label for="lastName">Last Name </label>
+	                  </div>
+	                </div>
+	                <div class="col-md-6">
+	                  <div class="form-floating">
+	                    <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="Email" data-required="true">
+	                    <label for="email">Email <span style="color:red;">*</span></label>
+	                  </div>
+	                </div>
+	                <div class="col-md-6">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="mobile" th:field="*{mobile}" value="+94" placeholder="Mobile" data-required="true">
+	                    <label for="mobile">Mobile<span style="color:red;">*</span></label>
+	                  </div>
+	                </div>
+	                <div class="col-md-12">
+					  <div class="form-floating mb-3">
+					    <select class="form-select" id="status" name="gender" aria-label="gender">
+					      <option value="MALE" th:selected="${customer.gender.name() == 'MALE'}">MALE</option>
+					      <option value="FEMALE" th:selected="${customer.gender.name() == 'FEMALE'}">FEMALE</option>
+					    </select>
+					    <label for="floatingSelect">Status</label>
+					  </div>
+					</div>
+	                <div class="col-md-6">
+	                  	<div class="form-floating">
+	                    	<input type="text" class="form-control" id="username" name="username" th:field="*{username}" placeholder="Username" data-required="true" autocomplete="false" oninput="validateUsername(this)" readonly>
+	                    	<label for="username">Username <span style="color:red;">*</span></label>
+	                  	</div>
+	                  	<div class="text-left">
+							<span class="error-message"></span>
+						</div>
+	                </div>
+	                <!--
+						<div class="col-md-6">
+		                  <div class="form-floating">
+		                    <input type="password" class="form-control" id="password" name="password" th:field="*{password}" placeholder="Password" data-required="false" autocomplete="false">
+		                    <label for="password">Password</label>
+		                  </div>
+		                </div>
+	                -->
+	                <div class="col-md-6">
+					  <div class="form-floating mb-3">
+					    <select class="form-select" id="status" name="status" aria-label="status">
+					      <option value="ACTIVE" th:selected="${customer.status.name() == 'ACTIVE'}">ACTIVE</option>
+					      <option value="SUSPEND" th:selected="${customer.status.name() == 'SUSPEND'}">SUSPEND</option>
+					      <option value="DEACTIVE" th:selected="${customer.status.name() == 'DEACTIVE'}">DEACTIVE</option>
+					    </select>
+					    <label for="floatingSelect">Status</label>
+					  </div>
+					</div>
+	                <div class="col-md-3">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="createBy" th:field="*{createBy}" placeholder="Create By" readonly data-required="false">
+	                    <label for="createBy">Create By</label>
+	                  </div>
+	                </div>
+	                <div class="col-md-3">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="createDate" th:field="*{createDate}" placeholder="Create Date" readonly data-required="false">
+	                    <label for="createDate">Create Date</label>
+	                  </div>
+	                </div>
+	                <div class="col-md-3">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="updateBy" th:field="*{updateBy}" placeholder="Updated By" readonly data-required="false">
+	                    <label for="updateBy">Updated By</label>
+	                  </div>
+	                </div>
+	                <div class="col-md-3">
+	                  <div class="form-floating">
+	                    <input type="text" class="form-control" id="updateDate" th:field="*{updateDate}" placeholder="Update Date" readonly data-required="false">
+	                    <label for="updateDate">Update Date</label>
+	                  </div>
+	                </div>
+	                <div class="text-left">
+	                  <button type="submit" class="btn btn-primary" onclick="validateForm(event)">Submit</button>
+	                  <button type="reset" class="btn btn-secondary">Reset</button>
+	                </div>
+	                <div class="text-left">
+						<span class="error-message"></span>
+					</div>
+	              </form><!-- End floating Labels Form -->
+	
+	            </div>
+	          </div>
+	
+	        </div>
+	      </div>
+	    </section>
+	  </main>
+	</div>
+</body>	
+</html>

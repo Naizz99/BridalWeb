@@ -1,0 +1,421 @@
+.ia-container {
+	overflow: hidden;
+	width: 100%;
+}
+
+.ia-container figure {
+    position: absolute;
+	top: 0;
+	left: 43.3%; /* width of visible piece */
+	width: 335px;
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.6);
+	-webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+}
+
+.ia-container > figure {
+    position: relative;
+	left: 0 !important;
+}
+
+.ia-container img {
+	display: block;
+	width: 100%;
+}
+
+.ia-container input {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%; /* just cover visible part */
+	height: 100%;
+	cursor: pointer;
+	border: 0;
+	padding: 0;
+    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+    opacity: 0;
+	z-index: 100;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+.ia-container input:checked{
+	width: 100%;
+	left: auto;
+	right: 0px;
+}
+.ia-container input:checked ~ figure {
+	-webkit-transition: all 0.7s ease-in-out;
+    -moz-transition: all 0.7s ease-in-out;
+    -o-transition: all 0.7s ease-in-out;
+    -ms-transition: all 0.7s ease-in-out;
+    transition: all 0.7s ease-in-out;
+	left: 335px;
+}
+.ia-container input:hover{
+	width: 100%;
+	left: auto;
+	right: 0px;
+}
+.ia-container input:hover ~ figure {
+	-webkit-transition: all 0.7s ease-in-out;
+    -moz-transition: all 0.7s ease-in-out;
+    -o-transition: all 0.7s ease-in-out;
+    -ms-transition: all 0.7s ease-in-out;
+    transition: all 0.7s ease-in-out;
+	left: 335px;
+}
+
+
+.ia-container figcaption {
+	width: 100%;
+	height: 100%;
+	background: rgba(87, 73, 81, 0.1);
+	position: absolute;
+	top: 0px;
+	-webkit-transition: all 0.2s linear;
+    -moz-transition: all 0.2s linear;
+    -o-transition: all 0.2s linear;
+    -ms-transition: all 0.2s linear;
+    transition: all 0.2s linear;
+}
+
+.ia-container figcaption span {
+	position: absolute;
+	bottom: 20%;
+	left: 20px;
+	overflow: hidden;
+	line-height: 20px;
+    font-family: "Libre Baskerville"; 
+	font-size: 30px;
+    opacity: 0;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	font-weight: 700;
+	padding: 20px;
+	color: #fff;
+	z-index: 1;
+} 
+
+.ia-container figcaption .play-trigger{
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+     opacity: 0; 
+    position: absolute;
+
+    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+}
+
+.ia-container input:checked + figcaption,
+.ia-container input:checked:hover + figcaption{
+	background: rgba(87, 73, 81, 0);
+	cursor: url(../../images/cursor-icon.png) 10 10, crosshair;
+}
+
+.ia-container input:checked + figcaption .gallery-shot,
+.ia-container input:checked:hover + figcaption .gallery-shot{
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: 0;
+	width: 100%;
+	height: 100%;
+	cursor: url(../../images/cursor-icon.png) 10 10, crosshair;
+    background: rgba(87, 73, 81, 0.3);
+}
+
+.ia-container input:checked + figcaption span {
+	-webkit-transition: all 0.4s ease-in-out 0.5s;
+    -moz-transition: all 0.4s ease-in-out 0.5s;
+    -o-transition: all 0.4s ease-in-out 0.5s;
+    -ms-transition: all 0.4s ease-in-out 0.5s;
+    transition: all 0.4s ease-in-out 0.5s;
+	
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=99)";
+    filter: alpha(opacity=99);
+	opacity: 1;
+	
+	bottom: 11%;
+}
+
+.ia-container input:checked + figcaption .play-trigger{
+	-webkit-transition: all 0.4s ease-in-out 0.5s;
+    -moz-transition: all 0.4s ease-in-out 0.5s;
+    -o-transition: all 0.4s ease-in-out 0.5s;
+    -ms-transition: all 0.4s ease-in-out 0.5s;
+    transition: all 0.4s ease-in-out 0.5s;
+	
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=99)";
+    filter: alpha(opacity=99);
+	opacity: 1;
+	cursor: url(../../images/cursor-icon.png) 10 10, crosshair;
+	
+}
+
+.ia-container #ia-selector-last:checked + figcaption span {
+	-webkit-transition-delay: 0.3s;
+	-moz-transition-delay: 0.3s;
+	-o-transition-delay: 0.3s;
+	-ms-transition-delay: 0.3s;
+	transition-delay: 0.3s;
+}
+
+.ia-container input:hover + figcaption span {
+	-webkit-transition: all 0.4s ease-in-out 0.5s;
+    -moz-transition: all 0.4s ease-in-out 0.5s;
+    -o-transition: all 0.4s ease-in-out 0.5s;
+    -ms-transition: all 0.4s ease-in-out 0.5s;
+    transition: all 0.4s ease-in-out 0.5s;
+	
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=99)";
+    filter: alpha(opacity=99);
+	opacity: 1;
+	
+	bottom: 11%;
+}
+
+.ia-container input:hover + figcaption .play-trigger{
+	-webkit-transition: all 0.4s ease-in-out 0.5s;
+    -moz-transition: all 0.4s ease-in-out 0.5s;
+    -o-transition: all 0.4s ease-in-out 0.5s;
+    -ms-transition: all 0.4s ease-in-out 0.5s;
+    transition: all 0.4s ease-in-out 0.5s;
+	
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=99)";
+    filter: alpha(opacity=99);
+	opacity: 1;
+	cursor: url(../../images/cursor-icon.png) 10 10, crosshair;
+	
+}
+
+.ia-container #ia-selector-last:hover + figcaption span {
+	-webkit-transition-delay: 0.3s;
+	-moz-transition-delay: 0.3s;
+	-o-transition-delay: 0.3s;
+	-ms-transition-delay: 0.3s;
+	transition-delay: 0.3s;
+}
+
+.ia-container input:hover + figcaption {
+	background: rgba(87, 73, 81, 0.03);
+}
+
+.ia-container input:checked ~ figure input{
+    z-index: 1;
+}
+.ia-container input:hover ~ figure input{
+    z-index: 1;
+}
+
+@media (min-width : 1500px) and (max-width : 2100px) {
+
+    .ia-container { 
+        width: 100%; 
+    }
+
+    .ia-container figure { 
+        left: 200px; 
+        width: 500px; 
+    }
+    
+    .ia-container input { 
+        width: 100%; 
+    }
+    
+    .ia-container input:checked ~ figure { 
+        left: 500px; 
+    }
+    .ia-container input:hover ~ figure { 
+        left: 500px; 
+    }
+    
+    .ia-container figcaption span { 
+        font-size: 16px; 
+    }
+}
+
+
+@media screen and (min-width: 992px) {
+	/*.ia-container { 
+		width: 100%; 
+	}
+
+	.ia-container figure { 
+		left: 40px; 
+		width: 260px; 
+	}
+	
+	.ia-container input { 
+		width: 40px; 
+	}
+	
+	.ia-container input:checked ~ figure { 
+		left: 260px; 
+	}
+	
+	.ia-container figcaption span { 
+		font-size: 16px; 
+	}*/
+}
+
+
+@media screen and (max-width: 720px) {
+    .ia-container { 
+		width: 100%; 
+	}
+	
+	.ia-container figure { 
+		left: 40px; 
+		width: 260px; 
+	}
+	
+	.ia-container input { 
+		width: 100%; 
+	}
+	
+	.ia-container input:checked ~ figure { 
+		left: 260px; 
+	}
+	.ia-container input:hover ~ figure { 
+		left: 260px; 
+	}
+	
+	.ia-container figcaption span { 
+		font-size: 16px; 
+	}
+}
+
+@media screen and (max-width: 520px) {
+    .ia-container { 
+		width: 100%; 
+	}
+	
+	.ia-container figure { 
+		left: 20px; 
+		width: 180px; 
+	}
+	
+	.ia-container input { 
+		width: 100%; 
+	}
+	
+	.ia-container input:checked ~ figure { 
+		left: 180px; 
+	}
+	.ia-container input:hover ~ figure { 
+		left: 180px; 
+	}
+	
+	.ia-container figcaption span { 
+		font-size: 12px; 
+		letter-spacing: 2px; 
+		padding: 10px; 
+		margin-top: -20px; 
+	} 
+
+}
+
+
+/* Main container for the image carousel */
+/*.ia-container {*/
+/*    display: flex;*/
+/*    overflow: hidden;  Hide overflow for sliding effect */
+/*    width: 100%;*/
+/*    position: relative;*/
+/*    white-space: nowrap;*/
+/*}*/
+
+/* Carousel slide animation */
+/*.ia-container {*/
+/*    scroll-behavior: smooth;*/
+/*    scroll-snap-type: x mandatory;*/
+/*}*/
+
+/* Horizontal scrolling row */
+/*.ia-container-wrapper {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    justify-content: center;*/
+/*    overflow-x: auto;*/
+/*    scroll-snap-type: x mandatory;*/
+/*    white-space: nowrap;*/
+/*    width: 100%;*/
+/*    position: relative;*/
+/*}*/
+
+/* Gallery Section */
+/*.gallery-section {*/
+/*  text-align: center;*/
+/*  background-color: #f87eb9;  Pink background for gallery */
+/*  padding: 20px;*/
+/*  border-radius: 10px;*/
+/*}*/
+
+/*.gallery-section h1 {*/
+/*  color: white;*/
+/*  margin-bottom: 20px;*/
+/*}*/
+
+/* Gallery Container */
+/*.gallery-container {*/
+/*  display: flex;*/
+/*  flex-wrap: nowrap;  Prevents wrapping */
+/*  overflow-x: auto;  Horizontal scroll */
+/*  overflow-y: hidden;  Hide vertical overflow */
+/*  scrollbar-width: thin;  For custom scroll bar */
+/*  scrollbar-color: #f87eb9 transparent;*/
+/*  padding: 40px;*/
+/*  border: 5px solid white;*/
+/*  background: #fff;*/
+/*  gap: 10px;  Spacing between images */
+/*}*/
+
+/* Styling Images */
+/*.gallery-container img {*/
+/*  width: 180px;*/
+/*  height: 270px;*/
+/*  object-fit: cover;*/
+/*  border-radius: 10px;*/
+/*  transition: transform 0.3s ease-in-out;*/
+/*  cursor: pointer;*/
+/*}*/
+
+/*@media screen and (max-width: 720px) {*/
+/*	.gallery-container img {*/
+/*	  width: 120px;*/
+/*	  height: 180px;*/
+/*	}*/
+/*}*/
+
+/*.gallery-container img:hover {*/
+/*  transform: scale(1.5);  Expands the image when hovered */
+/*  z-index: 200;  Ensures the image comes to the front */
+/*}*/
+
+/* Hide scrollbar in Webkit browsers */
+/*.gallery-container::-webkit-scrollbar {*/
+/*  height: 8px;*/
+/*}*/
+
+/*.gallery-container::-webkit-scrollbar-thumb {*/
+/*  background-color: #f87eb9;*/
+/*  border-radius: 10px;*/
+/*}*/
+
+/* Custom scroll bar for Firefox */
+/*.gallery-container {*/
+/*  scrollbar-width: thin;*/
+/*  scrollbar-color: #f87eb9 transparent;*/
+/*}*/
+
+/*.gallery-container.active {*/
+/*  cursor: grabbing;*/
+/*}*/

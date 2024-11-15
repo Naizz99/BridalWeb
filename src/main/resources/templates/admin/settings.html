@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{admin/fragments/layout}">
+<head>
+	<style>
+		label{
+			font-weight: 600;
+		}
+	</style>
+</head>
+<body>
+	<div layout:fragment="content" th:remove="tag">
+	<main id="main" class="main">
+
+	    <div class="pagetitle">
+	      <h1>Settings</h1>
+	      <nav>
+	        <ol class="breadcrumb">
+	          <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+	          <li class="breadcrumb-item active">Settings</li>
+	        </ol>
+	      </nav>
+	    </div>
+	
+	    <section class="section">
+	      <div class="row">
+		        <div class="col-12">
+					<form th:action="@{/settings}" th:object="${setting}" id="settingForm" method="post" autocomplete="off" enctype="multipart/form-data">
+			          <div class="card">
+			            <div class="card-body row g-3">
+			              <h5 class="card-title">Website Settings</h5>
+			
+			              	<input type="hidden" name="id" th:field="*{id}">
+			              	<input type="hidden" name="aboutUsImage" th:field="*{aboutUsImage}">
+			              	<input type="hidden" name="systemSeq" th:field="*{systemSeq}">
+			              	
+			              	<div class="col-md-12">
+			                  	<label for="systemName" class="form-label">Name <span style="color:red;">*</span></label>
+			                  	<input type="text" class="form-control" id="systemName" name="systemName" th:field="*{systemName}" data-required="true">
+			                </div>
+			                
+			                <div class="col-md-12">
+			                  	<label for="logo" class="form-label">Logo</label> <button class="btn btn-outline-dark" type="button" onClick="document.getElementById('logo').click();">Change</button>
+			                  	<input type="file" class="form-control" accept="image/*" id="logo" name="systemLogo" hidden="" onchange="previewImage(event,'logoimagePreview')">
+			                  	<img id="logoimagePreview" th:src="${setting.systemLogo}" alt="logo">
+			                </div>
+			                
+			                <div class="col-md-12">
+				            	<label for="images">Landing Contents</label> <br><br>
+			              		<input type="file" class="form-control" accept="image/*" id="landingContents" name="landingContents" multiple  data-required="false">
+			                </div>
+			                <div class="col-md-12">
+				                <div class="row">
+									<div class="col-2" th:each="content : ${landingContents}" if="${landingContents}">
+							        	<div class="card">
+								        	<img th:src="${content.path}" class="card-img-top" th:if="${content.type.name() == 'IMAGE'}">
+				
+										    <video muted autoplay 
+										           th:if="${content.type.name() == 'VIDEO'}">
+										      <source th:src="@{${content.path}}" type="video/mp4">
+										    </video>
+								            <p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+					              				<a class="btn btn-outline-danger" th:href="@{settings/landingContent/delete/{id}(id=${content.imageId})}" onclick="return confirm('Are you sure?');">Remove</a>
+					              			</p>
+								        </div>
+							        </div>
+								</div>
+			                </div>
+			                
+			                <div class="col-md-12">
+			                	<label for="aboutUs" class="form-label">Company About<span style="color:red;">*</span></label>
+			                  	<textarea class="form-control" id="aboutUs" th:field="*{aboutUs}" style="height: 300px;" data-required="true"></textarea>
+			                </div>
+	<!--		                <div class="col-md-4">-->
+	<!--		                	<button class="btn btn-outline-dark" type="button" onClick="document.getElementById('aboutUsImage').click();">Change</button>-->
+	<!--		                  	<input type="file" class="form-control" accept="image/*" id="aboutUsImage" name="aboutUsImage" hidden="" onchange="previewImage(event,'aboutUsImagePreview')">-->
+	<!--		                  	<img id="aboutUsImagePreview" th:src="${setting.aboutUsImage}" alt="aboutUsImage">  -->
+	<!--		                </div>-->
+			                
+			                <div class="col-12">
+			                  <label for="footerDescription" class="form-label">Footer Description <span style="color:red;">*</span></label>
+			                  <textarea class="form-control" id="footerDescription" th:field="*{footerDescription}" style="height: 100px;" data-required="true"></textarea>
+			                </div>
+			                
+			                <div class="col-md-12">
+				            	<label for="images">Gallery Images</label> <br><br>
+			              		<input type="file" class="form-control" accept="image/*" id="gallery" name="gallery" multiple  data-required="false">
+			                </div>
+			                <div class="col-md-12">
+				                <div class="row">
+									<div class="col-2" th:each="image : ${gallery}" if="${gallery}">
+							        	<div class="card">
+								        	<img th:src="${image.image}" class="card-img-top">
+								            <p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+					              				<a class="btn btn-success btn-sm" th:href="@{settings/galleryImage/active/{id}(id=${image.galleryId})}" th:if="${!image.active}">Active</a>
+					              				<a class="btn btn-warning btn-sm" th:href="@{settings/galleryImage/deactve/{id}(id=${image.galleryId})}" th:if="${image.active}">Deactive</a><br><br>
+					              				<a class="btn btn-danger btn-sm" th:href="@{settings/galleryImage/delete/{id}(id=${image.galleryId})}" onclick="return confirm('Are you sure?');">Remove</a>
+					              			</p>
+								        </div>
+							        </div>
+								</div>
+			                </div>
+			                
+			            </div>
+			          </div>
+			          
+			          <div class="card">
+			          	<div class="card-body row g-3">
+			            	<h5 class="card-title">Contact Details</h5>
+			                <div class="col-md-6">
+			                  <label for="email1" class="form-label">Email 1 <span style="color:red;">*</span></label>
+			                  <input type="email" class="form-control" id="email1" name="email1" th:field="*{email1}" data-required="true">
+			                </div>
+			                
+			                <div class="col-md-6">
+			                  <label for="email2" class="form-label">Email 2</label>
+			                  <input type="email" class="form-control" id="email2" name="email2" th:field="*{email2}" data-required="false">
+			                </div>
+			                
+			                <div class="col-md-6">
+			                  <label for="mobile1" class="form-label">Mobile 1<span style="color:red;">*</span></label>
+			                  <input type="text" class="form-control" id="mobile1" name="mobile1" th:field="*{mobile1}" data-required="true">
+			                </div>
+			                
+			                <div class="col-md-6">
+			                  <label for="mobile2" class="form-label">Mobile 2</label>
+			                  <input type="text" class="form-control" id="mobile2" name="mobile2" th:field="*{mobile2}" data-required="false">
+			                </div>
+			                
+			                <div class="col-md-6">
+			                  <label for="whatsapp" class="form-label">Whatsapp</label>
+			                  <input type="text" class="form-control" id="whatsapp" name="whatsapp" th:field="*{whatsapp}" data-required="false">
+			                </div>
+			            </div>
+			          </div>
+			          
+			          <div class="card">
+			          	<div class="card-body row g-3">
+			            	<h5 class="card-title">Social Links</h5>
+			                <div class="col-md-6">
+			                  <label for="facebook" class="form-label">FaceBook</label>
+			                  <input type="text" class="form-control" id="facebook" name="facebook" th:field="*{facebook}" data-required="false">
+			                </div>
+			                
+			                <div class="col-md-6">
+			                  <label for="instagram" class="form-label">Instagram</label>
+			                  <input type="text" class="form-control" id="instagram" name="instagram" th:field="*{instagram}" data-required="false">
+			                </div>
+			                
+			                <div class="col-md-6">
+			                  <label for="twitter" class="form-label">Twitter</label>
+			                  <input type="text" class="form-control" id="twitter" name="twitter" th:field="*{twitter}" data-required="false">
+			                </div>
+			            </div>
+			          </div>
+			          
+			          <div class="card">
+			          	<div class="card-body">
+							  <br>
+			                <div class="text-left">
+			                  <button type="submit" class="btn btn-primary" onclick="validateForm(event)">Submit</button>
+			                  <button type="reset" class="btn btn-secondary">Reset</button>
+			                </div>	
+			                <div class="text-left">
+								<span class="error-message"></span>
+							</div>		
+			            </div>
+			          </div>
+          
+					</form>
+		        </div>
+	      </div>
+	    </section>
+		
+		<script>
+
+			document.addEventListener('DOMContentLoaded', function () {
+			    
+			});
+
+		</script>
+		
+	  </main>
+	</div>
+</body>	
+</html>
